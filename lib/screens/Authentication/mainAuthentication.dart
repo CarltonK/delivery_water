@@ -15,7 +15,10 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
   int _selectedPage = 0;
 
   final List<Widget> tabs = [
-    Text("Sign In", style: styleAuthButtons), 
+    Text(
+      "Sign In",
+      style: styleAuthButtons,
+    ),
     Text("Sign Up", style: styleAuthButtons)
   ];
 
@@ -35,27 +38,25 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
           ),
         ),
         Container(
-          width: 200,
-          height: 40,
-          child: TabBar(
-            controller: controller,
-            onTap: (value) {
-              setState(() {
-                _selectedPage = value;
-                 _pageController.animateToPage(_selectedPage, duration: Duration(milliseconds: 200), curve: Curves.ease);
-              });
-            }, 
-            tabs: tabs,
-          )
-        )
+            width: 200,
+            height: 40,
+            child: TabBar(
+              controller: controller,
+              onTap: (value) {
+                setState(() {
+                  _selectedPage = value;
+                  _pageController.animateToPage(_selectedPage,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.ease);
+                });
+              },
+              tabs: tabs,
+            ))
       ],
     );
   }
 
-  List<Widget> _pages = [
-    LoginPage(),
-    SignUpPage()
-  ];
+  List<Widget> _pages = [LoginPage(), SignUpPage()];
 
   Widget _pageSelection() {
     return Expanded(
@@ -83,10 +84,7 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
             width: size.width,
             padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
             child: Column(
-              children: <Widget>[
-                _appBar(),
-                _pageSelection()
-              ],
+              children: <Widget>[_appBar(), _pageSelection()],
             ),
           ),
           value: SystemUiOverlayStyle.light),
