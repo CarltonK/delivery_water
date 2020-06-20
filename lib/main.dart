@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:water_del/screens/authentication/mainAuthentication.dart';
+import 'package:water_del/screens/authentication/main_authentication.dart';
 
 void main() {
   runApp(MyApp());

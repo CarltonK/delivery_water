@@ -2,15 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:water_del/utilities/global/social_buttons.dart';
 import 'package:water_del/utilities/styles.dart';
 
-class LoginPage extends StatelessWidget {
+class SignUpPage extends StatelessWidget {
   Widget _introText() {
-    return Text(
-      'Welcome',
-      style: headerOutlineBlack,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Hello,',
+          style: headerOutlineBlack,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Enter your information below\nor login with a social account',
+          style: normalOutlineBlack,
+        )
+      ],
     );
   }
 
-  Widget _loginEmailField() {
+  Widget _registerEmailField() {
     return TextFormField(
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
@@ -27,7 +39,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginPasswordField() {
+  Widget _registerPasswordField() {
     return TextFormField(
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.text,
@@ -45,7 +57,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginButton() {
+  Widget _registerButton() {
     return Positioned(
         bottom: 20,
         right: 15,
@@ -53,27 +65,15 @@ class LoginPage extends StatelessWidget {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.blueAccent[200].withOpacity(0.7)),
+              borderRadius: BorderRadius.circular(12), color: Colors.pink[200]),
           child: IconButton(
             icon: Icon(
               Icons.arrow_forward_ios,
               color: Colors.white,
             ),
-            onPressed: () => print('I want to login now'),
+            onPressed: () => print('I want to register now'),
           ),
         ));
-  }
-
-  Widget _forgotPasswordButton() {
-    return Positioned(
-        bottom: 20,
-        child: FlatButton(
-            onPressed: () => print('I want to reset my password'),
-            child: Text(
-              'Forgot Password ?',
-              style: normalOutlineBlack,
-            )));
   }
 
   @override
@@ -97,17 +97,20 @@ class LoginPage extends StatelessWidget {
                 SizedBox(
                   height: 50,
                 ),
-                _loginEmailField(),
+                _registerEmailField(),
                 SizedBox(
                   height: 20,
                 ),
-                _loginPasswordField(),
+                _registerPasswordField(),
+                SizedBox(
+                  height: 20,
+                ),
+                _registerPasswordField(),
                 SocialButtons()
               ],
             ),
           ),
-          _forgotPasswordButton(),
-          _loginButton()
+          _registerButton()
         ],
       ),
     );

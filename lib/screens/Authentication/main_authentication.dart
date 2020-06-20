@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:water_del/screens/Authentication/SignUp.dart';
 import 'package:water_del/screens/authentication/login.dart';
+import 'package:water_del/screens/authentication/registration.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class MainAuthentication extends StatefulWidget {
@@ -17,31 +17,21 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
   final List<Widget> tabs = [
     Text(
       "Sign In",
-      style: styleAuthButtons,
+      style: boldOutlineBlack,
     ),
-    Text("Sign Up", style: styleAuthButtons)
+    Text("Sign Up", style: boldOutlineBlack)
   ];
 
   Widget _appBar() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Container(
-          height: 40,
-          width: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.pink[200],
-          ),
-          child: Center(
-            child: Icon(Icons.person, color: Colors.white),
-          ),
-        ),
         Container(
             width: 200,
             height: 40,
             child: TabBar(
               controller: controller,
+              labelPadding: EdgeInsets.all(8),
               onTap: (value) {
                 setState(() {
                   _selectedPage = value;
@@ -63,6 +53,7 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
       child: PageView(
         children: _pages,
         controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
       ),
     );
   }
@@ -78,16 +69,18 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-          child: Container(
-            height: size.height,
-            width: size.width,
-            padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-            child: Column(
-              children: <Widget>[_appBar(), _pageSelection()],
-            ),
+        value: SystemUiOverlayStyle.light,
+        child: Container(
+          height: size.height,
+          width: size.width,
+          padding: EdgeInsets.fromLTRB(20, 40, 10, 0),
+          child: Column(
+            children: <Widget>[_appBar(), _pageSelection()],
           ),
-          value: SystemUiOverlayStyle.light),
+        ),
+      ),
     );
   }
 }
