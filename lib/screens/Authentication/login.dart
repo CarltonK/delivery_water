@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:water_del/screens/Authentication/reset_password.dart';
 import 'package:water_del/utilities/global/social_buttons.dart';
 import 'package:water_del/utilities/styles.dart';
 
@@ -65,11 +66,11 @@ class LoginPage extends StatelessWidget {
         ));
   }
 
-  Widget _forgotPasswordButton() {
+  Widget _forgotPasswordButton(BuildContext context) {
     return Positioned(
         bottom: 20,
         child: FlatButton(
-            onPressed: () => print('I want to reset my password'),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>ResetPassword() )),
             child: Text(
               'Forgot Password ?',
               style: normalOutlineBlack,
@@ -106,7 +107,7 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
-          _forgotPasswordButton(),
+          _forgotPasswordButton(context),
           _loginButton()
         ],
       ),
