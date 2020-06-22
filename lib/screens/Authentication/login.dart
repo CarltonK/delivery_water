@@ -70,7 +70,8 @@ class LoginPage extends StatelessWidget {
     return Positioned(
         bottom: 20,
         child: FlatButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>ResetPassword() )),
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => ResetPassword())),
             child: Text(
               'Forgot Password ?',
               style: normalOutlineBlack,

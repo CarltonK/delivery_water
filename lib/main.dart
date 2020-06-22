@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:water_del/screens/Home/supplier.dart';
+import 'package:water_del/screens/home/home_main.dart';
+import 'package:water_del/screens/home/supplier.dart';
 import 'package:water_del/screens/authentication/main_authentication.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Supplier(),
+      home: HomeMain(),
     );
   }
 }
