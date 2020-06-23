@@ -6,36 +6,45 @@ import 'package:water_del/screens/checkout/singleCartItem.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class CartScreen extends StatefulWidget {
-
   @override
   _CartScreenState createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-
-
   Widget _cartAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: Colors.black,), 
-        onPressed: null
-      ),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: null),
       centerTitle: true,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Cart',style: headerOutlineBlack,),
-          SizedBox(width: 5,),
-          Icon(Icons.shopping_cart, color: Colors.black,)
+          Text(
+            'Cart',
+            style: headerOutlineBlack,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Icon(
+            Icons.shopping_cart,
+            color: Colors.black,
+          )
         ],
       ),
       actions: <Widget>[
         IconButton(
-        icon: Icon(Icons.cancel, color: Colors.black,), 
-        onPressed: null
-      )
+            icon: Icon(
+              Icons.cancel,
+              color: Colors.black,
+            ),
+            onPressed: null)
       ],
     );
   }
@@ -56,12 +65,10 @@ class _CartScreenState extends State<CartScreen> {
         width: size.height,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(36),
-            bottomRight: Radius.circular(36)
-          )
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(36),
+                bottomRight: Radius.circular(36))),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
           child: ListView.builder(
@@ -69,29 +76,34 @@ class _CartScreenState extends State<CartScreen> {
             itemBuilder: (context, index) {
               CartModel singleItem = itemsCart[index];
               return Dismissible(
-                key: Key(itemsCart[index].title),
-                background: Container(
-                  margin: EdgeInsets.symmetric(vertical: 5),
-                  alignment: Alignment.centerRight,   
-                  decoration: BoxDecoration(
-                    color: Colors.red,
+                  key: Key(itemsCart[index].title),
+                  background: Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    alignment: Alignment.centerRight,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Icon(
+                          CupertinoIcons.delete_solid,
+                          color: Colors.white,
+                        ),
+                        Icon(
+                          CupertinoIcons.delete_solid,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Icon(CupertinoIcons.delete_solid, color: Colors.white,),
-                      Icon(CupertinoIcons.delete_solid, color: Colors.white,),
-                    ],
-                  ),
-                ),
-                onDismissed: (direction) {
-                  setState(() {
-                    itemsCart.removeAt(index);
-                  });
-                },
-                child: SingleCartItem(model: singleItem)
-              );
+                  onDismissed: (direction) {
+                    setState(() {
+                      itemsCart.removeAt(index);
+                    });
+                  },
+                  child: SingleCartItem(model: singleItem));
             },
           ),
         ),
@@ -112,23 +124,32 @@ class _CartScreenState extends State<CartScreen> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text('Total Price', style: normalDescription,),
-                Text('1000 KES',style: headerOutlineWhite,)
+                Text(
+                  'Total Price',
+                  style: normalDescription,
+                ),
+                Text(
+                  '1000 KES',
+                  style: headerOutlineWhite,
+                )
               ],
             ),
             Hero(
               tag: 'checkout',
               child: Container(
                 child: RaisedButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => FinalCheckout(),)
-                  ),
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => FinalCheckout(),
+                  )),
                   color: Colors.blue,
                   padding: EdgeInsets.all(8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text('Buy Now',style: buttonWhite,),
+                  child: Text(
+                    'Buy Now',
+                    style: buttonWhite,
+                  ),
                 ),
               ),
             )
@@ -150,7 +171,7 @@ class _CartScreenState extends State<CartScreen> {
         children: <Widget>[
           _backgroundColor(),
           _finalCartDetails(size),
-           _cartBody(size),
+          _cartBody(size),
         ],
       ),
     );

@@ -9,6 +9,10 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="water_del"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAW2ylkjGECuhEED3W5x2T0m2qtvF-HbZY"/>
+            
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -43,5 +47,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        
     </application>
 </manifest>

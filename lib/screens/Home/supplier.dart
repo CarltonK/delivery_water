@@ -123,18 +123,16 @@ class Supplier extends StatelessWidget {
           height: 16,
           width: 5,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.grey[300]
-          ),
+              borderRadius: BorderRadius.circular(16), color: Colors.grey[300]),
         ),
-        SizedBox(height: 3,),
+        SizedBox(
+          height: 3,
+        ),
         Container(
           height: 11,
           width: 5,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.grey[400]
-          ),
+              borderRadius: BorderRadius.circular(16), color: Colors.grey[400]),
         ),
         Row(
           children: <Widget>[

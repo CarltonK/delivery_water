@@ -3,22 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class FinalCheckout extends StatelessWidget {
-
   Widget _checkoutAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: Colors.black,), 
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ),
         onPressed: () => Navigator.of(context).pop(),
       ),
       centerTitle: true,
-      title: Text('Checkout',style: headerOutlineBlack,),
+      title: Text(
+        'Checkout',
+        style: headerOutlineBlack,
+      ),
       actions: <Widget>[
         IconButton(
-        icon: Icon(Icons.cancel, color: Colors.black,), 
-        onPressed: null
-      )
+            icon: Icon(
+              Icons.cancel,
+              color: Colors.black,
+            ),
+            onPressed: null)
       ],
     );
   }
@@ -39,45 +46,37 @@ class FinalCheckout extends StatelessWidget {
         width: size.height,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(36),
-            bottomRight: Radius.circular(36)
-          )
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(36),
+                bottomRight: Radius.circular(36))),
         child: ListView(
           children: <Widget>[
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)
-              ),
+                  borderRadius: BorderRadius.circular(12)),
               child: ListTile(
                 leading: Image.asset('assets/logos/mpesa_logo.png'),
                 contentPadding: EdgeInsets.all(12),
                 trailing: Radio(
-                  value: null, 
-                  groupValue: null, 
-                  onChanged: (value) {
-                    
-                  },
+                  value: null,
+                  groupValue: null,
+                  onChanged: (value) {},
                 ),
               ),
             ),
             Card(
               elevation: 4,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)
-              ),
+                  borderRadius: BorderRadius.circular(12)),
               child: ListTile(
                 leading: Image.asset('assets/logos/cash.png'),
                 contentPadding: EdgeInsets.all(12),
                 trailing: Radio(
-                  value: null, 
-                  groupValue: null, 
-                  onChanged: (value) {
-                    
-                  },
+                  value: null,
+                  groupValue: null,
+                  onChanged: (value) {},
                 ),
               ),
             )
@@ -100,11 +99,15 @@ class FinalCheckout extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text('Confirm Order',style: headerOutlineWhite,),
+          child: Text(
+            'Confirm Order',
+            style: headerOutlineWhite,
+          ),
         ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -116,7 +119,7 @@ class FinalCheckout extends StatelessWidget {
         children: <Widget>[
           _backgroundColor(),
           _finalCheckoutDetails(size),
-           _checkoutBody(size),
+          _checkoutBody(size),
         ],
       ),
     );
