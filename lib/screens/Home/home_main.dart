@@ -4,17 +4,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:water_del/services/location_file.dart';
 import 'package:water_del/widgets/mapWidget.dart';
 
-
 class HomeMain extends StatefulWidget {
   @override
   _HomeMainState createState() => _HomeMainState();
 }
 
 class _HomeMainState extends State<HomeMain> {
-
   Future coord;
   Locate _locate = new Locate();
-
 
   @override
   void initState() {
@@ -90,7 +87,7 @@ class _HomeMainState extends State<HomeMain> {
                     FlatButton(
                         onPressed: () =>
                             print('I want to change the delivery location'),
-                            color: Colors.blue.withOpacity(0.2),
+                        color: Colors.blue.withOpacity(0.2),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[

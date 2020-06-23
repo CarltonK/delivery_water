@@ -11,9 +11,7 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> {
-
   Completer<GoogleMapController> _controller = Completer();
-
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -21,16 +19,12 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     var lat = widget.coordinates['lat'];
     var lon = widget.coordinates['lon'];
 
     return GoogleMap(
-      onMapCreated:  _onMapCreated,
-      initialCameraPosition: CameraPosition(
-        target: LatLng(lat, lon),
-        zoom: 12
-      )
-    );
+        onMapCreated: _onMapCreated,
+        initialCameraPosition:
+            CameraPosition(target: LatLng(lat, lon), zoom: 12));
   }
 }

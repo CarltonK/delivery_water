@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:water_del/screens/checkout/cart.dart';
+import 'package:water_del/screens/checkout/finalCheckout.dart';
 import 'package:water_del/screens/home/home_main.dart';
 import 'package:water_del/screens/home/supplier.dart';
 import 'package:water_del/screens/authentication/main_authentication.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeMain(),
+      home: CartScreen(),
     );
   }
 }

@@ -79,6 +79,65 @@ class FinalCheckout extends StatelessWidget {
                   onChanged: (value) {},
                 ),
               ),
+            ),
+            SizedBox(
+              height: 100,
+            ),
+            TextFormField(
+                decoration: InputDecoration(labelText: 'Enter a coupon code')),
+            SizedBox(
+              height: 120,
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  'ITEMS(4)',
+                  style: normalOutlineBlack,
+                ),
+                SizedBox(
+                  width: 212,
+                ),
+                Text(
+                  'ksh 68',
+                  style: boldOutlineBlack,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  'Delivery Services',
+                  style: normalOutlineBlack,
+                ),
+                SizedBox(
+                  width: 150,
+                ),
+                Text(
+                  'ksh 100',
+                  style: boldOutlineBlack,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              children: <Widget>[
+                Text(
+                  'Total Price',
+                  style: normalOutlineBlack,
+                ),
+                SizedBox(
+                  width: 198,
+                ),
+                Text(
+                  'ksh 168',
+                  style: boldOutlineBlack,
+                )
+              ],
             )
           ],
         ),
