@@ -33,7 +33,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       actions: <Widget>[
         IconButton(
-        icon: Icon(CupertinoIcons.delete_solid, color: Colors.black,), 
+        icon: Icon(Icons.cancel, color: Colors.black,), 
         onPressed: null
       )
       ],

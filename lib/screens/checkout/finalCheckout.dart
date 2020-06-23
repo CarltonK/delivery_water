@@ -48,7 +48,7 @@ class FinalCheckout extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             Card(
-              elevation: 5,
+              elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)
               ),
@@ -65,12 +65,12 @@ class FinalCheckout extends StatelessWidget {
               ),
             ),
             Card(
-              elevation: 5,
+              elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12)
               ),
               child: ListTile(
-                leading: Image.asset('assets/logos/mpesa_logo.png'),
+                leading: Image.asset('assets/logos/cash.png'),
                 contentPadding: EdgeInsets.all(12),
                 trailing: Radio(
                   value: null, 
