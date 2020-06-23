@@ -10,10 +10,18 @@ final normalOutlineBlack =
 final headerOutlineBlack =
     GoogleFonts.montserrat(fontSize: 28, letterSpacing: 1, color: Colors.black);
 
+final subheaderOutlineBlack =
+    GoogleFonts.montserrat(fontSize: 22, letterSpacing: 1, color: Colors.black);
+
 final boldOutlineBlue = GoogleFonts.montserrat(
     color: Colors.blue[600], fontSize: 28, fontWeight: FontWeight.bold);
 
 final normalDescription = GoogleFonts.montserrat(color: Colors.white70);
 
+final buttonWhite = GoogleFonts.montserrat(color: Colors.white);
+
 final boldOutlineWhite = GoogleFonts.montserrat(
     color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
+
+final headerOutlineWhite = GoogleFonts.montserrat(
+    color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold);
