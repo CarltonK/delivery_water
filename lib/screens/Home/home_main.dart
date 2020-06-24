@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:water_del/screens/home/profilePage.dart';
 import 'package:water_del/services/location_file.dart';
+import 'package:water_del/utilities/global/pageTransitions.dart';
+import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/widgets/mapWidget.dart';
 
 class HomeMain extends StatefulWidget {
@@ -51,6 +55,112 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
+  Widget popupTime() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.blue.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(12)),
+      child: PopupMenuButton(
+        tooltip: 'Time',
+        itemBuilder: (context) {
+          var list = List<PopupMenuEntry<Object>>();
+          list.add(PopupMenuItem(
+            child: Text('Delivery Time'),
+            value: 1,
+          ));
+          list.add(
+            PopupMenuDivider(
+              height: 10,
+            ),
+          );
+          list.add(
+            CheckedPopupMenuItem(
+              child: Text(
+                "Now",
+                style: normalOutlineBlack,
+              ),
+              value: 2,
+              checked: true,
+            ),
+          );
+          return list;
+        },
+        offset: Offset(0, 100),
+        icon: Icon(CupertinoIcons.clock_solid),
+      ),
+    );
+  }
+
+  Widget popupPlace() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.blue.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(12)),
+      child: PopupMenuButton(
+        tooltip: 'Place',
+        itemBuilder: (context) {
+          var list = List<PopupMenuEntry<Object>>();
+          list.add(PopupMenuItem(
+            child: Text('Delivery Location'),
+            value: 1,
+          ));
+          list.add(
+            PopupMenuDivider(
+              height: 10,
+            ),
+          );
+          list.add(
+            CheckedPopupMenuItem(
+              child: Text(
+                "Home",
+                style: normalOutlineBlack,
+              ),
+              value: 2,
+              checked: true,
+            ),
+          );
+          return list;
+        },
+        offset: Offset(0, 100),
+        icon: Icon(CupertinoIcons.location_solid),
+      ),
+    );
+  }
+
+  Widget _appBarItems() {
+    return Positioned(
+        top: 40,
+        left: 10,
+        child: Row(
+          children: <Widget>[
+            popupTime(),
+            SizedBox(
+              width: 5,
+            ),
+            popupPlace()
+          ],
+        ));
+  }
+
+  Widget _profilePage() {
+    return Positioned(
+      top: 40,
+      right: 10,
+      child: GestureDetector(
+        onTap: () =>
+            Navigator.of(context).push(SlideLeftTransition(page: ProfilePage())),
+        child: Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.5), shape: BoxShape.circle),
+          padding: EdgeInsets.all(8),
+          child: FlutterLogo(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -61,57 +171,8 @@ class _HomeMainState extends State<HomeMain> {
         child: Stack(
           children: <Widget>[
             _pageView(size),
-            Positioned(
-                top: 40,
-                left: 10,
-                child: Row(
-                  children: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          print('I want to change the delivery time');
-                        },
-                        color: Colors.blue.withOpacity(0.2),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text('Now'),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(Icons.keyboard_arrow_down)
-                          ],
-                        )),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    FlatButton(
-                        onPressed: () =>
-                            print('I want to change the delivery location'),
-                        color: Colors.blue.withOpacity(0.2),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text('Home'),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(Icons.keyboard_arrow_down)
-                          ],
-                        ))
-                  ],
-                )),
-            Positioned(
-              top: 40,
-              right: 10,
-              child: Container(
-                height: 36,
-                width: 36,
-                decoration:
-                    BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                padding: EdgeInsets.all(8),
-                child: FlutterLogo(),
-              ),
-            ),
+            _appBarItems(),
+            _profilePage(),
           ],
         ),
       ),

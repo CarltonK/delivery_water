@@ -38,6 +38,38 @@ class FinalCheckout extends StatelessWidget {
     );
   }
 
+  Widget _paymentMethodCard(String asset) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        leading: Image.asset(asset),
+        contentPadding: EdgeInsets.all(12),
+        trailing: Radio(
+          value: null,
+          groupValue: null,
+          onChanged: (value) {},
+        ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String title, var sub) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          title,
+          style: normalOutlineBlack,
+        ),
+        Text(
+          sub,
+          style: boldOutlineBlack,
+        )
+      ],
+    );
+  }
+
   Widget _checkoutBody(Size size) {
     return Align(
       alignment: Alignment.topCenter,
@@ -50,95 +82,23 @@ class FinalCheckout extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(36),
                 bottomRight: Radius.circular(36))),
-        child: ListView(
+        child: Column(
           children: <Widget>[
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                leading: Image.asset('assets/logos/mpesa_logo.png'),
-                contentPadding: EdgeInsets.all(12),
-                trailing: Radio(
-                  value: null,
-                  groupValue: null,
-                  onChanged: (value) {},
-                ),
-              ),
-            ),
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              child: ListTile(
-                leading: Image.asset('assets/logos/cash.png'),
-                contentPadding: EdgeInsets.all(12),
-                trailing: Radio(
-                  value: null,
-                  groupValue: null,
-                  onChanged: (value) {},
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 100,
-            ),
-            TextFormField(
-                decoration: InputDecoration(labelText: 'Enter a coupon code')),
-            SizedBox(
-              height: 120,
-            ),
-            Row(
-              children: <Widget>[
-                Text(
-                  'ITEMS(4)',
-                  style: normalOutlineBlack,
-                ),
-                SizedBox(
-                  width: 212,
-                ),
-                Text(
-                  'ksh 68',
-                  style: boldOutlineBlack,
-                )
-              ],
-            ),
+            _paymentMethodCard('assets/logos/mpesa_logo.png'),
+            _paymentMethodCard('assets/logos/cash.png'),
+            Expanded(child: Container()),
+            _infoRow('ITEMS (4)', 'ksh 68'),
             SizedBox(
               height: 15,
             ),
-            Row(
-              children: <Widget>[
-                Text(
-                  'Delivery Services',
-                  style: normalOutlineBlack,
-                ),
-                SizedBox(
-                  width: 150,
-                ),
-                Text(
-                  'ksh 100',
-                  style: boldOutlineBlack,
-                )
-              ],
-            ),
+            _infoRow('Delivery Services', 'ksh 100'),
             SizedBox(
               height: 20,
             ),
-            Row(
-              children: <Widget>[
-                Text(
-                  'Total Price',
-                  style: normalOutlineBlack,
-                ),
-                SizedBox(
-                  width: 198,
-                ),
-                Text(
-                  'ksh 168',
-                  style: boldOutlineBlack,
-                )
-              ],
-            )
+            _infoRow('Total Price', 'ksh 168'),
+            SizedBox(
+              height: 15,
+            ),
           ],
         ),
       ),

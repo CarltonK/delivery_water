@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:water_del/models/cartModel.dart';
 import 'package:water_del/screens/checkout/finalCheckout.dart';
 import 'package:water_del/screens/checkout/singleCartItem.dart';
+import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class CartScreen extends StatefulWidget {
@@ -22,21 +23,9 @@ class _CartScreenState extends State<CartScreen> {
           ),
           onPressed: null),
       centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'Cart',
-            style: headerOutlineBlack,
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Icon(
-            Icons.shopping_cart,
-            color: Colors.black,
-          )
-        ],
+      title: Text(
+        'Cart',
+        style: headerOutlineBlack,
       ),
       actions: <Widget>[
         IconButton(
@@ -134,23 +123,16 @@ class _CartScreenState extends State<CartScreen> {
                 )
               ],
             ),
-            Hero(
-              tag: 'checkout',
-              child: Container(
-                child: RaisedButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => FinalCheckout(),
-                  )),
-                  color: Colors.blue,
-                  padding: EdgeInsets.all(8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    'Buy Now',
-                    style: buttonWhite,
-                  ),
-                ),
+            RaisedButton(
+              onPressed: () => Navigator.of(context).push(ScaleRoute(page: FinalCheckout())),
+              color: Colors.blue,
+              padding: EdgeInsets.all(8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Buy Now',
+                style: buttonWhite,
               ),
             )
           ],

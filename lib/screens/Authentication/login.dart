@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:water_del/screens/Authentication/reset_password.dart';
+import 'package:water_del/screens/checkout/cart.dart';
+import 'package:water_del/screens/home/home_main.dart';
+import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/global/social_buttons.dart';
 import 'package:water_del/utilities/styles.dart';
 
@@ -46,7 +49,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _loginButton() {
+  Widget _loginButton(BuildContext context) {
     return Positioned(
         bottom: 20,
         right: 15,
@@ -61,7 +64,7 @@ class LoginPage extends StatelessWidget {
               Icons.arrow_forward_ios,
               color: Colors.white,
             ),
-            onPressed: () => print('I want to login now'),
+            onPressed: () => Navigator.of(context).push(SlideRightTransition(page: HomeMain())),
           ),
         ));
   }
@@ -71,7 +74,7 @@ class LoginPage extends StatelessWidget {
         bottom: 20,
         child: FlatButton(
             onPressed: () => Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ResetPassword())),
+                .push(SlideRightTransition(page: CartScreen())),
             child: Text(
               'Forgot Password ?',
               style: normalOutlineBlack,
@@ -109,7 +112,7 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           _forgotPasswordButton(context),
-          _loginButton()
+          _loginButton(context)
         ],
       ),
     );
