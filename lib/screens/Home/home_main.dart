@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
 import 'package:water_del/screens/home/profilePage.dart';
 import 'package:water_del/services/location_file.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/widgets/itemHolderWidget.dart';
 import 'package:water_del/widgets/mapWidget.dart';
 
 class HomeMain extends StatefulWidget {
@@ -161,6 +163,24 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
+  Widget _sheetHeader() {
+    return Container(
+      height: 50,
+      margin: EdgeInsets.symmetric(horizontal: 2),
+      color: Colors.white,
+      child: Center(
+        child: Container(
+          height: 15,
+          width: 70,
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(25)
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -175,6 +195,12 @@ class _HomeMainState extends State<HomeMain> {
             _profilePage(),
           ],
         ),
+      ),
+      bottomSheet: SolidBottomSheet(
+        smoothness: Smoothness.medium,
+        maxHeight: 350,
+        headerBar: _sheetHeader(), 
+        body: ItemHolderWidget()
       ),
     );
   }
