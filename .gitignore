@@ -29,7 +29,9 @@
 .pub-cache/
 .pub/
 /build/
-/test/
+/test/node_modules/
+/test/package.json
+/test/package-lock.json
 /android/app/src/main/
 /android/app/
 
