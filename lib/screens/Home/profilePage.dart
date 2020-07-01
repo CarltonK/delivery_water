@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:water_del/screens/home/orderhistory.dart';
+import 'package:water_del/utilities/global/pageTransitions.dart';
+import 'package:water_del/utilities/styles.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
 
-  final String url = 'https://images.unsplash.com/photo-1494959764136-6be9eb3c261e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
-  final String urlUser = 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80';
+class _ProfilePageState extends State<ProfilePage> {
+  final String url =
+      'https://images.unsplash.com/photo-1494959764136-6be9eb3c261e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
+
+  final String urlUser =
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80';
+
+  PageController _controller;
 
   Widget _backButton(BuildContext context) {
     return Positioned(
@@ -11,7 +23,8 @@ class ProfilePage extends StatelessWidget {
       left: 10,
       child: IconButton(
         icon: Icon(
-          Icons.arrow_back_ios,color: Colors.white,
+          Icons.arrow_back_ios,
+          color: Colors.white,
         ),
         onPressed: () => Navigator.of(context).pop(),
       ),
@@ -23,8 +36,29 @@ class ProfilePage extends StatelessWidget {
       height: size.height * 0.3,
       width: size.width,
       child: ColorFiltered(
-        colorFilter: ColorFilter.mode(Colors.grey[100], BlendMode.colorBurn),
-        child: Image.network(url, fit: BoxFit.fill)
+          colorFilter: ColorFilter.mode(Colors.grey[100], BlendMode.colorBurn),
+          child: Image.network(url, fit: BoxFit.fill)),
+    );
+  }
+
+  Widget _singleAddress(int index) {
+    return Card(
+      elevation: 3,
+      child: ListTile(
+        title: Text('Address'),
+        dense: false,
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('More details'),
+            Text('Even more details'),
+          ],
+        ),
+        isThreeLine: true,
+        trailing: IconButton(
+          icon: Icon(Icons.edit_location, color: Theme.of(context).primaryColor,),
+          onPressed: () => print('I want to edit this address'),
+        ),
       ),
     );
   }
@@ -37,9 +71,35 @@ class ProfilePage extends StatelessWidget {
         height: size.height * 0.7,
         width: size.width,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            SizedBox(
+              height: size.height * 0.18,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Delivery Address',
+                  style: boldOutlineBlack,
+                ),
+                IconButton(
+                  icon: Icon(Icons.add_location),
+                  onPressed: () => print('I want to add an address'),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: size.height * 0.2,
+              width: double.infinity,
+              child: PageView.builder(
+                controller: _controller,
+                itemBuilder: (context, index) => _singleAddress(index),
+              ),
+            )
           ],
         ),
       ),
@@ -54,29 +114,57 @@ class ProfilePage extends StatelessWidget {
       child: Align(
         alignment: Alignment.center,
         child: Card(
-          elevation: 12,
+          elevation: 15,
           child: Container(
             height: size.height * 0.3,
             width: size.width,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                SizedBox(height: 5,),
-                Text('Mark Carlton'),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Mark Carlton',
+                  style: headerOutlineBlack,
+                  textAlign: TextAlign.center,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Text('4.3'),
-                        Text('Rating')
-                      ],
+                    FlatButton(
+                      onPressed: () => print('I want to view my ratings'),
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            '4.3',
+                            style: boldOutlineBlack,
+                          ),
+                          Text(
+                            'Rating',
+                            style: normalOutlineBlack,
+                          )
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: <Widget>[
-                        Text('2'),
-                        Text('Reviews')
-                      ],
+                    FlatButton(
+                      onPressed: () => Navigator.of(context).push(SlideLeftTransition(
+                        page: OrderHistory()
+                      )),
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            '2',
+                            style: boldOutlineBlack,
+                          ),
+                          Text(
+                            'Orders',
+                            style: normalOutlineBlack,
+                          )
+                        ],
+                      ),
                     )
                   ],
                 )
@@ -98,6 +186,18 @@ class ProfilePage extends StatelessWidget {
         radius: size.width * 0.14,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController(initialPage: 0, viewportFraction: 0.9);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

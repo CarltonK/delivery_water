@@ -31,12 +31,14 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
             height: 40,
             child: TabBar(
               controller: controller,
+              indicatorColor: Theme.of(context).primaryColor,
               labelPadding: EdgeInsets.all(8),
+              indicatorWeight: 2,
               onTap: (value) {
                 setState(() {
                   _selectedPage = value;
                   _pageController.animateToPage(_selectedPage,
-                      duration: Duration(milliseconds: 200),
+                      duration: Duration(milliseconds: 100),
                       curve: Curves.ease);
                 });
               },

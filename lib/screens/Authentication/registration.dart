@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:water_del/screens/authentication/pre_login.dart';
+import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/global/social_buttons.dart';
 import 'package:water_del/utilities/styles.dart';
 
@@ -57,7 +59,7 @@ class SignUpPage extends StatelessWidget {
     );
   }
 
-  Widget _registerButton() {
+  Widget _registerButton(BuildContext context) {
     return Positioned(
         bottom: 20,
         right: 15,
@@ -65,13 +67,15 @@ class SignUpPage extends StatelessWidget {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12), color: Colors.pink[200]),
+              borderRadius: BorderRadius.circular(12),
+              color: Theme.of(context).primaryColor),
           child: IconButton(
             icon: Icon(
               Icons.arrow_forward_ios,
               color: Colors.white,
             ),
-            onPressed: () => print('I want to register now'),
+            onPressed: () => Navigator.of(context)
+                .push(SlideRightTransition(page: PreLogin())),
           ),
         ));
   }
@@ -110,7 +114,7 @@ class SignUpPage extends StatelessWidget {
               ],
             ),
           ),
-          _registerButton()
+          _registerButton(context)
         ],
       ),
     );

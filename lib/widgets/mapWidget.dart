@@ -21,10 +21,10 @@ class _MapWidgetState extends State<MapWidget> {
   Widget build(BuildContext context) {
     var lat = widget.coordinates['lat'];
     var lon = widget.coordinates['lon'];
-
     return GoogleMap(
         onMapCreated: _onMapCreated,
+        zoomControlsEnabled: false,
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 12));
+            CameraPosition(target: LatLng(lat, lon), zoom: 14));
   }
 }

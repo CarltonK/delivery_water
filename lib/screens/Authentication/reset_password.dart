@@ -42,26 +42,25 @@ class ResetPassword extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.light,
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
             child: Container(
               height: size.height,
               width: size.width,
-              padding: EdgeInsets.fromLTRB(30, 5, 30, 0),
+              padding: EdgeInsets.fromLTRB(30, 40, 30, 0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: 200,
-                    width: 200,
+                    height: 150,
+                    width: 150,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.grey[200]),
                   ),
                   SizedBox(
-                    height: 35,
+                    height: 30,
                   ),
                   Text(
                     'Forgot Password?',

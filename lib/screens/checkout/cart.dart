@@ -124,7 +124,8 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
             RaisedButton(
-              onPressed: () => Navigator.of(context).push(ScaleRoute(page: FinalCheckout())),
+              onPressed: () =>
+                  Navigator.of(context).push(ScaleRoute(page: FinalCheckout())),
               color: Colors.blue,
               padding: EdgeInsets.all(8),
               shape: RoundedRectangleBorder(

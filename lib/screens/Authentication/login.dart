@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:water_del/screens/Authentication/reset_password.dart';
-import 'package:water_del/screens/checkout/cart.dart';
+import 'package:water_del/screens/authentication/reset_password.dart';
 import 'package:water_del/screens/home/home_main.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/global/social_buttons.dart';
@@ -58,13 +57,14 @@ class LoginPage extends StatelessWidget {
           width: 60,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.blueAccent[200].withOpacity(0.7)),
+              color: Theme.of(context).primaryColor),
           child: IconButton(
             icon: Icon(
               Icons.arrow_forward_ios,
               color: Colors.white,
             ),
-            onPressed: () => Navigator.of(context).push(SlideRightTransition(page: HomeMain())),
+            onPressed: () => Navigator.of(context)
+                .push(SlideRightTransition(page: HomeMain())),
           ),
         ));
   }
@@ -74,7 +74,7 @@ class LoginPage extends StatelessWidget {
         bottom: 20,
         child: FlatButton(
             onPressed: () => Navigator.of(context)
-                .push(SlideRightTransition(page: CartScreen())),
+                .push(SlideRightTransition(page: ResetPassword())),
             child: Text(
               'Forgot Password ?',
               style: normalOutlineBlack,

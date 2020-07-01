@@ -5,10 +5,13 @@ final boldOutlineBlack = GoogleFonts.montserrat(
     color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold);
 
 final normalOutlineBlack =
-    GoogleFonts.montserrat(color: Colors.black54, fontSize: 16);
+    GoogleFonts.montserrat(color: Colors.black, fontSize: 16);
 
-final headerOutlineBlack =
-    GoogleFonts.montserrat(fontSize: 28, letterSpacing: 1, color: Colors.black);
+final normalOutlineWhite =
+    GoogleFonts.montserrat(color: Colors.white, fontSize: 16);
+
+final headerOutlineBlack = GoogleFonts.montserrat(
+    fontSize: 28, letterSpacing: .7, color: Colors.black);
 
 final subheaderOutlineBlack =
     GoogleFonts.montserrat(fontSize: 22, letterSpacing: 1, color: Colors.black);

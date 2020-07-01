@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Naqua',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        accentColor: Colors.pink[200],
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MainAuthentication(),
