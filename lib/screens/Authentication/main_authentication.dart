@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/screens/authentication/login.dart';
 import 'package:water_del/screens/authentication/registration.dart';
+import 'package:water_del/screens/home/home_main.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class MainAuthentication extends StatefulWidget {
@@ -68,8 +71,46 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    _pageController.dispose();
+    SignUpPage.passwording.clear();
+    SignUpPage.confirmPass.clear();
+    SignUpPage.passwording.dispose();
+    SignUpPage.confirmPass.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider.instance(),
+      child: Consumer(
+        builder: (context, AuthProvider value, child) {
+          if (value.status == Status.Authenticated) {
+            return HomeMain();
+          } else {
+            return Home(
+              size: size,
+              bar: _appBar(),
+              body: _pageSelection(),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  final Size size;
+  final Widget bar;
+  final Widget body;
+  Home({@required this.size, @required this.bar, @required this.body});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -79,10 +120,14 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
           width: size.width,
           padding: EdgeInsets.fromLTRB(20, 40, 10, 0),
           child: Column(
-            children: <Widget>[_appBar(), _pageSelection()],
+            children: <Widget>[bar, body],
           ),
         ),
       ),
     );
   }
 }
+
+/*
+
+*/

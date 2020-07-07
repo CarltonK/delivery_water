@@ -9,6 +9,7 @@ class Locate {
   }
 
   //Get co-ordinates of device
+  // ignore: missing_return
   Future<Map<String, dynamic>> getCoordinates() async {
     //Check if the permission is granted
     try {
@@ -26,9 +27,9 @@ class Locate {
           LocationData location;
           location = await _locationService.getLocation();
           var lat = location.latitude;
-          print('Lat - $lat');
+          // print('Lat - $lat');
           var lon = location.longitude;
-          print('Lon - $lon');
+          // print('Lon - $lon');
           Map<String, dynamic> coords = {'lat': lat, 'lon': lon};
           return coords;
         }

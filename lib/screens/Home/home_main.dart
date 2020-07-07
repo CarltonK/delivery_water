@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
+import 'package:provider/provider.dart';
+import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/screens/home/profilePage.dart';
 import 'package:water_del/services/location_file.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
@@ -22,8 +23,8 @@ class _HomeMainState extends State<HomeMain> {
 
   Widget _pageView(Size size) {
     return Container(
-      height: double.infinity,
-      width: double.infinity,
+      height: size.height,
+      width: size.width,
       child: FutureBuilder<Map<String, dynamic>>(
         future: coord,
         builder: (context, snapshot) {
@@ -52,46 +53,10 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
-  Widget popupTime() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(12)),
-      child: PopupMenuButton(
-        tooltip: 'Time',
-        itemBuilder: (context) {
-          var list = List<PopupMenuEntry<Object>>();
-          list.add(PopupMenuItem(
-            child: Text('Delivery Time'),
-            value: 1,
-          ));
-          list.add(
-            PopupMenuDivider(
-              height: 10,
-            ),
-          );
-          list.add(
-            CheckedPopupMenuItem(
-              child: Text(
-                "Now",
-                style: normalOutlineBlack,
-              ),
-              value: 2,
-              checked: true,
-            ),
-          );
-          return list;
-        },
-        offset: Offset(0, 100),
-        icon: Icon(CupertinoIcons.clock_solid),
-      ),
-    );
-  }
-
   Widget popupPlace() {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.5),
+          color: Colors.blue.withOpacity(0.4),
           borderRadius: BorderRadius.circular(12)),
       child: PopupMenuButton(
         tooltip: 'Place',
@@ -129,13 +94,7 @@ class _HomeMainState extends State<HomeMain> {
         top: 40,
         left: 10,
         child: Row(
-          children: <Widget>[
-            popupTime(),
-            SizedBox(
-              width: 5,
-            ),
-            popupPlace()
-          ],
+          children: <Widget>[popupPlace()],
         ));
   }
 
@@ -144,15 +103,20 @@ class _HomeMainState extends State<HomeMain> {
       top: 40,
       right: 10,
       child: GestureDetector(
-        onTap: () => Navigator.of(context)
-            .push(SlideLeftTransition(page: ProfilePage())),
+        onTap: () {
+          Navigator.of(context).push(SlideLeftTransition(page: ProfilePage()));
+        },
         child: Container(
           height: 48,
           width: 48,
           decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.5), shape: BoxShape.circle),
-          padding: EdgeInsets.all(8),
-          child: FlutterLogo(),
+              color: Colors.blue.withOpacity(0.4), shape: BoxShape.circle),
+          child: Center(
+            child: Icon(
+              CupertinoIcons.person_solid,
+              size: 30,
+            ),
+          ),
         ),
       ),
     );
@@ -241,13 +205,17 @@ class _HomeMainState extends State<HomeMain> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: Stack(
-          children: <Widget>[
-            _pageView(size),
-            _appBarItems(),
-            _profilePage(),
-            _bottomSelection()
-          ],
+        child: Container(
+          height: size.height,
+          width: size.width,
+          child: Stack(
+            children: <Widget>[
+              _pageView(size),
+              _appBarItems(),
+              _profilePage(),
+              _bottomSelection()
+            ],
+          ),
         ),
       ),
     );

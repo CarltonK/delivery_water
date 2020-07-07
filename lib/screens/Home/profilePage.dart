@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/screens/home/orderhistory.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
@@ -31,6 +33,24 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Widget _exitButton(BuildContext context) {
+    return Positioned(
+      top: 30,
+      right: 10,
+      child: IconButton(
+        tooltip: 'Logout',
+        icon: Icon(
+          Icons.exit_to_app,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          AuthProvider.instance().logout();
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
   Widget _imageBackground(Size size) {
     return Container(
       height: size.height * 0.3,
@@ -56,7 +76,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         isThreeLine: true,
         trailing: IconButton(
-          icon: Icon(Icons.edit_location, color: Theme.of(context).primaryColor,),
+          icon: Icon(
+            Icons.edit_location,
+            color: Theme.of(context).primaryColor,
+          ),
           onPressed: () => print('I want to edit this address'),
         ),
       ),
@@ -149,9 +172,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     FlatButton(
-                      onPressed: () => Navigator.of(context).push(SlideLeftTransition(
-                        page: OrderHistory()
-                      )),
+                      onPressed: () => Navigator.of(context)
+                          .push(SlideLeftTransition(page: OrderHistory())),
                       padding: EdgeInsets.all(8),
                       child: Column(
                         children: <Widget>[
@@ -203,7 +225,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -213,6 +234,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             _imageBackground(size),
             _backButton(context),
+            _exitButton(context),
             _pageBody(size),
             _cardUser(size),
             _userDp(size)

@@ -1,8 +1,6 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
-import 'package:water_del/screens/checkout/cart.dart';
-import 'package:water_del/screens/checkout/finalCheckout.dart';
-import 'package:water_del/screens/home/home_main.dart';
-import 'package:water_del/screens/home/supplier.dart';
 import 'package:water_del/screens/authentication/main_authentication.dart';
 
 void main() {
@@ -10,18 +8,20 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  final FirebaseAnalytics analytics = FirebaseAnalytics();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Naqua',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.pink[200],
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MainAuthentication(),
-    );
+          debugShowCheckedModeBanner: false,
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: analytics),
+          ],
+          title: 'Naqua',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            accentColor: Colors.pink[200],
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: MainAuthentication());
   }
 }

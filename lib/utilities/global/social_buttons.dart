@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:water_del/provider/auth_provider.dart';
 
 class SocialButtons extends StatelessWidget {
   //Social Buttons
@@ -35,7 +36,9 @@ class SocialButtons extends StatelessWidget {
             width: 10,
           ),
           _buildSocialBtn(
-            () {},
+            () {
+              AuthProvider.instance().signInWithGoogle();
+            },
             AssetImage(
               'assets/logos/google.png',
             ),

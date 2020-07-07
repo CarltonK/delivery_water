@@ -1,6 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isSupplier(uid) {
+      return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientstatus == false
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
@@ -8,7 +13,11 @@ service cloud.firestore {
       allow read: if true;
     }
     match /users/{userId} {
-      allow write: if (request.auth.uid == userId);
+      allow read, write: if (request.auth.uid == userId);
+      //Only write a product if supplier
+      match /products/{productId} {
+        allow write: if isSupplier(userId)
+      }
     }
     match /rides/{rideId} {
       //Only a client can create

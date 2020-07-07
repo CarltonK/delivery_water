@@ -8,7 +8,7 @@ const myAuth = {uid: myID, email: "abc@gmail.com"}
 const theirAuth = {uid: theirID, email: "xyz@gmail.com"}
 
 function getFirestore(auth) {
-    return firebase.initializeTestApp({projectId: PROJECT_ID, auth: myAuth}).firestore();
+    return firebase.initializeTestApp({projectId: PROJECT_ID, auth: auth}).firestore();
 }
 
 function getAdminFirestore() {
@@ -34,16 +34,21 @@ describe('Naqua', () => {
         await firebase.assertSucceeds(testDoc.get())
     })
 
+    it("Can't read a user document if user is not owner", async () => {
+        const db = getFirestore(theirAuth);
+        const userDoc = db.collection('users').doc(myID)
+        await firebase.assertFails(userDoc.get())
+    })
+
     it("Can't write a user document if user is not signed in", async () => {
-        const db = firebase.initializeTestApp({projectId: PROJECT_ID}).firestore();
-        const testDoc = db.collection('users').doc('user_abc');
+        const db = getFirestore(null);
+        const testDoc = db.collection('users').doc(myID);
         await firebase.assertFails(testDoc.set({foo: "bar"}))
     })
 
     it("Can't write a user document if user is not the owner", async () => {
-        const auth = {uid: "user_abc", email: "abc@gmail.com"}
-        const db = firebase.initializeTestApp({projectId: PROJECT_ID, auth: auth}).firestore();
-        const testDoc = db.collection('users').doc(theirID);
+        const db = getFirestore(theirAuth);
+        const testDoc = db.collection('users').doc(myID);
         await firebase.assertFails(testDoc.set({foo: "bar"}))
     })
 
@@ -81,7 +86,7 @@ describe('Naqua', () => {
         const admin = getAdminFirestore();
         const rideId = "ride_one";
         const setupDoc = admin.collection('rides').doc(rideId);
-        await setupDoc.set({client: myID, rideId: theirID})
+        await setupDoc.set({client: myID, rider: theirID})
 
         const db = getFirestore(myAuth)
         const testDoc = db.collection('rides').doc(rideId);
@@ -89,13 +94,39 @@ describe('Naqua', () => {
     })
 
     it("Can update a ride document if user is rider", async () => {
+        const admin = getAdminFirestore();
+        const rideId = "ride_one";
+        const setupDoc = admin.collection('rides').doc(rideId);
+        await setupDoc.set({client: myID, rider: theirID})
+        
         const db = getFirestore(theirAuth)
-        const testDoc = db.collection('rides').doc("ride_two");
+        const testDoc = db.collection('rides').doc("ride_one");
         await firebase.assertSucceeds(testDoc.update({status: false}))
+    })
+
+    it("Can't allow a client to write a product", async () => {
+        const db = getFirestore(myAuth)
+
+        const clientDoc = db.collection('users').doc(myID)
+        await clientDoc.set({clientstatus: true})
+
+        const productDoc = db.collection('users').doc(myID).collection('products').doc('product_one')
+        await firebase.assertFails(productDoc.set({id: 'someId'}))
+    })
+
+
+    it("Can allow a supplier to write a product", async () => {
+        const db = getFirestore(myAuth)
+
+        const clientDoc = db.collection('users').doc(myID)
+        await clientDoc.set({clientstatus: false})
+
+        const productDoc = db.collection('users').doc(myID).collection('products').doc('product_one')
+        await firebase.assertSucceeds(productDoc.set({id: 'someId'}))
     })
 
 })
 
-// after(async () => {
-//     await firebase.clearFirestoreData({projectId: PROJECT_ID});
-// });
+after(async () => {
+    await firebase.clearFirestoreData({projectId: PROJECT_ID});
+});
