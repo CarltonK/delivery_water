@@ -10,7 +10,7 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /private/{docId} {
-      allow read: if true;
+      allow read, write: if false;
     }
     match /users/{userId} {
       allow read, write: if (request.auth.uid == userId);
@@ -28,6 +28,9 @@ service cloud.firestore {
       //Only riders and clients can query
       allow read: if resource.data.client == request.auth.uid 
         || resource.data.rider == request.auth.uid;
+      //Only clients can delete(cancel) a ride if the ride status is not true
+      allow delete: if resource.data.client == request.auth.uid
+        && resource.data.ridestatus != true
     }
   }
 }

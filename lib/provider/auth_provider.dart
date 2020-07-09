@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:water_del/models/userModel.dart';
@@ -8,6 +9,7 @@ enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class AuthProvider with ChangeNotifier {
   final Firestore db = Firestore.instance;
+  final FirebaseMessaging fcm = FirebaseMessaging();
   final FirebaseAuth auth;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseUser currentUser;
@@ -39,10 +41,7 @@ class AuthProvider with ChangeNotifier {
     try {
       AuthResult result = await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
-
       currentUser = result.user;
-
-      //Get the uid
       String uid = currentUser.uid;
 
       // //Log an Analytics Event signalling SIGN UP
@@ -74,9 +73,9 @@ class AuthProvider with ChangeNotifier {
   Future saveUser(UserModel user, String uid) async {
     //Remove password from user class and replace with null
     user.password = null;
-    //Set uid to user model
     user.uid = uid;
     try {
+      user.token = await fcm.getToken();
       await db.collection("users").document(uid).setData(user.toFirestore());
     } catch (e) {
       print("saveUser ERROR -> ${e.toString()}");
@@ -100,6 +99,8 @@ class AuthProvider with ChangeNotifier {
       if (emailVerificationStatus) {
         return Future.value(currentUser);
       } else {
+        _status = Status.Unauthenticated;
+        notifyListeners();
         return 'Please verify your email. We sent you an email earlier';
       }
     } catch (e) {
@@ -180,7 +181,11 @@ class AuthProvider with ChangeNotifier {
       final AuthResult authResult = await auth.signInWithCredential(credential);
       final FirebaseUser user = authResult.user;
 
-      UserModel model = new UserModel(email: user.email, password: null);
+      UserModel model = new UserModel(
+          email: user.email,
+          password: null,
+          fullName: user.displayName
+      );
 
       await saveUser(model, user.uid);
 

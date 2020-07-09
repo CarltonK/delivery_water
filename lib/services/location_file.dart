@@ -1,4 +1,5 @@
 import 'package:location/location.dart';
+import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/services/permission_file.dart';
 
 class Locate {
@@ -10,13 +11,14 @@ class Locate {
 
   //Get co-ordinates of device
   // ignore: missing_return
-  Future<Map<String, dynamic>> getCoordinates() async {
+  Future<LocationModel> getCoordinates() async {
     //Check if the permission is granted
+    LocationModel userLocation;
+    Location _locationService = Location();
     try {
       var status = await _permissionsService.requestLocationPermission();
       if (status == true) {
         //If the location is granted. Check if the GPS is on
-        Location _locationService = Location();
         //Show the GPS dialog
         bool status = await _locationService.requestService();
         //If the GPS is on, get the location data
@@ -26,12 +28,14 @@ class Locate {
           //Get Location Data
           LocationData location;
           location = await _locationService.getLocation();
-          var lat = location.latitude;
-          // print('Lat - $lat');
-          var lon = location.longitude;
-          // print('Lon - $lon');
-          Map<String, dynamic> coords = {'lat': lat, 'lon': lon};
-          return coords;
+          userLocation = LocationModel(
+            latitude: location.latitude,
+            longitude: location.longitude
+          );
+          return userLocation;
+        }
+        else {
+          await _locationService.requestService();
         }
       } else {
         //Executed if permission is not granted

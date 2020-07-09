@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
+import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/home/profilePage.dart';
 import 'package:water_del/services/location_file.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
@@ -17,41 +19,39 @@ class HomeMain extends StatefulWidget {
 }
 
 class _HomeMainState extends State<HomeMain> {
-  Future coord;
-  Locate _locate = new Locate();
   PageController _controller;
 
-  Widget _pageView(Size size) {
-    return Container(
-      height: size.height,
-      width: size.width,
-      child: FutureBuilder<Map<String, dynamic>>(
-        future: coord,
-        builder: (context, snapshot) {
-          print(snapshot.data);
-          switch (snapshot.connectionState) {
-            case ConnectionState.active:
-            case ConnectionState.none:
-              return Text('None');
-            case ConnectionState.waiting:
-              return SpinKitWave(
-                color: Colors.blue[800].withOpacity(0.6),
-                size: size.height * 0.25,
-                type: SpinKitWaveType.center,
-              );
-            case ConnectionState.done:
-              return MapWidget(coordinates: snapshot.data);
-            default:
-              return SpinKitWave(
-                color: Colors.blue[800].withOpacity(0.6),
-                size: size.height * 0.25,
-                type: SpinKitWaveType.center,
-              );
-          }
-        },
-      ),
-    );
-  }
+  // Widget _pageView(Size size) {
+  //   return Container(
+  //     height: size.height,
+  //     width: size.width,
+  //     child: FutureBuilder<Map<String, dynamic>>(
+  //       future: coord,
+  //       builder: (context, snapshot) {
+  //         // print(snapshot.data);
+  //         switch (snapshot.connectionState) {
+  //           case ConnectionState.active:
+  //           case ConnectionState.none:
+  //             return Text('None');
+  //           case ConnectionState.waiting:
+  //             return SpinKitWave(
+  //               color: Colors.blue[800].withOpacity(0.6),
+  //               size: size.height * 0.25,
+  //               type: SpinKitWaveType.center,
+  //             );
+  //           case ConnectionState.done:
+  //             return MapWidget(coordinates: snapshot.data);
+  //           default:
+  //             return SpinKitWave(
+  //               color: Colors.blue[800].withOpacity(0.6),
+  //               size: size.height * 0.25,
+  //               type: SpinKitWaveType.center,
+  //             );
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
 
   Widget popupPlace() {
     return Container(
@@ -143,7 +143,7 @@ class _HomeMainState extends State<HomeMain> {
         shadowColor: Colors.grey[50],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Container(
-          height: 180,
+          height: 120,
           width: 120,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
@@ -156,7 +156,7 @@ class _HomeMainState extends State<HomeMain> {
             children: <Widget>[
               Image.asset(
                 listMainItems[index].imgUrl,
-                height: 150,
+                height: 105,
                 fit: BoxFit.contain,
               ),
               Text(
@@ -176,7 +176,7 @@ class _HomeMainState extends State<HomeMain> {
       left: 5,
       right: 5,
       child: Container(
-        height: 200,
+        height: 140,
         child: PageView.builder(
           controller: _controller,
           itemCount: listMainItems.length,
@@ -189,7 +189,6 @@ class _HomeMainState extends State<HomeMain> {
   @override
   void initState() {
     super.initState();
-    coord = _locate.getCoordinates();
     _controller = PageController(initialPage: 0, viewportFraction: 0.5);
   }
 
@@ -202,22 +201,23 @@ class _HomeMainState extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var userLocation = Provider.of<LocationModel>(context);
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Container(
-          height: size.height,
-          width: size.width,
-          child: Stack(
-            children: <Widget>[
-              _pageView(size),
-              _appBarItems(),
-              _profilePage(),
-              _bottomSelection()
-            ],
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: Container(
+            height: size.height,
+            width: size.width,
+            child: Stack(
+              children: <Widget>[
+                MapWidget(),
+                _appBarItems(),
+                _profilePage(),
+                _bottomSelection()
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

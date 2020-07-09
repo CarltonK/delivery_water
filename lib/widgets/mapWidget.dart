@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:water_del/models/locationModel.dart';
 
 class MapWidget extends StatefulWidget {
-  final Map<String, dynamic> coordinates;
-
+  final LocationModel coordinates;
   MapWidget({@required this.coordinates});
   @override
   _MapWidgetState createState() => _MapWidgetState();
@@ -19,12 +19,12 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var lat = widget.coordinates['lat'];
-    var lon = widget.coordinates['lon'];
     return GoogleMap(
         onMapCreated: _onMapCreated,
         zoomControlsEnabled: false,
-        initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 14));
+        initialCameraPosition: CameraPosition(
+            target: LatLng(
+                widget.coordinates.latitude, widget.coordinates.longitude),
+            zoom: 15));
   }
 }

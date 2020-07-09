@@ -22,17 +22,18 @@ before(async () => {
 
 describe('Naqua', () => {
 
-    it("Can't write items in the read-only collection", async () => {
+    it("Can't write items in the private collection", async () => {
         const db = getFirestore(null);
         const testDoc = db.collection('private').doc('testDoc')
         await firebase.assertFails(testDoc.set({foo: "bar"}))
     })
 
-    it('Can read items in the read-only collection', async () => {
+    it("Can't read items from the private collection", async () => {
         const db = getFirestore(null);
         const testDoc = db.collection('private').doc('testDoc')
-        await firebase.assertSucceeds(testDoc.get())
+        await firebase.assertFails(testDoc.get())
     })
+
 
     it("Can't read a user document if user is not owner", async () => {
         const db = getFirestore(theirAuth);
@@ -87,7 +88,6 @@ describe('Naqua', () => {
         const rideId = "ride_one";
         const setupDoc = admin.collection('rides').doc(rideId);
         await setupDoc.set({client: myID, rider: theirID})
-
         const db = getFirestore(myAuth)
         const testDoc = db.collection('rides').doc(rideId);
         await firebase.assertSucceeds(testDoc.update({status: true}))
@@ -104,12 +104,30 @@ describe('Naqua', () => {
         await firebase.assertSucceeds(testDoc.update({status: false}))
     })
 
+    it("Can allow a client to delete a ride if ride status is false", async () => {
+        const db = getFirestore(myAuth)
+        const testDoc = db.collection('rides').doc('ride_three')
+        await testDoc.set({client: myID, ridestatus: false})
+        await firebase.assertSucceeds(testDoc.delete())
+    })
+
+    it("Can't allow a client to delete a ride if ride status is true", async () => {
+        const db = getFirestore(myAuth)
+        const testDoc = db.collection('rides').doc('ride_three')
+        await testDoc.set({client: myID, ridestatus: true})
+        await firebase.assertFails(testDoc.delete())
+    })
+
+    it("Can't allow a rider to delete a ride", async () => {
+        const db = getFirestore(theirAuth)
+        const testDoc = db.collection('rides').doc('ride_one')
+        await firebase.assertFails(testDoc.delete())
+    })
+
     it("Can't allow a client to write a product", async () => {
         const db = getFirestore(myAuth)
-
         const clientDoc = db.collection('users').doc(myID)
         await clientDoc.set({clientstatus: true})
-
         const productDoc = db.collection('users').doc(myID).collection('products').doc('product_one')
         await firebase.assertFails(productDoc.set({id: 'someId'}))
     })
@@ -117,10 +135,8 @@ describe('Naqua', () => {
 
     it("Can allow a supplier to write a product", async () => {
         const db = getFirestore(myAuth)
-
         const clientDoc = db.collection('users').doc(myID)
         await clientDoc.set({clientstatus: false})
-
         const productDoc = db.collection('users').doc(myID).collection('products').doc('product_one')
         await firebase.assertSucceeds(productDoc.set({id: 'someId'}))
     })

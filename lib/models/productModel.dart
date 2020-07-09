@@ -17,4 +17,12 @@ ProductModel cartWater = ProductModel(
 ProductModel tankedWater = ProductModel(
     title: 'Tanker', imgUrl: 'assets/images/tanker.png', selected: true);
 
-List<ProductModel> listMainItems = [bottledWater, cartWater, tankedWater];
+ProductModel exhausterService = ProductModel(
+    title: 'Exhauster', imgUrl: 'assets/images/tanker.png', selected: true);
+
+List<ProductModel> listMainItems = [
+  bottledWater,
+  cartWater,
+  tankedWater,
+  exhausterService
+];

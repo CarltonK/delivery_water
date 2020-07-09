@@ -8,24 +8,36 @@ class UserModel {
   final Timestamp registerDate = Timestamp.now();
   String uid;
   String password;
+  String token;
+  String phone;
 
   UserModel(
-      {this.fullName, this.email, this.addresses, this.uid, this.password});
+      {this.fullName,
+      this.email,
+      this.addresses,
+      this.uid,
+      this.password,
+      this.phone,
+      this.token});
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     return UserModel(
-        fullName: data['fullName'] ?? 'null',
-        email: data['email'] ?? 'null',
+        fullName: data['fullName'] ?? null,
+        email: data['email'] ?? null,
         addresses: data['addresses'],
-        uid: data['uid'] ?? 'null');
+        token: data['token'] ?? null,
+        phone: data['phone'] ?? null,
+        uid: data['uid'] ?? null);
   }
 
   Map<String, dynamic> toFirestore() => {
         'fullName': fullName,
         'email': email,
         'addresses': addresses,
+        'phone': phone,
         'registerDate': registerDate,
-        'uid': uid
+        'uid': uid,
+        'token': token
       };
 }
