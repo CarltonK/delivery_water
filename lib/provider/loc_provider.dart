@@ -32,18 +32,18 @@ class LocationProvider {
         location.requestService().then((value) {
           if (value) {
             location
-              .changeSettings(
-                  accuracy: LocationAccuracy.BALANCED, interval: 100)
-              .then((value) {
-                //listen to location change stream
-                location.onLocationChanged().listen((locationData) {
-                  if (locationData != null) {
-                    _locationController.add(LocationModel(
-                        latitude: locationData.latitude,
-                        longitude: locationData.longitude));
-                  }
-                });
+                .changeSettings(
+                    accuracy: LocationAccuracy.BALANCED, interval: 100)
+                .then((value) {
+              //listen to location change stream
+              location.onLocationChanged().listen((locationData) {
+                if (locationData != null) {
+                  _locationController.add(LocationModel(
+                      latitude: locationData.latitude,
+                      longitude: locationData.longitude));
+                }
               });
+            });
           }
         });
       }

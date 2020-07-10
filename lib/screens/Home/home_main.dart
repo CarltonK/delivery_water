@@ -7,7 +7,6 @@ import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/home/profilePage.dart';
-import 'package:water_del/services/location_file.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/productModel.dart';
@@ -20,38 +19,7 @@ class HomeMain extends StatefulWidget {
 
 class _HomeMainState extends State<HomeMain> {
   PageController _controller;
-
-  // Widget _pageView(Size size) {
-  //   return Container(
-  //     height: size.height,
-  //     width: size.width,
-  //     child: FutureBuilder<Map<String, dynamic>>(
-  //       future: coord,
-  //       builder: (context, snapshot) {
-  //         // print(snapshot.data);
-  //         switch (snapshot.connectionState) {
-  //           case ConnectionState.active:
-  //           case ConnectionState.none:
-  //             return Text('None');
-  //           case ConnectionState.waiting:
-  //             return SpinKitWave(
-  //               color: Colors.blue[800].withOpacity(0.6),
-  //               size: size.height * 0.25,
-  //               type: SpinKitWaveType.center,
-  //             );
-  //           case ConnectionState.done:
-  //             return MapWidget(coordinates: snapshot.data);
-  //           default:
-  //             return SpinKitWave(
-  //               color: Colors.blue[800].withOpacity(0.6),
-  //               size: size.height * 0.25,
-  //               type: SpinKitWaveType.center,
-  //             );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
+  var userCurrent;
 
   Widget popupPlace() {
     return Container(
@@ -104,7 +72,10 @@ class _HomeMainState extends State<HomeMain> {
       right: 10,
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(SlideLeftTransition(page: ProfilePage()));
+          Navigator.of(context).push(SlideLeftTransition(
+              page: ProfilePage(
+            user: userCurrent,
+          )));
         },
         child: Container(
           height: 48,
@@ -176,7 +147,7 @@ class _HomeMainState extends State<HomeMain> {
       left: 5,
       right: 5,
       child: Container(
-        height: 140,
+        height: 150,
         child: PageView.builder(
           controller: _controller,
           itemCount: listMainItems.length,
@@ -198,26 +169,44 @@ class _HomeMainState extends State<HomeMain> {
     super.dispose();
   }
 
+  Widget baseMap() {
+    return StreamBuilder<LocationModel>(
+      stream: LocationProvider().locationStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MapWidget(
+            coordinates: snapshot.data,
+          );
+        }
+        return Center(
+            child: SpinKitFoldingCube(
+          size: 150,
+          color: Theme.of(context).primaryColor,
+        ));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var userLocation = Provider.of<LocationModel>(context);
+    userCurrent = Provider.of<AuthProvider>(context).currentUser;
     return Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: Container(
-            height: size.height,
-            width: size.width,
-            child: Stack(
-              children: <Widget>[
-                MapWidget(),
-                _appBarItems(),
-                _profilePage(),
-                _bottomSelection()
-              ],
-            ),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Container(
+          height: size.height,
+          width: size.width,
+          child: Stack(
+            children: <Widget>[
+              baseMap(),
+              _appBarItems(),
+              _profilePage(),
+              _bottomSelection()
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }

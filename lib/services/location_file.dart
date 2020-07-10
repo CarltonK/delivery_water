@@ -29,12 +29,9 @@ class Locate {
           LocationData location;
           location = await _locationService.getLocation();
           userLocation = LocationModel(
-            latitude: location.latitude,
-            longitude: location.longitude
-          );
+              latitude: location.latitude, longitude: location.longitude);
           return userLocation;
-        }
-        else {
+        } else {
           await _locationService.requestService();
         }
       } else {

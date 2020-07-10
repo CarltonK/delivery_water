@@ -19,12 +19,12 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
+    double lat = widget.coordinates.latitude;
+    double lon = widget.coordinates.longitude;
     return GoogleMap(
         onMapCreated: _onMapCreated,
         zoomControlsEnabled: false,
-        initialCameraPosition: CameraPosition(
-            target: LatLng(
-                widget.coordinates.latitude, widget.coordinates.longitude),
-            zoom: 15));
+        initialCameraPosition:
+            CameraPosition(target: LatLng(lat, lon), zoom: 15));
   }
 }

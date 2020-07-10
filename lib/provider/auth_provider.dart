@@ -182,10 +182,10 @@ class AuthProvider with ChangeNotifier {
       final FirebaseUser user = authResult.user;
 
       UserModel model = new UserModel(
+          photoUrl: user.photoUrl,
           email: user.email,
           password: null,
-          fullName: user.displayName
-      );
+          fullName: user.displayName);
 
       await saveUser(model, user.uid);
 

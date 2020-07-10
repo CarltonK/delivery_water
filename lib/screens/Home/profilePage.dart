@@ -1,11 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:water_del/models/userModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
+import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/screens/home/orderhistory.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class ProfilePage extends StatefulWidget {
+  final FirebaseUser user;
+  ProfilePage({@required this.user});
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -14,10 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
   final String url =
       'https://images.unsplash.com/photo-1494959764136-6be9eb3c261e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
 
-  final String urlUser =
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80';
-
   PageController _controller;
+  DatabaseProvider _databaseProvider = DatabaseProvider();
+  UserModel currentUser;
 
   Widget _backButton(BuildContext context) {
     return Positioned(
@@ -56,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
       height: size.height * 0.3,
       width: size.width,
       child: ColorFiltered(
-          colorFilter: ColorFilter.mode(Colors.grey[100], BlendMode.colorBurn),
+          colorFilter: ColorFilter.mode(Colors.grey[600], BlendMode.colorBurn),
           child: Image.network(url, fit: BoxFit.fill)),
     );
   }
@@ -118,14 +122,80 @@ class _ProfilePageState extends State<ProfilePage> {
             Container(
               height: size.height * 0.2,
               width: double.infinity,
-              child: PageView.builder(
-                controller: _controller,
-                itemBuilder: (context, index) => _singleAddress(index),
-              ),
+              child: currentUser.addresses != null &&
+                      currentUser.addresses.length >= 1
+                  ? PageView.builder(
+                      controller: _controller,
+                      itemBuilder: (context, index) => _singleAddress(index),
+                    )
+                  : Center(
+                      child: Text(
+                      'Press the add button above to add a delivery address',
+                      style: normalOutlineBlack,
+                      textAlign: TextAlign.center,
+                    )),
             )
           ],
         ),
       ),
+    );
+  }
+
+  Widget _userPersonalInfo() {
+    return Column(
+      children: [
+        Text(
+          currentUser.fullName ?? '',
+          style: headerOutlineBlack,
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          currentUser.email,
+          style: normalOutlineBlack,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _userImpactInfo() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        FlatButton(
+          onPressed: () => print('I want to view my ratings'),
+          padding: EdgeInsets.all(8),
+          child: Column(
+            children: <Widget>[
+              Text(
+                currentUser.ratingCount.toStringAsFixed(1),
+                style: boldOutlineBlack,
+              ),
+              Text(
+                'Rating',
+                style: normalOutlineBlack,
+              )
+            ],
+          ),
+        ),
+        FlatButton(
+          onPressed: () => Navigator.of(context)
+              .push(SlideLeftTransition(page: OrderHistory())),
+          padding: EdgeInsets.all(8),
+          child: Column(
+            children: <Widget>[
+              Text(
+                currentUser.orderCount.toString(),
+                style: boldOutlineBlack,
+              ),
+              Text(
+                'Orders',
+                style: normalOutlineBlack,
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -145,51 +215,10 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 SizedBox(
-                  height: 5,
+                  height: 20,
                 ),
-                Text(
-                  'Mark Carlton',
-                  style: headerOutlineBlack,
-                  textAlign: TextAlign.center,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    FlatButton(
-                      onPressed: () => print('I want to view my ratings'),
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            '4.3',
-                            style: boldOutlineBlack,
-                          ),
-                          Text(
-                            'Rating',
-                            style: normalOutlineBlack,
-                          )
-                        ],
-                      ),
-                    ),
-                    FlatButton(
-                      onPressed: () => Navigator.of(context)
-                          .push(SlideLeftTransition(page: OrderHistory())),
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            '2',
-                            style: boldOutlineBlack,
-                          ),
-                          Text(
-                            'Orders',
-                            style: normalOutlineBlack,
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )
+                _userPersonalInfo(),
+                _userImpactInfo()
               ],
             ),
           ),
@@ -199,12 +228,22 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _userDp(Size size) {
+    String url = currentUser.photoUrl;
     return Positioned(
       top: size.height * 0.075,
       left: size.width * 0.35,
       right: size.width * 0.35,
       child: CircleAvatar(
-        backgroundImage: NetworkImage(urlUser),
+        backgroundImage: url != null ? NetworkImage(url) : null,
+        child: url == null
+            ? IconButton(
+                icon: Icon(
+                  Icons.add_a_photo,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: null)
+            : Container(),
         radius: size.width * 0.14,
       ),
     );
@@ -228,19 +267,30 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        height: size.height,
-        width: size.width,
-        child: Stack(
-          children: <Widget>[
-            _imageBackground(size),
-            _backButton(context),
-            _exitButton(context),
-            _pageBody(size),
-            _cardUser(size),
-            _userDp(size)
-          ],
-        ),
-      ),
+          height: size.height,
+          width: size.width,
+          child: StreamBuilder<UserModel>(
+            stream: _databaseProvider.streamUser(widget.user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                currentUser = snapshot.data;
+                return Stack(
+                  children: <Widget>[
+                    _imageBackground(size),
+                    _backButton(context),
+                    _exitButton(context),
+                    _pageBody(size),
+                    _cardUser(size),
+                    _userDp(size)
+                  ],
+                );
+              }
+              return SpinKitDoubleBounce(
+                color: Theme.of(context).primaryColor,
+                size: 150,
+              );
+            },
+          )),
     );
   }
 }
