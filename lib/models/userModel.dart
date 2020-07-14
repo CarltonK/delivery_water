@@ -1,38 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:water_del/models/singleAddress.dart';
 
 class UserModel {
   String fullName;
   String email;
-  List<SingleAddress> addresses;
   final Timestamp registerDate = Timestamp.now();
   String uid;
+  bool clientStatus;
   String password;
   String token;
   String phone;
   var ratingCount;
   int orderCount;
   String photoUrl;
+  Map<String, dynamic> location;
 
   UserModel(
       {this.fullName,
       this.email,
-      this.addresses,
       this.uid,
       this.password,
+      this.clientStatus = true,
       this.phone,
       this.ratingCount = 0,
       this.orderCount = 0,
+      this.location,
       this.photoUrl,
       this.token});
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data;
     return UserModel(
-        fullName: data['fullName'] ?? null,
+        fullName: data['fullName'] ?? '',
         photoUrl: data['photoUrl'],
+        location: data['location'] ?? null,
+        clientStatus: data['clientStatus'],
         email: data['email'] ?? null,
-        addresses: data['addresses'],
         token: data['token'] ?? null,
         orderCount: data['orderCount'] ?? 0,
         ratingCount: data['ratingCount'] ?? 0,
@@ -43,10 +45,11 @@ class UserModel {
   Map<String, dynamic> toFirestore() => {
         'fullName': fullName,
         'email': email,
-        'addresses': addresses,
         'photoUrl': photoUrl,
+        'location': location,
         'phone': phone,
         'registerDate': registerDate,
+        'clientStatus': clientStatus,
         'ratingCount': ratingCount,
         'orderCount': orderCount,
         'uid': uid,

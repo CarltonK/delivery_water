@@ -3,7 +3,18 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function isSupplier(uid) {
-      return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientstatus == false
+      return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientstatus == false;
+    }
+
+    function isOwner(uid) {
+      return request.auth.uid == uid;
+    }
+
+    function isAddressValid(uid) {
+      return isOwner(uid) 
+      && request.resource.data.region != null
+      && request.resource.data.town != null
+      && request.resource.data.address != null;
     }
 
     match /{document=**} {
@@ -13,10 +24,16 @@ service cloud.firestore {
       allow read, write: if false;
     }
     match /users/{userId} {
-      allow read, write: if (request.auth.uid == userId);
+      //A user can do everything apart from delete their profile
+      allow read, create, update: if isOwner(userId);
       //Only write a product if supplier
       match /products/{productId} {
-        allow write: if isSupplier(userId)
+        allow write: if isSupplier(userId);
+      }
+      match /addresses/{address} {
+        allow update, delete: if isOwner(userId);
+        allow create: if isAddressValid(userId);
+        allow read: if isOwner(userId);
       }
     }
     match /rides/{rideId} {
@@ -30,7 +47,7 @@ service cloud.firestore {
         || resource.data.rider == request.auth.uid;
       //Only clients can delete(cancel) a ride if the ride status is not true
       allow delete: if resource.data.client == request.auth.uid
-        && resource.data.ridestatus != true
+        && resource.data.ridestatus != true;
     }
   }
 }

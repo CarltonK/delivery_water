@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:water_del/models/userModel.dart';
+import 'package:water_del/provider/database_provider.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
@@ -13,7 +16,10 @@ class AuthProvider with ChangeNotifier {
   final FirebaseAuth auth;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseUser currentUser;
+  UserModel userModel;
   Status _status = Status.Uninitialized;
+  final Timestamp now = Timestamp.now();
+  DatabaseProvider database = DatabaseProvider();
 
   AuthProvider.instance() : auth = FirebaseAuth.instance {
     auth.onAuthStateChanged.listen(_onAuthStateChanged);
@@ -25,6 +31,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
+      notifyListeners();
     } else {
       currentUser = firebaseUser;
       _status = Status.Authenticated;
@@ -73,6 +80,7 @@ class AuthProvider with ChangeNotifier {
   Future saveUser(UserModel user, String uid) async {
     //Remove password from user class and replace with null
     user.password = null;
+    user.location = null;
     user.uid = uid;
     try {
       user.token = await fcm.getToken();
@@ -97,6 +105,10 @@ class AuthProvider with ChangeNotifier {
       bool emailVerificationStatus = currentUser.isEmailVerified;
 
       if (emailVerificationStatus) {
+        await db
+            .collection('users')
+            .document(user.uid)
+            .updateData({'lastLogin': now});
         return Future.value(currentUser);
       } else {
         _status = Status.Unauthenticated;
@@ -159,14 +171,6 @@ class AuthProvider with ChangeNotifier {
     return Future.delayed(Duration.zero);
   }
 
-  Stream<UserModel> getUserDoc(FirebaseUser user) {
-    return db
-        .collection('users')
-        .document(user.uid)
-        .snapshots()
-        .map((doc) => UserModel.fromFirestore(doc));
-  }
-
   Future<FirebaseUser> signInWithGoogle() async {
     try {
       final GoogleSignInAccount googleSignInAccount =
@@ -184,11 +188,21 @@ class AuthProvider with ChangeNotifier {
       UserModel model = new UserModel(
           photoUrl: user.photoUrl,
           email: user.email,
-          password: null,
           fullName: user.displayName);
+      print(model.toFirestore());
 
-      await saveUser(model, user.uid);
-
+      db.collection('users').document(user.uid).get().then((value) async {
+        if (value.exists) {
+          print('${user.email} already exists');
+          await db
+              .collection('users')
+              .document(user.uid)
+              .updateData({'lastLogin': now});
+        } else {
+          print("Let's create a user document");
+          await saveUser(model, user.uid);
+        }
+      });
       return user;
     } catch (e) {
       print('signInWithGoogle ERROR -> ${e.toString()}');

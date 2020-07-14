@@ -4,9 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/userModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
+import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/home/profilePage.dart';
+import 'package:water_del/utilities/global/dialogs.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/productModel.dart';
@@ -20,6 +23,8 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain> {
   PageController _controller;
   var userCurrent;
+  UserModel userModel;
+  DatabaseProvider _databaseProvider = DatabaseProvider();
 
   Widget popupPlace() {
     return Container(
@@ -28,6 +33,7 @@ class _HomeMainState extends State<HomeMain> {
           borderRadius: BorderRadius.circular(12)),
       child: PopupMenuButton(
         tooltip: 'Place',
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         itemBuilder: (context) {
           var list = List<PopupMenuEntry<Object>>();
           list.add(PopupMenuItem(
@@ -36,7 +42,7 @@ class _HomeMainState extends State<HomeMain> {
           ));
           list.add(
             PopupMenuDivider(
-              height: 10,
+              height: 5,
             ),
           );
           list.add(
@@ -174,8 +180,11 @@ class _HomeMainState extends State<HomeMain> {
       stream: LocationProvider().locationStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          List<LocationModel> locations = [];
+          locations.insert(0, snapshot.data);
           return MapWidget(
-            coordinates: snapshot.data,
+            coordinates: locations,
+            user: userCurrent,
           );
         }
         return Center(
@@ -187,6 +196,25 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
+  Widget clientPage() {
+    return Stack(
+      children: [baseMap(), _appBarItems(), _profilePage(), _bottomSelection()],
+    );
+  }
+
+  Widget supplierPage() {
+    return Stack(
+      children: [
+        baseMap(),
+        _profilePage(),
+      ],
+    );
+  }
+
+  Future<bool> _onWillPop() {
+    return logoutPopUp(context) ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -194,17 +222,35 @@ class _HomeMainState extends State<HomeMain> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: Container(
-          height: size.height,
-          width: size.width,
-          child: Stack(
-            children: <Widget>[
-              baseMap(),
-              _appBarItems(),
-              _profilePage(),
-              _bottomSelection()
-            ],
-          ),
+        child: StreamBuilder<UserModel>(
+          stream: _databaseProvider.streamUser(userCurrent.uid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                children: [
+                  if (snapshot.data.clientStatus) ...[
+                    Container(
+                      height: size.height,
+                      width: size.width,
+                      child: clientPage(),
+                    )
+                  ],
+                  if (!snapshot.data.clientStatus) ...[
+                    Container(
+                      height: size.height,
+                      width: size.width,
+                      child: supplierPage(),
+                    )
+                  ]
+                ],
+              );
+            }
+            return Center(
+                child: SpinKitFoldingCube(
+              size: 150,
+              color: Theme.of(context).primaryColor,
+            ));
+          },
         ),
       ),
     );

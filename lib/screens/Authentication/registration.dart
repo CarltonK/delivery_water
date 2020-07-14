@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:water_del/models/userModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/utilities/global/dialogs.dart';
-import 'package:water_del/utilities/global/social_buttons.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -214,7 +213,6 @@ class SignUpPage extends StatelessWidget {
                     height: 20,
                   ),
                   _registerPasswordField2(context),
-                  SocialButtons()
                 ],
               ),
             ),

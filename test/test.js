@@ -53,10 +53,46 @@ describe('Naqua', () => {
         await firebase.assertFails(testDoc.set({foo: "bar"}))
     })
 
+    it("Can't allow a user to delete their own document", async () => {
+        const db = getFirestore(myAuth);
+        const testDoc = db.collection('users').doc(myID);
+        await firebase.assertFails(testDoc.delete())
+    })
+
+    it("Can't allow a user to delete another users document", async () => {
+        const db = getFirestore(theirAuth);
+        const testDoc = db.collection('users').doc(myID);
+        await firebase.assertFails(testDoc.delete())
+    })
+
     it("Can write a user document if user is signed in and is owner", async () => {
         const db = getFirestore(myAuth)
         const testDoc = db.collection('users').doc(myID);
         await firebase.assertSucceeds(testDoc.set({foo: "bar"}))
+    })
+
+    it("Can't write an address if user is not owner", async () => {
+        const db = getFirestore(theirAuth);
+        const testDoc = db.collection('users').doc(myID).collection('addresses').doc('add_one')
+        await firebase.assertFails(testDoc.set({foo: 'bar'}));
+    })
+
+    it("Can't read an address if user is not owner", async () => {
+        const db = getFirestore(theirAuth);
+        const testDoc = db.collection('users').doc(myID).collection('addresses').doc('add_one')
+        await firebase.assertFails(testDoc.get());
+    })
+
+    it("Can write an address if user is owner", async () => {
+        const db = getFirestore(myAuth);
+        const testDoc = db.collection('users').doc(myID).collection('addresses').doc('add_one')
+        await firebase.assertSucceeds(testDoc.set({region: 'Nairobi', town: 'Westlands', address: 'Purshottam'}));
+    })
+
+    it("Can read an address if user is owner", async () => {
+        const db = getFirestore(myAuth);
+        const testDoc = db.collection('users').doc(myID).collection('addresses').doc('add_one')
+        await firebase.assertSucceeds(testDoc.get());
     })
 
     it("Can query rides if i am client", async () => {

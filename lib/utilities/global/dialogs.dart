@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:water_del/widgets/global/custome_info_dialog.dart';
+import 'package:water_del/widgets/global/exit_dialog.dart';
 
 Future dialogInfo(BuildContext context, String message) {
   return showCupertinoModalPopup(
@@ -11,3 +12,10 @@ Future dialogInfo(BuildContext context, String message) {
     ),
   );
 }
+
+  Future logoutPopUp(BuildContext context) {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (context) => ExitDialog(),
+    );
+  }

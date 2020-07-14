@@ -95,7 +95,11 @@ class LoginPage extends StatelessWidget {
     } else if (result == "Too many requests. Please try again in 2 minutes") {
       return false;
     } else if (result ==
-        "Please verify your email before signing in. We sent you an email earlier") {
+        "Please verify your email. We sent you an email earlier") {
+      return false;
+    } else if (result == null) {
+      result =
+          'This account has been registered using another provider. Please login using either Facebook or Google';
       return false;
     } else {
       return true;

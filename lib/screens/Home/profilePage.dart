@@ -1,12 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:water_del/models/singleAddress.dart';
 import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/screens/home/orderhistory.dart';
+import 'package:water_del/utilities/global/dialogs.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/widgets/setAddressWidget.dart';
+import 'package:water_del/widgets/setPhoneWidget.dart';
 
 class ProfilePage extends StatefulWidget {
   final FirebaseUser user;
@@ -16,12 +20,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final String url =
-      'https://images.unsplash.com/photo-1494959764136-6be9eb3c261e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80';
+  final String url = 'assets/images/background.jpg';
 
   PageController _controller;
   DatabaseProvider _databaseProvider = DatabaseProvider();
   UserModel currentUser;
+
+  Future addressFuture;
 
   Widget _backButton(BuildContext context) {
     return Positioned(
@@ -37,21 +42,19 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+
+
   Widget _exitButton(BuildContext context) {
     return Positioned(
       top: 30,
       right: 10,
       child: IconButton(
-        tooltip: 'Logout',
-        icon: Icon(
-          Icons.exit_to_app,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          AuthProvider.instance().logout();
-          Navigator.of(context).pop();
-        },
-      ),
+          tooltip: 'Logout',
+          icon: Icon(
+            Icons.exit_to_app,
+            color: Colors.white,
+          ),
+          onPressed: () => logoutPopUp(context)),
     );
   }
 
@@ -61,21 +64,30 @@ class _ProfilePageState extends State<ProfilePage> {
       width: size.width,
       child: ColorFiltered(
           colorFilter: ColorFilter.mode(Colors.grey[600], BlendMode.colorBurn),
-          child: Image.network(url, fit: BoxFit.fill)),
+          child: Image.asset(url, fit: BoxFit.fill)),
     );
   }
 
-  Widget _singleAddress(int index) {
+  Widget _singleAddress(SingleAddress add) {
     return Card(
       elevation: 3,
       child: ListTile(
-        title: Text('Address'),
+        title: Text(
+          add.region,
+          style: boldOutlineBlack,
+        ),
         dense: false,
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('More details'),
-            Text('Even more details'),
+            Text(
+              add.town,
+              style: normalOutlineBlack,
+            ),
+            Text(
+              add.address,
+              style: normalOutlineBlack,
+            ),
           ],
         ),
         isThreeLine: true,
@@ -87,6 +99,71 @@ class _ProfilePageState extends State<ProfilePage> {
           onPressed: () => print('I want to edit this address'),
         ),
       ),
+    );
+  }
+
+  Widget _addressSection(Size size) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Delivery Address',
+              style: boldOutlineBlack,
+            ),
+            IconButton(
+              icon: Icon(Icons.add_location),
+              onPressed: () => showCupertinoModalPopup(
+                context: context,
+                builder: (context) => SetAddress(
+                  user: widget.user,
+                ),
+              ),
+            )
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Container(
+          height: size.height * 0.1,
+          width: double.infinity,
+          child: FutureBuilder<List<SingleAddress>>(
+            future: addressFuture,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                  return PageView.builder(
+                    controller: _controller,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      SingleAddress address = snapshot.data[index];
+                      return _singleAddress(address);
+                    },
+                  );
+                case ConnectionState.waiting:
+                  return SpinKitChasingDots(
+                    size: (size.height * 0.1) / 2,
+                    color: Theme.of(context).primaryColor,
+                  );
+                case ConnectionState.active:
+                case ConnectionState.none:
+                  return Text(
+                    'Press the button above to create an address',
+                    style: normalOutlineBlack,
+                  );
+                default:
+                  return SpinKitChasingDots(
+                    size: (size.height * 0.1) / 2,
+                    color: Theme.of(context).primaryColor,
+                  );
+              }
+            },
+          ),
+        )
+      ],
     );
   }
 
@@ -103,38 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(
               height: size.height * 0.18,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Delivery Address',
-                  style: boldOutlineBlack,
-                ),
-                IconButton(
-                  icon: Icon(Icons.add_location),
-                  onPressed: () => print('I want to add an address'),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              height: size.height * 0.2,
-              width: double.infinity,
-              child: currentUser.addresses != null &&
-                      currentUser.addresses.length >= 1
-                  ? PageView.builder(
-                      controller: _controller,
-                      itemBuilder: (context, index) => _singleAddress(index),
-                    )
-                  : Center(
-                      child: Text(
-                      'Press the add button above to add a delivery address',
-                      style: normalOutlineBlack,
-                      textAlign: TextAlign.center,
-                    )),
-            )
+            currentUser.clientStatus ? _addressSection(size) : Container()
           ],
         ),
       ),
@@ -154,6 +200,14 @@ class _ProfilePageState extends State<ProfilePage> {
           style: normalOutlineBlack,
           textAlign: TextAlign.center,
         ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          currentUser.phone ?? '',
+          style: boldOutlineBlack,
+          textAlign: TextAlign.center,
+        )
       ],
     );
   }
@@ -179,8 +233,10 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         FlatButton(
-          onPressed: () => Navigator.of(context)
-              .push(SlideLeftTransition(page: OrderHistory())),
+          onPressed: () => currentUser.orderCount > 0
+              ? Navigator.of(context)
+                  .push(SlideLeftTransition(page: OrderHistory()))
+              : dialogInfo(context, 'You have no previous orders'),
           padding: EdgeInsets.all(8),
           child: Column(
             children: <Widget>[
@@ -253,12 +309,23 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0, viewportFraction: 0.9);
+    addressFuture = _databaseProvider.getAddresses(widget.user.uid);
+    Future.delayed(Duration(seconds: 2), () {
+      currentUser.phone == null ? promptAddPhone() : Container();
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Future promptAddPhone() {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (context) => SetPhoneWidget(user: widget.user),
+    );
   }
 
   @override
@@ -274,6 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 currentUser = snapshot.data;
+                // print(currentUser.toFirestore());
                 return Stack(
                   children: <Widget>[
                     _imageBackground(size),

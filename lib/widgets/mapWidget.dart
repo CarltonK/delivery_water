@@ -1,30 +1,64 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/provider/database_provider.dart';
 
 class MapWidget extends StatefulWidget {
-  final LocationModel coordinates;
-  MapWidget({@required this.coordinates});
+  final FirebaseUser user;
+  final List<LocationModel> coordinates;
+  MapWidget({@required this.coordinates, @required this.user});
+
   @override
   _MapWidgetState createState() => _MapWidgetState();
 }
 
 class _MapWidgetState extends State<MapWidget> {
+  DatabaseProvider _databaseProvider = DatabaseProvider();
   Completer<GoogleMapController> _controller = Completer();
+  final Map<String, Marker> _markers = {};
+  LocationModel myLocation;
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        _markers.clear();
+        for (var item in widget.coordinates) {
+          String itemIndex = widget.coordinates.indexOf(item).toString();
+          final marker = Marker(
+            markerId: MarkerId(itemIndex),
+            position: LatLng(item.latitude, item.longitude),
+          );
+          _markers[itemIndex] = marker;
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    Future.delayed(
+        Duration(seconds: 1),
+        () => _databaseProvider
+            .updateLocation(widget.user.uid, myLocation)
+            .then((value) => print('We have updated the location of the user'))
+            .catchError((error) =>
+                print('updateLocation ERROR -> ${error.toString()}')));
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double lat = widget.coordinates.latitude;
-    double lon = widget.coordinates.longitude;
+    myLocation = widget.coordinates[0];
+    double lat = myLocation.latitude;
+    double lon = myLocation.longitude;
     return GoogleMap(
         onMapCreated: _onMapCreated,
         zoomControlsEnabled: false,
+        markers: _markers.values.toSet(),
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 15));
+            CameraPosition(target: LatLng(lat, lon), zoom: 14.5));
   }
 }
