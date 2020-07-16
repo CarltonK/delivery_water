@@ -14,7 +14,6 @@ class DatabaseProvider {
   }
 
   Future saveUser(UserModel user, String uid) async {
-    //Remove password from user class and replace with null
     user.location = null;
     user.uid = uid;
     try {
@@ -25,20 +24,17 @@ class DatabaseProvider {
     }
   }
 
-  //Set Last Login Time
   Future<void> setLastLogin(String uid, Timestamp now) async {
     await _db.collection('users').document(uid).updateData({
       'lastLogin': now
     },);
   }
 
-  //Returning data as a future
   Future<UserModel> getUser(String uid) async {
     var snap = await _db.collection('users').document(uid).get();
     return UserModel.fromFirestore(snap);
   }
 
-  //Returning document data as a stream
   Stream<UserModel> streamUser(String uid) {
     return _db
         .collection('users')
@@ -47,7 +43,6 @@ class DatabaseProvider {
         .map((event) => UserModel.fromFirestore(event));
   }
 
-  //Set an address
   Future<void> setAddress(String uid, SingleAddress address) async {
     await _db
         .collection('users')
@@ -57,7 +52,6 @@ class DatabaseProvider {
         .setData(address.toFirestore());
   }
 
-  //Get an address
   Future<List<SingleAddress>> getAddresses(String uid) async {
     try {
       QuerySnapshot snapshotAddresses = await _db
