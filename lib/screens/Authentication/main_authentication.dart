@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
-import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/authentication/login.dart';
 import 'package:water_del/screens/authentication/registration.dart';
 import 'package:water_del/screens/home/home_main.dart';
@@ -76,31 +74,16 @@ class _State extends State<MainAuthentication> with TickerProviderStateMixin {
   void dispose() {
     controller.dispose();
     _pageController.dispose();
-    SignUpPage.passwording.clear();
-    SignUpPage.confirmPass.clear();
-    SignUpPage.passwording.dispose();
-    SignUpPage.confirmPass.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return ChangeNotifierProvider(
-      create: (context) => AuthProvider.instance(),
-      child: Consumer(
-        builder: (context, AuthProvider value, child) {
-          if (value.status == Status.Authenticated) {
-            return HomeMain();
-          } else {
-            return Home(
-              size: size,
-              bar: _appBar(),
-              body: _pageSelection(),
-            );
-          }
-        },
-      ),
+    return Home(
+      size: size,
+      bar: _appBar(),
+      body: _pageSelection(),
     );
   }
 }

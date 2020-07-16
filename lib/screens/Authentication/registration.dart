@@ -8,6 +8,7 @@ import 'package:water_del/utilities/styles.dart';
 class SignUpPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
+  final FocusNode _focusEmail = FocusNode();
   final FocusNode _focusPassword = FocusNode();
   final FocusNode _focusPassword2 = FocusNode();
 
@@ -15,12 +16,18 @@ class SignUpPage extends StatelessWidget {
   static TextEditingController confirmPass = TextEditingController();
 
   static String email;
+  static String name;
   static String password;
   static String password2;
 
   static dynamic result;
 
   static dynamic userProvider;
+
+  void handleName(String value) {
+    name = value.trim();
+    print('Name -> $name');
+  }
 
   void handleEmail(String value) {
     email = value.trim();
@@ -56,6 +63,26 @@ class SignUpPage extends StatelessWidget {
     );
   }
 
+  Widget _registerNameField(BuildContext context) {
+    return TextFormField(
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.text,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please provide a name';
+        }
+        if (!value.contains(' ')) {
+          return 'Please enter your names separated by a space';
+        }
+        return null;
+      },
+      onFieldSubmitted: (value) =>
+          FocusScope.of(context).requestFocus(_focusEmail),
+      onSaved: handleName,
+      decoration: InputDecoration(labelText: 'Full Name'),
+    );
+  }
+
   Widget _registerEmailField(BuildContext context) {
     return TextFormField(
       textInputAction: TextInputAction.next,
@@ -69,7 +96,8 @@ class SignUpPage extends StatelessWidget {
         }
         return null;
       },
-      decoration: InputDecoration(labelText: 'Email address'),
+      focusNode: _focusEmail,
+      decoration: InputDecoration(labelText: 'Email Address'),
       onFieldSubmitted: (value) =>
           FocusScope.of(context).requestFocus(_focusPassword),
       onSaved: handleEmail,
@@ -137,12 +165,12 @@ class SignUpPage extends StatelessWidget {
   }
 
   void _registerBtnPressed(BuildContext context) async {
-    // Navigator.of(context).push(SlideRightTransition(page: PreLogin()));
     final FormState form = _formKey.currentState;
     if (form.validate()) {
       form.save();
 
-      UserModel user = new UserModel(email: email, password: password);
+      UserModel user =
+          new UserModel(email: email, password: password, fullName: name);
       serverCall(user).then((value) {
         if (value) {
           print(value);
@@ -183,43 +211,51 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    userProvider = Provider.of<AuthProvider>(context);
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Container(
-            height: size.height,
-            width: size.width,
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  SizedBox(
-                    height: 60,
+    return Consumer<AuthProvider>(
+      builder: (context, AuthProvider value, child) {
+        userProvider = value;
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: size.width,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 60,
+                      ),
+                      _introText(),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      _registerNameField(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _registerEmailField(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _registerPasswordField(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _registerPasswordField2(context),
+                    ],
                   ),
-                  _introText(),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  _registerEmailField(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _registerPasswordField(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _registerPasswordField2(context),
-                ],
+                ),
               ),
-            ),
+              _registerButton(context)
+            ],
           ),
-          _registerButton(context)
-        ],
-      ),
+        );
+      }
     );
   }
 }

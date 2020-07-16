@@ -160,6 +160,18 @@ describe('Naqua', () => {
         await firebase.assertFails(testDoc.delete())
     })
 
+    it("Can't allow unauthenticated users to view a product", async () => {
+        const db = getFirestore(null)
+        const productDoc = db.collectionGroup('products')
+        await firebase.assertFails(productDoc.get())
+    })
+
+    it("Can allow authenticated users to view a product", async () => {
+        const db = getFirestore(myAuth)
+        const productQuery = db.collectionGroup('products')
+        await firebase.assertFails(productQuery.get())
+    })
+
     it("Can't allow a client to write a product", async () => {
         const db = getFirestore(myAuth)
         const clientDoc = db.collection('users').doc(myID)
@@ -172,7 +184,7 @@ describe('Naqua', () => {
     it("Can allow a supplier to write a product", async () => {
         const db = getFirestore(myAuth)
         const clientDoc = db.collection('users').doc(myID)
-        await clientDoc.set({clientstatus: false})
+        await clientDoc.set({clientStatus: false})
         const productDoc = db.collection('users').doc(myID).collection('products').doc('product_one')
         await firebase.assertSucceeds(productDoc.set({id: 'someId'}))
     })

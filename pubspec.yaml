@@ -12,12 +12,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+  bottom_navy_bar: ^5.4.0
   google_fonts:
   provider: 
   firebase_auth:
   firebase_analytics:
   cloud_firestore:
   firebase_messaging:
+  firebase_crashlytics:
   google_sign_in:
   google_maps_flutter: ^0.5.27+3
   # Permissions

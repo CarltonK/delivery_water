@@ -31,7 +31,6 @@ class AuthProvider with ChangeNotifier {
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
-      notifyListeners();
     } else {
       currentUser = firebaseUser;
       _status = Status.Authenticated;
@@ -79,8 +78,8 @@ class AuthProvider with ChangeNotifier {
 
   Future saveUser(UserModel user, String uid) async {
     //Remove password from user class and replace with null
-    user.password = null;
     user.location = null;
+    user.lastLogin = now;
     user.uid = uid;
     try {
       user.token = await fcm.getToken();
@@ -101,20 +100,7 @@ class AuthProvider with ChangeNotifier {
           email: user.email, password: user.password);
       currentUser = result.user;
 
-      //Check if email is verified before proceeding
-      bool emailVerificationStatus = currentUser.isEmailVerified;
-
-      if (emailVerificationStatus) {
-        await db
-            .collection('users')
-            .document(user.uid)
-            .updateData({'lastLogin': now});
-        return Future.value(currentUser);
-      } else {
-        _status = Status.Unauthenticated;
-        notifyListeners();
-        return 'Please verify your email. We sent you an email earlier';
-      }
+      return Future.value(currentUser);
     } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -188,6 +174,7 @@ class AuthProvider with ChangeNotifier {
       UserModel model = new UserModel(
           photoUrl: user.photoUrl,
           email: user.email,
+          lastLogin: now,
           fullName: user.displayName);
       print(model.toFirestore());
 

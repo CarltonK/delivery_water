@@ -9,7 +9,7 @@ import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/home/profilePage.dart';
-import 'package:water_del/utilities/global/dialogs.dart';
+import 'package:water_del/screens/home/supplier_home.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/productModel.dart';
@@ -202,57 +202,54 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
-  Widget supplierPage() {
-    return Stack(
-      children: [
-        baseMap(),
-        _profilePage(),
-      ],
-    );
-  }
-
-  Future<bool> _onWillPop() {
-    return logoutPopUp(context) ?? false;
-  }
+  // Future<bool> _onWillPop() {
+  //   return logoutPopUp(context) ?? false;
+  // }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    userCurrent = Provider.of<AuthProvider>(context).currentUser;
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: StreamBuilder<UserModel>(
-          stream: _databaseProvider.streamUser(userCurrent.uid),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                children: [
-                  if (snapshot.data.clientStatus) ...[
-                    Container(
-                      height: size.height,
-                      width: size.width,
-                      child: clientPage(),
-                    )
+    return Consumer<AuthProvider>(
+    builder: (context, AuthProvider value, child) {
+      userCurrent = value.currentUser;
+      return Scaffold(
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light,
+          child: StreamBuilder<UserModel>(
+            stream: _databaseProvider.streamUser(userCurrent.uid),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: [
+                    if (snapshot.data.clientStatus) ...[
+                      Container(
+                        height: size.height,
+                        width: size.width,
+                        child: clientPage(),
+                      )
+                    ],
+                    if (!snapshot.data.clientStatus) ...[
+                      Container(
+                        height: size.height,
+                        width: size.width,
+                        child: SupplierHome(
+                          user: userCurrent,
+                        ),
+                      )
+                    ]
                   ],
-                  if (!snapshot.data.clientStatus) ...[
-                    Container(
-                      height: size.height,
-                      width: size.width,
-                      child: supplierPage(),
-                    )
-                  ]
-                ],
-              );
-            }
-            return Center(
-                child: SpinKitFoldingCube(
-              size: 150,
-              color: Theme.of(context).primaryColor,
-            ));
-          },
+                );
+              }
+              return Center(
+                  child: SpinKitFoldingCube(
+                    size: 150,
+                    color: Theme.of(context).primaryColor,
+                  ));
+            },
+          ),
         ),
-      ),
+      );
+    },
     );
   }
 }

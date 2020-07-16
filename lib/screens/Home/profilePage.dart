@@ -42,8 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-
   Widget _exitButton(BuildContext context) {
     return Positioned(
       top: 30,
@@ -135,6 +133,13 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.done:
+                  if (snapshot.data.length == 0) {
+                    return Text(
+                      'Press the button above to create an address',
+                      textAlign: TextAlign.center,
+                      style: normalOutlineBlack,
+                    );
+                  }
                   return PageView.builder(
                     controller: _controller,
                     itemCount: snapshot.data.length,
@@ -190,6 +195,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _userPersonalInfo() {
     return Column(
       children: [
+        SizedBox(
+          height: 8,
+        ),
         Text(
           currentUser.fullName ?? '',
           style: headerOutlineBlack,
@@ -201,7 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
           textAlign: TextAlign.center,
         ),
         SizedBox(
-          height: 10,
+          height: 5,
         ),
         Text(
           currentUser.phone ?? '',
@@ -274,7 +282,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 20,
                 ),
                 _userPersonalInfo(),
-                _userImpactInfo()
+                currentUser.clientStatus ? _userImpactInfo() : Container()
               ],
             ),
           ),
@@ -310,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
     _controller = PageController(initialPage: 0, viewportFraction: 0.9);
     addressFuture = _databaseProvider.getAddresses(widget.user.uid);
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       currentUser.phone == null ? promptAddPhone() : Container();
     });
   }

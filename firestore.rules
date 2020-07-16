@@ -3,11 +3,15 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function isSupplier(uid) {
-      return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientstatus == false;
+      return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientStatus == false;
     }
 
     function isOwner(uid) {
       return request.auth.uid == uid;
+    }
+
+    function isAuthenticated() {
+      return request.auth.uid != null;
     }
 
     function isAddressValid(uid) {
@@ -25,10 +29,12 @@ service cloud.firestore {
     }
     match /users/{userId} {
       //A user can do everything apart from delete their profile
-      allow read, create, update: if isOwner(userId);
+      allow get, create, update: if isOwner(userId);
       //Only write a product if supplier
+      //Any authenticated user can view products
       match /products/{productId} {
         allow write: if isSupplier(userId);
+        allow read: if isAuthenticated();
       }
       match /addresses/{address} {
         allow update, delete: if isOwner(userId);

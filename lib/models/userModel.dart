@@ -4,6 +4,7 @@ class UserModel {
   String fullName;
   String email;
   final Timestamp registerDate = Timestamp.now();
+  Timestamp lastLogin;
   String uid;
   bool clientStatus;
   String password;
@@ -19,6 +20,7 @@ class UserModel {
       this.email,
       this.uid,
       this.password,
+      this.lastLogin,
       this.clientStatus = true,
       this.phone,
       this.ratingCount = 0,
@@ -47,6 +49,7 @@ class UserModel {
         'email': email,
         'photoUrl': photoUrl,
         'location': location,
+        'lastLogin': lastLogin,
         'phone': phone,
         'registerDate': registerDate,
         'clientStatus': clientStatus,

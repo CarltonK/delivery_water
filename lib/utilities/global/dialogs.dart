@@ -13,9 +13,9 @@ Future dialogInfo(BuildContext context, String message) {
   );
 }
 
-  Future logoutPopUp(BuildContext context) {
-    return showCupertinoModalPopup(
-      context: context,
-      builder: (context) => ExitDialog(),
-    );
-  }
+Future logoutPopUp(BuildContext context) {
+  return showCupertinoModalPopup(
+    context: context,
+    builder: (context) => ExitDialog(),
+  );
+}

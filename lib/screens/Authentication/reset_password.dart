@@ -11,7 +11,7 @@ class ResetPassword extends StatelessWidget {
 
   static String email;
 
-  dynamic result;
+  static dynamic result;
 
   void handleEmail(String value) {
     email = value.trim();

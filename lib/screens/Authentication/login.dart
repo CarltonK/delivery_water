@@ -97,10 +97,6 @@ class LoginPage extends StatelessWidget {
     } else if (result ==
         "Please verify your email. We sent you an email earlier") {
       return false;
-    } else if (result == null) {
-      result =
-          'This account has been registered using another provider. Please login using either Facebook or Google';
-      return false;
     } else {
       return true;
     }
@@ -120,6 +116,7 @@ class LoginPage extends StatelessWidget {
           dialogInfo(context, result);
         }
       }).catchError((error) {
+        print(error);
         dialogInfo(context, error.toString());
       });
     }
@@ -180,41 +177,45 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    userProvider = Provider.of<AuthProvider>(context);
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Container(
-            height: size.height,
-            width: size.width,
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: <Widget>[
-                  SizedBox(
-                    height: 60,
-                  ),
-                  _introText(),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  _loginEmailField(context),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  _loginPasswordField(context),
-                  SocialButtons()
-                ],
+    return Consumer<AuthProvider>(
+    builder: (context, AuthProvider value, child) {
+      userProvider = value;
+      return GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Container(
+              height: size.height,
+              width: size.width,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 60,
+                    ),
+                    _introText(),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    _loginEmailField(context),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _loginPasswordField(context),
+                    SocialButtons()
+                  ],
+                ),
               ),
             ),
-          ),
-          _forgotPasswordButton(context),
-          _loginButton(context)
-        ],
-      ),
+            _forgotPasswordButton(context),
+            _loginButton(context)
+          ],
+        ),
+      );
+    },
     );
   }
 }
