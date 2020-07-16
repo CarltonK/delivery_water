@@ -6,6 +6,44 @@ service cloud.firestore {
       return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientStatus == false;
     }
 
+    function isClient(uid) {
+      return request.auth.uid != null && get(/databases/$(database)/documents/users/$(uid)).data.clientStatus == true;
+    }
+
+    function isProductCorrect() {
+      return (request.resource.data.price is number && request.resource.data.price >= 1)
+        && (request.resource.data.quantity is number && request.resource.data.quantity >= 1)
+        && (request.resource.data.category != null && request.resource.data.category in ['bottled','cart','exhauster','tanker'])
+        && request.resource.data.title != null
+        && request.resource.data.description != null
+        && request.resource.data.size() >= 6
+        && exists(/databases/$(database)/documents/users/$(request.resource.data.supplier));  
+    }
+
+    function isOrderCorrect() {
+      return request.resource.data.status == false
+        && (request.resource.data.location != null && request.resource.data.location is map)
+        && request.resource.data.size() == 6
+        && request.resource.data.products != null
+        && isSupplier(request.resource.data.supplier)
+        && isClient(request.resource.data.client)
+    }
+
+    function isValidReview(order) {
+      return get(/databases/$(database)/documents/orders/$(order)).data.status == 'completed'
+        && request.resource.data.title != null
+        && request.resource.data.description != null
+        && request.resource.data.client == get(/databases/$(database)/documents/orders/$(order)).data.client;
+    }
+
+    function isValidOrderClient(order) {
+      return resource.data.client == get(/databases/$(database)/documents/orders/$(order)).data.client
+    }
+
+    function isValidOrderSupplier(order) {
+      return resource.data.supplier == get(/databases/$(database)/documents/orders/$(order)).data.supplier
+    }
+
     function isOwner(uid) {
       return request.auth.uid == uid;
     }
@@ -32,8 +70,9 @@ service cloud.firestore {
       allow get, create, update: if isOwner(userId);
       //Only write a product if supplier
       //Any authenticated user can view products
-      match /products/{productId} {
-        allow write: if isSupplier(userId);
+      //Refactor to match any collection group queries
+      match /{path=**}/{productId} {
+        allow write: if isSupplier(userId) && isProductCorrect();
         allow read: if isAuthenticated();
       }
       match /addresses/{address} {
@@ -54,6 +93,14 @@ service cloud.firestore {
       //Only clients can delete(cancel) a ride if the ride status is not true
       allow delete: if resource.data.client == request.auth.uid
         && resource.data.ridestatus != true;
+    }
+    match /orders/{order} {
+      allow create: if isOrderCorrect();
+      allow read, update: if isValidOrderClient(order) || isValidOrderSupplier(order)
+    }
+    match /reviews/{review} {
+      allow create: if isAuthenticated() && isValidReview(request.resource.data.orderId);
+      allow read: if isAuthenticated();
     }
   }
 }

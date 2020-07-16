@@ -1,4 +1,3 @@
-
 class Product {
   var price;
   String id;

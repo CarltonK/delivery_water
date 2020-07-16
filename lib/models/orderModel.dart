@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:water_del/models/locationModel.dart';
 
 class OrderModel {
+  String id;
   String supplier;
   String client;
   LocationModel location;
@@ -10,12 +11,18 @@ class OrderModel {
   List<dynamic> products;
 
   OrderModel(
-      {this.supplier, this.client, this.location, this.status, this.products});
+      {this.supplier,
+      this.id,
+      this.client,
+      this.location,
+      this.status,
+      this.products});
 
   factory OrderModel.fromFirestore(DocumentSnapshot snapshot) {
     Map data = snapshot.data;
     Map loc = data['location'];
     return OrderModel(
+        id: snapshot.documentID,
         supplier: data['supplier'],
         client: data['client'],
         location: LocationModel.fromFirestore(loc),
