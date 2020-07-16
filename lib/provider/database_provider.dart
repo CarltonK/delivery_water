@@ -1,13 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/models/singleAddress.dart';
 import 'package:water_del/models/userModel.dart';
 
 class DatabaseProvider {
   final Firestore _db = Firestore.instance;
+  final FirebaseMessaging fcm = FirebaseMessaging();
+  final Timestamp now = Timestamp.now();
 
   DatabaseProvider() {
     print('Firestore has been initialized');
+  }
+
+  Future saveUser(UserModel user, String uid) async {
+    //Remove password from user class and replace with null
+    user.location = null;
+    user.uid = uid;
+    try {
+      user.token = await fcm.getToken();
+      await _db.collection("users").document(uid).setData(user.toFirestore());
+    } catch (e) {
+      print("saveUser ERROR -> ${e.toString()}");
+    }
+  }
+
+  //Set Last Login Time
+  Future<void> setLastLogin(String uid, Timestamp now) async {
+    await _db.collection('users').document(uid).updateData({
+      'lastLogin': now
+    },);
   }
 
   //Returning data as a future

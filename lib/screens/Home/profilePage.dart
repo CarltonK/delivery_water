@@ -204,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
           textAlign: TextAlign.center,
         ),
         Text(
-          currentUser.email,
+          currentUser.email ?? '',
           style: normalOutlineBlack,
           textAlign: TextAlign.center,
         ),

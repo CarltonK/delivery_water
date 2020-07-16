@@ -12,7 +12,7 @@ enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class AuthProvider with ChangeNotifier {
   final Firestore db = Firestore.instance;
-  final FirebaseMessaging fcm = FirebaseMessaging();
+
   final FirebaseAuth auth;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   FirebaseUser currentUser;
@@ -33,6 +33,7 @@ class AuthProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       currentUser = firebaseUser;
+      Future.delayed(Duration(seconds: 1), () => database.setLastLogin(currentUser.uid, now));
       _status = Status.Authenticated;
     }
     notifyListeners();
@@ -57,7 +58,7 @@ class AuthProvider with ChangeNotifier {
 
       //print('Positive Registration Response: ${currentUser.uid}');
       //Try adding the user to the Firestore
-      await saveUser(user, uid);
+      await database.saveUser(user, uid);
       return Future.value(currentUser);
     } catch (e) {
       _status = Status.Unauthenticated;
@@ -73,19 +74,6 @@ class AuthProvider with ChangeNotifier {
         response = 'An account with the same email exists';
       }
       return response;
-    }
-  }
-
-  Future saveUser(UserModel user, String uid) async {
-    //Remove password from user class and replace with null
-    user.location = null;
-    user.lastLogin = now;
-    user.uid = uid;
-    try {
-      user.token = await fcm.getToken();
-      await db.collection("users").document(uid).setData(user.toFirestore());
-    } catch (e) {
-      print("saveUser ERROR -> ${e.toString()}");
     }
   }
 
@@ -181,13 +169,10 @@ class AuthProvider with ChangeNotifier {
       db.collection('users').document(user.uid).get().then((value) async {
         if (value.exists) {
           print('${user.email} already exists');
-          await db
-              .collection('users')
-              .document(user.uid)
-              .updateData({'lastLogin': now});
+          Future.delayed(Duration(seconds: 1), () => database.setLastLogin(currentUser.uid, now));
         } else {
           print("Let's create a user document");
-          await saveUser(model, user.uid);
+          await database.saveUser(model, user.uid);
         }
       });
       return user;
