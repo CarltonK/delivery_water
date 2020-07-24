@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_del/models/locationModel.dart';
@@ -136,5 +138,26 @@ class DatabaseProvider {
     } catch (e) {
       throw e.toString();
     }
+  }
+
+  Future<List<Product>> populateMap(List<String> categories) async {
+    List<Product> products = [];
+    if (categories != null && categories.length > 0) {
+      try {
+        QuerySnapshot snapshot = await _db
+            .collectionGroup('products')
+            .where('category', whereIn: categories)
+            .orderBy('price', descending: true)
+            .getDocuments();
+        snapshot.documents.forEach((element) {
+          Product product = Product.fromJson(element.data);
+          products.add(product);
+        });
+        return products;
+      } catch (e) {
+        throw e.toString();
+      }
+    }
+    return null;
   }
 }

@@ -13,18 +13,15 @@ export const identifyProduct = functions.region('europe-west3').firestore
                 const phone: string = supplierDoc.get('phone')
                 const location: Map<string, any> = supplierDoc.get('location')
 
-                const object: Map<string, any> = new Map<string, any>()
-                object.set('user', {
-                    'fullName': fullName,
-                    'phone': phone,
-                    'location': location
-                })
-
                 await db.collection('users').doc(supplier).collection('products').doc(id)
                     .update({
                         id: id,
                         createTime: snapshot.createTime,
-                        details: object
+                        details: {
+                            'fullName': fullName,
+                            'phone': phone,
+                            'location': location
+                        }
                     })
                 console.log(`You have updated a product by ${supplier} as ${snapshot.id}`)
             } catch (error) {

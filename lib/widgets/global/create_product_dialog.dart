@@ -231,35 +231,38 @@ class _CreateProductState extends State<CreateProduct> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, AuthProvider user, child) {
-        supplier = user.currentUser.uid;
-        return Consumer<DatabaseProvider>(
-          builder: (context, DatabaseProvider value, child) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider.instance(),
+      child: Consumer<AuthProvider>(
+        builder: (context, AuthProvider user, child) {
+          supplier = user.currentUser.uid;
+          return Consumer<DatabaseProvider>(
+            builder: (context, DatabaseProvider value, child) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              content: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        categoryDropDown(),
+                        quantitySelector(),
+                        priceField(),
+                        titleField(),
+                        descField()
+                      ],
+                    ),
+                  )),
+              actions: [
+                _addProductButton(),
+                _cancelProductButton(),
+              ],
             ),
-            content: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      categoryDropDown(),
-                      quantitySelector(),
-                      priceField(),
-                      titleField(),
-                      descField()
-                    ],
-                  ),
-                )),
-            actions: [
-              _addProductButton(),
-              _cancelProductButton(),
-            ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

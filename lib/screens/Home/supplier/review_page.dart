@@ -60,7 +60,7 @@ class _ReviewPageState extends State<ReviewPage> {
             return Center(
                 child: Text(
               'You have not received any review(s)',
-              style: headerOutlineBlack,
+              style: normalOutlineBlack,
               textAlign: TextAlign.center,
             ));
           case ConnectionState.done:
@@ -68,7 +68,7 @@ class _ReviewPageState extends State<ReviewPage> {
               return Center(
                   child: Text(
                 'You have not received any review(s)',
-                style: headerOutlineBlack,
+                style: normalOutlineBlack,
                 textAlign: TextAlign.center,
               ));
             return ListView.separated(

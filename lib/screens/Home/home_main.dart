@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/product.dart';
 import 'package:water_del/models/userModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
@@ -14,6 +15,7 @@ import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/productModel.dart';
 import 'package:water_del/widgets/mapWidget.dart';
+import 'package:water_del/widgets/productMapWidget.dart';
 
 class HomeMain extends StatefulWidget {
   @override
@@ -25,6 +27,9 @@ class _HomeMainState extends State<HomeMain> {
   var userCurrent;
   UserModel userModel;
   DatabaseProvider _databaseProvider = DatabaseProvider();
+  List<String> display = [];
+  LocationModel myLocation;
+  Future productFuture;
 
   Widget popupPlace() {
     return Container(
@@ -104,16 +109,11 @@ class _HomeMainState extends State<HomeMain> {
       onTap: () {
         setState(() {
           listMainItems[index].selected = !listMainItems[index].selected;
+          !listMainItems[index].selected
+              ? display.add(listMainItems[index].category)
+              : display.remove(listMainItems[index].category);
+          productFuture = _databaseProvider.populateMap(display);
         });
-        showCupertinoModalPopup(
-          context: context,
-          builder: (context) => AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            content: Text(
-                'When you click an item, the map updates to show the suppliers and the bottom list showcases prices'),
-          ),
-        );
       },
       child: Card(
         elevation: 8,
@@ -182,6 +182,7 @@ class _HomeMainState extends State<HomeMain> {
         if (snapshot.hasData) {
           List<LocationModel> locations = [];
           locations.insert(0, snapshot.data);
+          myLocation = snapshot.data;
           return MapWidget(
             coordinates: locations,
             user: userCurrent,
@@ -196,9 +197,58 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
+  Widget productMap() {
+    return FutureBuilder<List<Product>>(
+      future: productFuture,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            if (snapshot.hasData && snapshot.data.length > 0) {
+              return ProductMapWidget(
+                products: snapshot.data,
+                user: userCurrent,
+                location: myLocation,
+              );
+            }
+            return Center(
+              child: Text(
+                'There are no products',
+                style: normalOutlineBlack,
+              ),
+            );
+            break;
+          case ConnectionState.active:
+          case ConnectionState.none:
+            return Center(
+              child: Text(
+                'There are no products',
+                style: normalOutlineBlack,
+              ),
+            );
+          case ConnectionState.waiting:
+            return Center(
+                child: SpinKitFoldingCube(
+              size: 150,
+              color: Theme.of(context).primaryColor,
+            ));
+        }
+        return Center(
+            child: SpinKitFoldingCube(
+          size: 150,
+          color: Theme.of(context).primaryColor,
+        ));
+      },
+    );
+  }
+
   Widget clientPage() {
     return Stack(
-      children: [baseMap(), _appBarItems(), _profilePage(), _bottomSelection()],
+      children: [
+        display.length == 0 ? baseMap() : productMap(),
+        _appBarItems(),
+        _profilePage(),
+        _bottomSelection()
+      ],
     );
   }
 
@@ -264,8 +314,6 @@ class ClientHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      
-    );
+    return Stack();
   }
 }

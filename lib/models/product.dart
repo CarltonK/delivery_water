@@ -1,9 +1,11 @@
+import 'package:water_del/models/userModel.dart';
 
 class Product {
   var price;
   String id;
   String supplier;
   int quantity;
+  Map<String, dynamic> details;
   String category;
   String title;
   String description;
@@ -11,6 +13,7 @@ class Product {
   Product(
       {this.price,
       this.id,
+      this.details,
       this.supplier,
       this.quantity,
       this.category,
@@ -21,6 +24,7 @@ class Product {
     return Product(
       category: data['category'],
       supplier: data['supplier'],
+      details: data['details'],
       quantity: data['quantity'],
       description: data['description'],
       id: data['id'],
