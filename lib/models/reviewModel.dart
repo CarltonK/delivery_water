@@ -22,11 +22,11 @@ class ReviewModel {
   }
 
   Map<String, dynamic> toFirestore() => {
-    'orderId': orderId,
-    'supplier': supplier,
-    'client': client,
-    'title': title,
-    'description': description,
-    'time': time
-  };
+        'orderId': orderId,
+        'supplier': supplier,
+        'client': client,
+        'title': title,
+        'description': description,
+        'time': time
+      };
 }

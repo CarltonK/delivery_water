@@ -16,11 +16,6 @@ function getAdminFirestore() {
     return firebase.initializeAdminApp({projectId: PROJECT_ID}).firestore();
 }
 
-before(async () => {
-    await firebase.clearFirestoreData({projectId: PROJECT_ID});
-});
-
-
 describe('Naqua', () => {
 
     it("Can't write items in the private collection", async () => {
@@ -81,7 +76,7 @@ describe('Naqua', () => {
     it("Can't read an address if user is not owner", async () => {
         const db = getFirestore(theirAuth);
         const testDoc = db.collection('users').doc(myID).collection('addresses').doc('add_one')
-        await firebase.assertSucceeds(testDoc.get());
+        await firebase.assertFails(testDoc.get());
     })
 
     it("Can write an address if user is owner", async () => {
@@ -170,7 +165,7 @@ describe('Naqua', () => {
     it("Can allow authenticated users to view a product", async () => {
         const db = getFirestore(myAuth)
         const productQuery = db.collectionGroup('products')
-        await firebase.assertFails(productQuery.get())
+        await firebase.assertSucceeds(productQuery.get())
     })
 
     it("Can't allow a client to write a product", async () => {
@@ -182,10 +177,10 @@ describe('Naqua', () => {
     })
 
 
-    it("Can allow a client to create a valid product", async () => {
+    it("Can allow a supplier to create a valid product", async () => {
         const db = getFirestore(myAuth)
-        const clientDoc = db.collection('users').doc(myID)
-        await clientDoc.set({clientStatus: false})
+        const admin = getAdminFirestore()
+        await admin.collection('users').doc(myID).set({clientStatus: false})
         const productDoc = db.collection('users').doc(myID).collection('products').doc('product_two')
         await firebase.assertSucceeds(productDoc.set({
             'price': 1,

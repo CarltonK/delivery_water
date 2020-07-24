@@ -212,50 +212,49 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Consumer<AuthProvider>(
-      builder: (context, AuthProvider value, child) {
-        userProvider = value;
-        return GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: size.width,
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 60,
-                      ),
-                      _introText(),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      _registerNameField(context),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerEmailField(context),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerPasswordField(context),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      _registerPasswordField2(context),
-                    ],
-                  ),
+        builder: (context, AuthProvider value, child) {
+      userProvider = value;
+      return GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Container(
+              height: double.infinity,
+              width: size.width,
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 60,
+                    ),
+                    _introText(),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    _registerNameField(context),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _registerEmailField(context),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _registerPasswordField(context),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _registerPasswordField2(context),
+                  ],
                 ),
               ),
-              _registerButton(context)
-            ],
-          ),
-        );
-      }
-    );
+            ),
+            _registerButton(context)
+          ],
+        ),
+      );
+    });
   }
 }

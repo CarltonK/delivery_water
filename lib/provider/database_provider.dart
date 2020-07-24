@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/product.dart';
+import 'package:water_del/models/reviewModel.dart';
 import 'package:water_del/models/singleAddress.dart';
 import 'package:water_del/models/userModel.dart';
 
@@ -25,9 +27,9 @@ class DatabaseProvider {
   }
 
   Future<void> setLastLogin(String uid, Timestamp now) async {
-    await _db.collection('users').document(uid).updateData({
-      'lastLogin': now
-    },);
+    await _db.collection('users').document(uid).updateData(
+      {'lastLogin': now},
+    );
   }
 
   Future<UserModel> getUser(String uid) async {
@@ -85,5 +87,54 @@ class DatabaseProvider {
         .collection('users')
         .document(uid)
         .updateData({'phone': phone, 'clientStatus': status});
+  }
+
+  Future<void> postProduct(String uid, Product product) async {
+    try {
+      await _db
+          .collection('users')
+          .document(uid)
+          .collection('products')
+          .document()
+          .setData(product.toJson());
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<List<Product>> getProducts(String uid) async {
+    try {
+      List<Product> queryData = [];
+      QuerySnapshot snapshot = await _db
+          .collectionGroup('products')
+          .where('supplier', isEqualTo: uid)
+          .orderBy('price', descending: true)
+          .getDocuments();
+      snapshot.documents.forEach((element) {
+        Product product = Product.fromJson(element.data);
+        queryData.add(product);
+      });
+      return Future.value(queryData);
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<List<ReviewModel>> getReviews(String uid) async {
+    try {
+      List<ReviewModel> reviews = [];
+      QuerySnapshot snapshot = await _db
+          .collection('reviews')
+          .where('supplier', isEqualTo: uid)
+          .orderBy('time', descending: true)
+          .getDocuments();
+      snapshot.documents.forEach((element) {
+        ReviewModel review = ReviewModel.fromFirestore(element);
+        reviews.add(review);
+      });
+      return Future.value(reviews);
+    } catch (e) {
+      throw e.toString();
+    }
   }
 }

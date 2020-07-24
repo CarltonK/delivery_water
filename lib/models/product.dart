@@ -1,3 +1,4 @@
+
 class Product {
   var price;
   String id;
@@ -16,15 +17,17 @@ class Product {
       this.title,
       this.description});
 
-  factory Product.fromJson(Map<String, dynamic> data) => Product(
-        category: data['category'],
-        supplier: data['supplier'],
-        quantity: data['quantity'],
-        description: data['description'],
-        id: data['id'],
-        price: data['price'],
-        title: data['title'],
-      );
+  factory Product.fromJson(Map<String, dynamic> data) {
+    return Product(
+      category: data['category'],
+      supplier: data['supplier'],
+      quantity: data['quantity'],
+      description: data['description'],
+      id: data['id'],
+      price: data['price'],
+      title: data['title'],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'category': category,

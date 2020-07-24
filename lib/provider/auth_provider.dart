@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:water_del/models/userModel.dart';
@@ -33,7 +31,8 @@ class AuthProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       currentUser = firebaseUser;
-      Future.delayed(Duration(seconds: 1), () => database.setLastLogin(currentUser.uid, now));
+      Future.delayed(Duration(seconds: 1),
+          () => database.setLastLogin(currentUser.uid, now));
       _status = Status.Authenticated;
     }
     notifyListeners();
@@ -169,7 +168,8 @@ class AuthProvider with ChangeNotifier {
       db.collection('users').document(user.uid).get().then((value) async {
         if (value.exists) {
           print('${user.email} already exists');
-          Future.delayed(Duration(seconds: 1), () => database.setLastLogin(currentUser.uid, now));
+          Future.delayed(Duration(seconds: 1),
+              () => database.setLastLogin(currentUser.uid, now));
         } else {
           print("Let's create a user document");
           await database.saveUser(model, user.uid);

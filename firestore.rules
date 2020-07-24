@@ -62,6 +62,11 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+     match /{path=**}/products/{product} {
+        allow create: if isSupplier(request.resource.data.supplier) && isProductCorrect();
+        allow update: if isSupplier(resource.data.supplier);
+        allow read: if isAuthenticated();
+    }
     match /private/{docId} {
       allow read, write: if false;
     }
@@ -71,10 +76,6 @@ service cloud.firestore {
       //Only write a product if supplier
       //Any authenticated user can view products
       //Refactor to match any collection group queries
-      match /{path=**}/{productId} {
-        allow write: if isSupplier(userId) && isProductCorrect();
-        allow read: if isAuthenticated();
-      }
       match /addresses/{address} {
         allow update, delete: if isOwner(userId);
         allow create: if isAddressValid(userId);

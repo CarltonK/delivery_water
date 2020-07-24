@@ -178,44 +178,44 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Consumer<AuthProvider>(
-    builder: (context, AuthProvider value, child) {
-      userProvider = value;
-      return GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Container(
-              height: size.height,
-              width: size.width,
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 60,
-                    ),
-                    _introText(),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    _loginEmailField(context),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _loginPasswordField(context),
-                    SocialButtons()
-                  ],
+      builder: (context, AuthProvider value, child) {
+        userProvider = value;
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Container(
+                height: size.height,
+                width: size.width,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 60,
+                      ),
+                      _introText(),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      _loginEmailField(context),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      _loginPasswordField(context),
+                      SocialButtons()
+                    ],
+                  ),
                 ),
               ),
-            ),
-            _forgotPasswordButton(context),
-            _loginButton(context)
-          ],
-        ),
-      );
-    },
+              _forgotPasswordButton(context),
+              _loginButton(context)
+            ],
+          ),
+        );
+      },
     );
   }
 }

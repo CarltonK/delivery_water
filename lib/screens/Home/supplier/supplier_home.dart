@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:water_del/screens/home/profilePage.dart';
+import 'package:water_del/screens/home/supplier/product_page.dart';
+import 'package:water_del/screens/home/supplier/review_page.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 
 class SupplierHome extends StatefulWidget {
@@ -16,6 +18,7 @@ class SupplierHome extends StatefulWidget {
 class _SupplierHomeState extends State<SupplierHome> {
   int _currentIndex = 0;
   PageController _pageController;
+  List<Widget> pages;
 
   static menuItemTemplate(String title, IconData icon, Color color) {
     return BottomNavyBarItem(
@@ -34,8 +37,6 @@ class _SupplierHomeState extends State<SupplierHome> {
     menuItemTemplate('Products', Icons.category, Colors.redAccent[700]),
     menuItemTemplate('Reviews', Icons.rate_review, Colors.blueAccent[700])
   ];
-
-  List<Widget> pages = [Container(), Container(), Container()];
 
   Widget _appBar() {
     return AppBar(
@@ -58,6 +59,15 @@ class _SupplierHomeState extends State<SupplierHome> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    pages = [
+      Container(),
+      ProductPage(
+        user: widget.user,
+      ),
+      ReviewPage(
+        user: widget.user,
+      )
+    ];
   }
 
   @override
@@ -76,10 +86,13 @@ class _SupplierHomeState extends State<SupplierHome> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: _appBar(),
       backgroundColor: Colors.white,
-      body: SizedBox.expand(
+      body: Container(
+        height: size.height,
+        width: double.infinity,
         child: PageView.builder(
           controller: _pageController,
           physics: NeverScrollableScrollPhysics(),

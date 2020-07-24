@@ -205,27 +205,29 @@ class _SetAddressState extends State<SetAddress> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       content: Form(
         key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _regionDropdown(),
-            SizedBox(
-              height: 10,
-            ),
-            _townDropdown(),
-            SizedBox(
-              height: 10,
-            ),
-            _addressField(),
-            SizedBox(
-              height: 10,
-            ),
-            _infoField(),
-            SizedBox(
-              height: 10,
-            ),
-            _setDefaultAddress()
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _regionDropdown(),
+              SizedBox(
+                height: 10,
+              ),
+              _townDropdown(),
+              SizedBox(
+                height: 10,
+              ),
+              _addressField(),
+              SizedBox(
+                height: 10,
+              ),
+              _infoField(),
+              SizedBox(
+                height: 10,
+              ),
+              _setDefaultAddress()
+            ],
+          ),
         ),
       ),
       actions: [

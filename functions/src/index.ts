@@ -1,7 +1,15 @@
-// import * as functions from 'firebase-functions'
-// import * as superadmin from 'firebase-admin'
+import * as superadmin from 'firebase-admin'
+superadmin.initializeApp()
 
-// export const createUser = functions.auth.user()
-//     .onCreate((user) => {
-        
-//     })
+// import * as api from './query_api'
+
+import * as productOps from './product_operations'
+
+export const db = superadmin.firestore()
+
+exports.productIdentifier = productOps.identifyProduct
+
+// /*
+// !!!---API---!!!
+// */
+// exports.NaquaMain = api.NaquaMain

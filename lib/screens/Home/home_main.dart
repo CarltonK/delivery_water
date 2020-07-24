@@ -9,7 +9,7 @@ import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/home/profilePage.dart';
-import 'package:water_del/screens/home/supplier_home.dart';
+import 'package:water_del/screens/home/supplier/supplier_home.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/productModel.dart';
@@ -210,46 +210,62 @@ class _HomeMainState extends State<HomeMain> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Consumer<AuthProvider>(
-    builder: (context, AuthProvider value, child) {
-      userCurrent = value.currentUser;
-      return Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: StreamBuilder<UserModel>(
-            stream: _databaseProvider.streamUser(userCurrent.uid),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: [
-                    if (snapshot.data.clientStatus) ...[
-                      Container(
-                        height: size.height,
-                        width: size.width,
-                        child: clientPage(),
-                      )
-                    ],
-                    if (!snapshot.data.clientStatus) ...[
-                      Container(
-                        height: size.height,
-                        width: size.width,
-                        child: SupplierHome(
-                          user: userCurrent,
-                        ),
-                      )
-                    ]
-                  ],
-                );
-              }
-              return Center(
-                  child: SpinKitFoldingCube(
-                    size: 150,
-                    color: Theme.of(context).primaryColor,
-                  ));
-            },
+      builder: (context, AuthProvider value, child) {
+        userCurrent = value.currentUser;
+        return Scaffold(
+          body: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle.light,
+            child: StreamBuilder<UserModel>(
+              stream: _databaseProvider.streamUser(userCurrent.uid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        if (snapshot.data.clientStatus) ...[
+                          Container(
+                            height: size.height,
+                            width: size.width,
+                            child: clientPage(),
+                          )
+                        ],
+                        if (!snapshot.data.clientStatus) ...[
+                          Container(
+                            height: size.height,
+                            width: size.width,
+                            child: SupplierHome(
+                              user: userCurrent,
+                            ),
+                          )
+                        ]
+                      ],
+                    ),
+                  );
+                }
+                return Center(
+                    child: SpinKitFoldingCube(
+                  size: 150,
+                  color: Theme.of(context).primaryColor,
+                ));
+              },
+            ),
           ),
-        ),
-      );
-    },
+        );
+      },
+    );
+  }
+}
+
+class ClientHome extends StatelessWidget {
+  final Widget profile;
+  final Widget delivery;
+
+  ClientHome({this.profile, this.delivery});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      
     );
   }
 }
