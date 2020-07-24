@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/provider/database_provider.dart';
+import 'package:water_del/widgets/global/product_info_dialog.dart';
 
 class ProductMapWidget extends StatefulWidget {
   final LocationModel location;
@@ -23,6 +24,16 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
   final Map<String, Marker> _markers = {};
   LocationModel myLocation;
 
+  Future showDetailsDialog(Product product) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => ProductInfoDialog(
+        product: product,
+      ),
+    );
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -34,11 +45,10 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
           double longitude = item.details['location']['longitude'];
           String itemIndex = widget.products.indexOf(item).toString();
           final marker = Marker(
-              markerId: MarkerId(itemIndex),
-              position: LatLng(latitude, longitude),
-              icon: BitmapDescriptor.defaultMarkerWithHue(0.8),
-              infoWindow:
-                  InfoWindow(title: item.title, snippet: item.description));
+            markerId: MarkerId(itemIndex),
+            onTap: () => showDetailsDialog(item),
+            position: LatLng(latitude, longitude),
+          );
           _markers[itemIndex] = marker;
         }
       });

@@ -216,7 +216,6 @@ class _HomeMainState extends State<HomeMain> {
                 style: normalOutlineBlack,
               ),
             );
-            break;
           case ConnectionState.active:
           case ConnectionState.none:
             return Center(
