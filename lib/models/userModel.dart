@@ -6,6 +6,7 @@ class UserModel {
   final Timestamp registerDate = Timestamp.now();
   Timestamp lastLogin;
   String uid;
+  String natID;
   bool clientStatus;
   String password;
   String token;
@@ -19,6 +20,7 @@ class UserModel {
       {this.fullName,
       this.email,
       this.uid,
+      this.natID,
       this.password,
       this.lastLogin,
       this.clientStatus = true,
@@ -33,6 +35,7 @@ class UserModel {
     Map data = doc.data;
     return UserModel(
         fullName: data['fullName'] ?? '',
+        natID: data['natID'],
         photoUrl: data['photoUrl'],
         location: data['location'] ?? null,
         clientStatus: data['clientStatus'],
@@ -47,6 +50,7 @@ class UserModel {
   Map<String, dynamic> toFirestore() => {
         'fullName': fullName,
         'email': email,
+        'natID': natID,
         'photoUrl': photoUrl,
         'location': location,
         'lastLogin': lastLogin,

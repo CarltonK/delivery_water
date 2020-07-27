@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/widgets/global/product_info_dialog.dart';
@@ -23,6 +25,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
   Completer<GoogleMapController> _controller = Completer();
   final Map<String, Marker> _markers = {};
   LocationModel myLocation;
+  OrderModel order;
 
   Future showDetailsDialog(Product product) {
     return showDialog(
@@ -30,6 +33,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
       barrierDismissible: false,
       builder: (context) => ProductInfoDialog(
         product: product,
+        orderModel: order,
       ),
     );
   }
@@ -64,6 +68,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
             .then((value) => print('We have updated the location of the user'))
             .catchError((error) =>
                 print('updateLocation ERROR -> ${error.toString()}')));
+    order = context.read<OrderModel>();
     super.initState();
   }
 

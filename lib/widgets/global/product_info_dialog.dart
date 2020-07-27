@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class ProductInfoDialog extends StatelessWidget {
   final Product product;
-  ProductInfoDialog({@required this.product});
-  Size size;
+  final OrderModel orderModel;
+  ProductInfoDialog({@required this.product, @required this.orderModel});
+  static Size size;
 
   Widget _cancelButton(BuildContext context) {
     return FlatButton(
@@ -19,7 +21,10 @@ class ProductInfoDialog extends StatelessWidget {
 
   Widget _addButton(BuildContext context) {
     return FlatButton(
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          orderModel.addProduct(product);
+          print(orderModel.toFirestore());
+        },
         child: Icon(
           Icons.add_shopping_cart,
           color: Colors.green,
@@ -51,6 +56,7 @@ class ProductInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
+    print(orderModel.toFirestore());
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(

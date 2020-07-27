@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/screens/authentication/login.dart';
 import 'package:water_del/screens/authentication/registration.dart';
-import 'package:water_del/screens/home/home_main.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class MainAuthentication extends StatefulWidget {
@@ -112,7 +109,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-/*
-
-*/

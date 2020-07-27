@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/models/userModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
@@ -66,15 +67,6 @@ class _HomeMainState extends State<HomeMain> {
         icon: Icon(CupertinoIcons.location_solid),
       ),
     );
-  }
-
-  Widget _appBarItems() {
-    return Positioned(
-        top: 40,
-        left: 10,
-        child: Row(
-          children: <Widget>[popupPlace()],
-        ));
   }
 
   Widget _profilePage() {
@@ -241,12 +233,23 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   Widget clientPage() {
-    return Stack(
-      children: [
-        display.length == 0 ? baseMap() : productMap(),
-        _profilePage(),
-        _bottomSelection()
-      ],
+    return ChangeNotifierProvider(
+      create: (context) => OrderModel(
+        client: userCurrent.uid,
+        grandtotal: 0,
+        location: myLocation,
+        status: false,
+        products: [],
+      ),
+      child: Consumer<OrderModel>(
+          builder: (context, OrderModel value, child) => Stack(
+                children: [
+                  display.length == 0 ? baseMap() : productMap(),
+                  value.products.length > 0 ? CartIcon() : Container(),
+                  _profilePage(),
+                  _bottomSelection()
+                ],
+              )),
     );
   }
 
@@ -296,6 +299,41 @@ class _HomeMainState extends State<HomeMain> {
           ),
         );
       },
+    );
+  }
+}
+
+class CartIcon extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    int items = Provider.of<OrderModel>(context).products.length;
+    print(items);
+    return Positioned(
+      top: 40,
+      left: 10,
+      child: GestureDetector(
+        onTap: () {},
+        child: Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.4), shape: BoxShape.circle),
+          child: Stack(
+            overflow: Overflow.visible,
+            alignment: Alignment.center,
+            children: [
+              Positioned(bottom: 5, child: Icon(Icons.shopping_cart)),
+              Positioned(
+                top: 8,
+                child: Text(
+                  items.toString() ?? '0',
+                  style: boldOutlineWhite,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
