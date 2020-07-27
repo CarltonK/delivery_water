@@ -244,16 +244,11 @@ class _HomeMainState extends State<HomeMain> {
     return Stack(
       children: [
         display.length == 0 ? baseMap() : productMap(),
-        _appBarItems(),
         _profilePage(),
         _bottomSelection()
       ],
     );
   }
-
-  // Future<bool> _onWillPop() {
-  //   return logoutPopUp(context) ?? false;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -302,17 +297,5 @@ class _HomeMainState extends State<HomeMain> {
         );
       },
     );
-  }
-}
-
-class ClientHome extends StatelessWidget {
-  final Widget profile;
-  final Widget delivery;
-
-  ClientHome({this.profile, this.delivery});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack();
   }
 }
