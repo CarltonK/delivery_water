@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 1.0.5+1
+version: 1.0.6+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -20,21 +20,19 @@ dependencies:
   cloud_firestore:
   firebase_messaging:
   firebase_crashlytics:
+  firebase_storage:
+  image_picker:
   firebase_performance: 
   google_sign_in:
   google_maps_flutter: ^0.5.27+3
-  # Permissions
   permission_handler: ^3.1.0
-  # Location
   location: ^2.3.5
-  # Spin Kit
   flutter_spinkit: 
   cupertino_icons: ^0.1.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  # Launcher Icons
   flutter_launcher_icons: ^0.7.5
 
 flutter:

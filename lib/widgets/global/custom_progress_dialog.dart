@@ -9,26 +9,22 @@ class CustomProgressDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            message,
-            style: GoogleFonts.muli(
-                textStyle: TextStyle(color: Colors.black, fontSize: 16)),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10),
-          SpinKitDualRing(
-            color: Colors.greenAccent[700],
-            size: 100,
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(
+          message,
+          style: GoogleFonts.muli(
+              textStyle: TextStyle(color: Colors.black, fontSize: 16)),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 10),
+        SpinKitDualRing(
+          color: Colors.greenAccent[700],
+          size: 100,
+        )
+      ],
     );
   }
 }

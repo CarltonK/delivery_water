@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:water_del/models/singleAddress.dart';
 import 'package:water_del/models/userModel.dart';
 import 'package:water_del/provider/database_provider.dart';
+import 'package:water_del/provider/storage_provider.dart';
 import 'package:water_del/screens/home/orderhistory.dart';
 import 'package:water_del/utilities/global/dialogs.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
@@ -24,9 +28,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   PageController _controller;
   DatabaseProvider _databaseProvider = DatabaseProvider();
+  StorageProvider _storageProvider = StorageProvider();
   UserModel currentUser;
 
   Future addressFuture;
+
+  File _imageFile;
+  String urlResult;
 
   Widget _backButton(BuildContext context) {
     return Positioned(
@@ -291,6 +299,64 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Future<void> pickImage(ImageSource source) async {
+    Navigator.of(context).pop();
+    await ImagePicker.pickImage(source: source).then((value) {
+      if (value != null) {
+        setState(() {
+          _imageFile = value;
+        });
+        dialogLoading(context, 'Uploading...');
+        _changePic();
+      }
+    });
+  }
+
+  Future _changePic() async {
+    String uid = widget.user.uid;
+    String dpFile = await _storageProvider.startUpload(_imageFile, uid);
+    _databaseProvider
+        .uploadDP(uid, dpFile)
+        .then((value) => Navigator.of(context).pop())
+        .whenComplete(
+            () => dialogInfo(context, 'Your profile has been updated'))
+        .catchError((error) => dialogInfo(context, error.toString()));
+  }
+
+  Future showImageSelection() {
+    return showCupertinoModalPopup(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        title: Center(
+          child: Text(
+            'Profile Picture',
+            style: boldOutlineBlack,
+          ),
+        ),
+        actions: [
+          CupertinoActionSheetAction(
+              onPressed: () => pickImage(ImageSource.camera),
+              child: Text(
+                'CAMERA',
+                style: boldOutlineGreen,
+              )),
+          CupertinoActionSheetAction(
+              onPressed: () => pickImage(ImageSource.gallery),
+              child: Text(
+                'GALLERY',
+                style: boldOutlineGreen,
+              ))
+        ],
+        cancelButton: CupertinoActionSheetAction(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'CANCEL',
+              style: boldOutlineRed,
+            )),
+      ),
+    );
+  }
+
   Widget _userDp(Size size) {
     String url = currentUser.photoUrl;
     return Positioned(
@@ -306,7 +372,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.white,
                   size: 30,
                 ),
-                onPressed: null)
+                onPressed: () => showImageSelection(),
+              )
             : Container(),
         radius: size.width * 0.14,
       ),
@@ -349,7 +416,6 @@ class _ProfilePageState extends State<ProfilePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 currentUser = snapshot.data;
-                // print(currentUser.toFirestore());
                 return Stack(
                   children: <Widget>[
                     _imageBackground(size),

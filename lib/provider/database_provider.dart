@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_del/models/locationModel.dart';
@@ -159,5 +158,13 @@ class DatabaseProvider {
       }
     }
     return null;
+  }
+
+  Future<void> uploadDP(String uid, String dp) async {
+    try {
+      await _db.collection('users').document(uid).updateData({'photoUrl': dp});
+    } catch (e) {
+      throw e.toString();
+    }
   }
 }
