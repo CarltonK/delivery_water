@@ -199,10 +199,8 @@ describe('Naqua', () => {
 
         const admin = getAdminFirestore()
         await admin.collection('users').doc(myID).set({clientStatus: true})
-        await admin.collection('users').doc(theirID).set({clientStatus: false})
 
         await firebase.assertSucceeds({
-            'supplier': theirID,
             'client': myID,
             'status': false,
             'location': {latitude: 1, longitude: 2},

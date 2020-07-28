@@ -23,9 +23,8 @@ service cloud.firestore {
     function isOrderCorrect() {
       return request.resource.data.status == false
         && (request.resource.data.location != null && request.resource.data.location is map)
-        && request.resource.data.size() == 6
+        && request.resource.data.size() >= 5
         && request.resource.data.products != null
-        && isSupplier(request.resource.data.supplier)
         && isClient(request.resource.data.client)
     }
 
