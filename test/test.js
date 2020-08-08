@@ -247,7 +247,7 @@ describe('Naqua', () => {
         const order = db.collection('orders').doc('order_three')
 
         const admin = getAdminFirestore()
-        await admin.collection('orders').doc('order_three').set({supplier: theirID})
+        await admin.collection('orders').doc('order_three').set({suppliers: [theirID]})
         await firebase.assertSucceeds(order.get())
     })
 

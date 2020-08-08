@@ -40,7 +40,7 @@ service cloud.firestore {
     }
 
     function isValidOrderSupplier(order) {
-      return resource.data.supplier == get(/databases/$(database)/documents/orders/$(order)).data.supplier
+      return request.auth.uid in get(/databases/$(database)/documents/orders/$(order)).data.suppliers
     }
 
     function isOwner(uid) {
