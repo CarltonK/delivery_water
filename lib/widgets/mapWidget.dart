@@ -19,6 +19,7 @@ class _MapWidgetState extends State<MapWidget> {
   Completer<GoogleMapController> _controller = Completer();
   final Map<String, Marker> _markers = {};
   LocationModel myLocation;
+  BitmapDescriptor pinLocationIcon;
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
@@ -28,17 +29,26 @@ class _MapWidgetState extends State<MapWidget> {
         for (var item in widget.coordinates) {
           String itemIndex = widget.coordinates.indexOf(item).toString();
           final marker = Marker(
-            markerId: MarkerId(itemIndex),
-            position: LatLng(item.latitude, item.longitude),
-          );
+              markerId: MarkerId(itemIndex),
+              position: LatLng(item.latitude, item.longitude),
+              infoWindow: InfoWindow(
+                  title: 'You are here', snippet: widget.user.email ?? ''),
+              icon: pinLocationIcon);
           _markers[itemIndex] = marker;
         }
       });
     });
   }
 
+  void setCustomMapPin() async {
+    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'assets/images/map_marker.png');
+  }
+
   @override
   void initState() {
+    setCustomMapPin();
     Future.delayed(
         Duration(seconds: 1),
         () => _databaseProvider
@@ -56,9 +66,10 @@ class _MapWidgetState extends State<MapWidget> {
     double lon = myLocation.longitude;
     return GoogleMap(
         onMapCreated: _onMapCreated,
+        myLocationEnabled: true,
         zoomControlsEnabled: false,
         markers: _markers.values.toSet(),
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 14.5));
+            CameraPosition(target: LatLng(lat, lon), zoom: 15, bearing: 30));
   }
 }

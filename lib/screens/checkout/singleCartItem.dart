@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:water_del/models/cartModel.dart';
+import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class SingleCartItem extends StatelessWidget {
-  final CartModel model;
-
+  final Product model;
   SingleCartItem({@required this.model});
 
   @override
@@ -22,8 +21,8 @@ class SingleCartItem extends StatelessWidget {
             width: 100,
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  model.imgUrl,
+                child: Image.asset(
+                  'assets/launcher/waterdel.png',
                   fit: BoxFit.fitHeight,
                 )),
           ),

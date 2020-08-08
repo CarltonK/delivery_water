@@ -54,13 +54,25 @@ class _ProfilePageState extends State<ProfilePage> {
     return Positioned(
       top: 30,
       right: 10,
-      child: IconButton(
-          tooltip: 'Logout',
-          icon: Icon(
-            Icons.exit_to_app,
-            color: Colors.white,
-          ),
-          onPressed: () => logoutPopUp(context)),
+      child: Column(
+        children: [
+          IconButton(
+              tooltip: 'Logout',
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.white,
+              ),
+              onPressed: () => logoutPopUp(context)),
+          IconButton(
+              tooltip: 'Info',
+              icon: Icon(
+                Icons.info,
+                color: Colors.white,
+              ),
+              onPressed: () => dialogInfo(context,
+                  'Please contact customer support on 07XXXXXXXX to reset your status')),
+        ],
+      ),
     );
   }
 

@@ -23,7 +23,6 @@ class ProductInfoDialog extends StatelessWidget {
     return FlatButton(
         onPressed: () {
           orderModel.addProduct(product);
-          print(orderModel.toFirestore());
         },
         child: Icon(
           Icons.add_shopping_cart,

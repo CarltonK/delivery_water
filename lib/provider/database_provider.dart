@@ -83,11 +83,11 @@ class DatabaseProvider {
   }
 
   Future<void> updatePhoneandStatus(
-      String uid, String phone, bool status) async {
+      String uid, String phone, String natId, bool status) async {
     await _db
         .collection('users')
         .document(uid)
-        .updateData({'phone': phone, 'clientStatus': status});
+        .updateData({'phone': phone, 'clientStatus': status, 'natID': natId});
   }
 
   Future<void> postProduct(String uid, Product product) async {

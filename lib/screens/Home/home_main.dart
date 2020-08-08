@@ -17,6 +17,7 @@ import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/productModel.dart';
 import 'package:water_del/widgets/mapWidget.dart';
 import 'package:water_del/widgets/productMapWidget.dart';
+import 'package:water_del/screens/checkout/cart.dart';
 
 class HomeMain extends StatefulWidget {
   @override
@@ -306,13 +307,19 @@ class _HomeMainState extends State<HomeMain> {
 class CartIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    int items = Provider.of<OrderModel>(context).products.length;
+    OrderModel model = Provider.of<OrderModel>(context);
+    int items = model.products.length;
     print(items);
     return Positioned(
       top: 40,
       left: 10,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).push(SlideLeftTransition(
+              page: CartScreen(
+            orderModel: model,
+          )));
+        },
         child: Container(
           height: 48,
           width: 48,

@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:water_del/models/cartModel.dart';
 import 'package:water_del/screens/checkout/finalCheckout.dart';
 import 'package:water_del/screens/checkout/singleCartItem.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/models/orderModel.dart';
+import 'package:water_del/models/product.dart';
 
 class CartScreen extends StatefulWidget {
+  final OrderModel orderModel;
+  CartScreen({@required this.orderModel});
   @override
   _CartScreenState createState() => _CartScreenState();
 }
@@ -17,11 +20,12 @@ class _CartScreenState extends State<CartScreen> {
       backgroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
-          onPressed: null),
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       centerTitle: true,
       title: Text(
         'Cart',
@@ -46,6 +50,41 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
+  Widget singleItem(int index) {
+    Product product = widget.orderModel.products[index];
+    return Dismissible(
+        key: Key(product.title),
+        background: Container(
+          margin: EdgeInsets.symmetric(vertical: 5),
+          alignment: Alignment.centerRight,
+          decoration: BoxDecoration(
+            color: Colors.red,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Icon(
+                CupertinoIcons.delete_solid,
+                color: Colors.white,
+              ),
+              Icon(
+                CupertinoIcons.delete_solid,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
+        onDismissed: (direction) {
+          widget.orderModel.removeProduct(index);
+          // setState(() {
+          //   itemsCart.removeAt(index);
+          // });
+          // Provider.of<OrderModel>(context).removeProduct(index);
+        },
+        child: SingleCartItem(model: product));
+  }
+
   Widget _cartBody(Size size) {
     return Align(
       alignment: Alignment.topCenter,
@@ -61,38 +100,9 @@ class _CartScreenState extends State<CartScreen> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
           child: ListView.builder(
-            itemCount: itemsCart.length,
+            itemCount: widget.orderModel.products.length,
             itemBuilder: (context, index) {
-              CartModel singleItem = itemsCart[index];
-              return Dismissible(
-                  key: Key(itemsCart[index].title),
-                  background: Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    alignment: Alignment.centerRight,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Icon(
-                          CupertinoIcons.delete_solid,
-                          color: Colors.white,
-                        ),
-                        Icon(
-                          CupertinoIcons.delete_solid,
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onDismissed: (direction) {
-                    setState(() {
-                      itemsCart.removeAt(index);
-                    });
-                  },
-                  child: SingleCartItem(model: singleItem));
+              return singleItem(index);
             },
           ),
         ),
@@ -105,7 +115,7 @@ class _CartScreenState extends State<CartScreen> {
       alignment: Alignment.bottomCenter,
       child: Container(
         width: size.width,
-        padding: EdgeInsets.only(bottom: 5, top: 5),
+        padding: EdgeInsets.only(bottom: 25, top: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -118,7 +128,7 @@ class _CartScreenState extends State<CartScreen> {
                   style: normalDescription,
                 ),
                 Text(
-                  '1000 KES',
+                  '${widget.orderModel.grandtotal.toStringAsFixed(2)} KES',
                   style: headerOutlineWhite,
                 )
               ],
@@ -145,7 +155,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _cartAppBar(),

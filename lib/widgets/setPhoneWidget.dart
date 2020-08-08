@@ -18,12 +18,19 @@ class _SetPhoneWidgetState extends State<SetPhoneWidget> {
   final DatabaseProvider _db = DatabaseProvider();
 
   static String _phone;
+  static String _natID;
+  final FocusNode focusId = FocusNode();
 
   bool _isClient = true;
 
   handlePhone(String value) {
     _phone = value.trim();
     print('Phone -> $_phone');
+  }
+
+  handleNatId(String value) {
+    _natID = value.trim();
+    print('National ID -> $_natID');
   }
 
   String validatePhone(String value) {
@@ -36,16 +43,45 @@ class _SetPhoneWidgetState extends State<SetPhoneWidget> {
     return null;
   }
 
+  String validateNatId(String value) {
+    if (value.isEmpty) {
+      return 'Please provide an ID number';
+    }
+    if (value.length < 7) {
+      return 'ID number should be 7 or 8 digits';
+    }
+    if (value.length > 8) {
+      return 'ID number should be 7 or 8 digits';
+    }
+    return null;
+  }
+
   Widget _phoneField() {
     return TextFormField(
       validator: validatePhone,
       autofocus: false,
+      textInputAction: TextInputAction.next,
       onSaved: handlePhone,
-      onFieldSubmitted: (value) => FocusScope.of(context).unfocus(),
+      onFieldSubmitted: (value) => FocusScope.of(context).requestFocus(focusId),
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Phone',
+          labelStyle: normalOutlineBlack),
+    );
+  }
+
+  Widget _natIdField() {
+    return TextFormField(
+      validator: validateNatId,
+      autofocus: false,
+      focusNode: focusId,
+      onSaved: handleNatId,
+      onFieldSubmitted: (value) => FocusScope.of(context).unfocus(),
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'ID',
           labelStyle: normalOutlineBlack),
     );
   }
@@ -65,7 +101,7 @@ class _SetPhoneWidgetState extends State<SetPhoneWidget> {
       form.save();
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       _db
-          .updatePhoneandStatus(widget.user.uid, _phone, _isClient)
+          .updatePhoneandStatus(widget.user.uid, _phone, _natID, _isClient)
           .then((value) {
         Navigator.of(context).pop();
         dialogInfo(context, 'Your profile has been updated successfully');
@@ -94,14 +130,16 @@ class _SetPhoneWidgetState extends State<SetPhoneWidget> {
           _isClient ? 'Client' : 'Supplier',
           style: normalOutlineBlack,
         ),
-        Checkbox(
+        Switch(
           value: _isClient,
           onChanged: (value) {
             setState(() {
               _isClient = value;
             });
           },
-        )
+          activeTrackColor: Theme.of(context).accentColor.withOpacity(0.5),
+          activeColor: Theme.of(context).accentColor,
+        ),
       ],
     );
   }
@@ -122,6 +160,10 @@ class _SetPhoneWidgetState extends State<SetPhoneWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _phoneField(),
+              SizedBox(
+                height: 10,
+              ),
+              _natIdField(),
               SizedBox(
                 height: 10,
               ),

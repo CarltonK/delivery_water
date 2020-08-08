@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
-import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/widgets/global/product_info_dialog.dart';
 
 class ProductMapWidget extends StatefulWidget {
@@ -21,11 +20,11 @@ class ProductMapWidget extends StatefulWidget {
 }
 
 class _ProductMapWidgetState extends State<ProductMapWidget> {
-  DatabaseProvider _databaseProvider = DatabaseProvider();
   Completer<GoogleMapController> _controller = Completer();
   final Map<String, Marker> _markers = {};
   LocationModel myLocation;
   OrderModel order;
+  BitmapDescriptor pinLocationIcon;
 
   Future showDetailsDialog(Product product) {
     return showDialog(
@@ -49,26 +48,27 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
           double longitude = item.details['location']['longitude'];
           String itemIndex = widget.products.indexOf(item).toString();
           final marker = Marker(
-            markerId: MarkerId(itemIndex),
-            onTap: () => showDetailsDialog(item),
-            position: LatLng(latitude, longitude),
-          );
+              markerId: MarkerId(itemIndex),
+              onTap: () => showDetailsDialog(item),
+              position: LatLng(latitude, longitude),
+              icon: pinLocationIcon);
           _markers[itemIndex] = marker;
         }
       });
     });
   }
 
+  void setCustomMapPin() async {
+    pinLocationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'assets/images/map_marker.png');
+  }
+
   @override
   void initState() {
-    Future.delayed(
-        Duration(seconds: 1),
-        () => _databaseProvider
-            .updateLocation(widget.user.uid, myLocation)
-            .then((value) => print('We have updated the location of the user'))
-            .catchError((error) =>
-                print('updateLocation ERROR -> ${error.toString()}')));
     order = context.read<OrderModel>();
+    order.location = widget.location;
+    setCustomMapPin();
     super.initState();
   }
 
@@ -79,9 +79,10 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
     double lon = myLocation.longitude;
     return GoogleMap(
         onMapCreated: _onMapCreated,
+        myLocationEnabled: true,
         zoomControlsEnabled: false,
         markers: _markers.values.toSet(),
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 12));
+            CameraPosition(target: LatLng(lat, lon), zoom: 15, bearing: 45));
   }
 }
