@@ -1,8 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:water_del/main.dart';
+import 'package:water_del/models/orderModel.dart';
+import 'package:water_del/provider/database_provider.dart';
+import 'package:water_del/screens/authentication/main_authentication.dart';
+import 'package:water_del/screens/home/home_main.dart';
+import 'package:water_del/utilities/global/dialogs.dart';
+import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class FinalCheckout extends StatelessWidget {
+  final OrderModel order;
+  FinalCheckout({@required this.order});
+
+  final DatabaseProvider databaseProvider = DatabaseProvider();
+
   Widget _checkoutAppBar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
@@ -19,14 +33,6 @@ class FinalCheckout extends StatelessWidget {
         'Checkout',
         style: headerOutlineBlack,
       ),
-      actions: <Widget>[
-        IconButton(
-            icon: Icon(
-              Icons.cancel,
-              color: Colors.black,
-            ),
-            onPressed: null)
-      ],
     );
   }
 
@@ -87,15 +93,12 @@ class FinalCheckout extends StatelessWidget {
             _paymentMethodCard('assets/logos/mpesa_logo.png'),
             _paymentMethodCard('assets/logos/cash.png'),
             Expanded(child: Container()),
-            _infoRow('ITEMS (4)', 'ksh 68'),
+            _infoRow(
+                'ITEMS (${order.products.length})', '${order.grandtotal} KES'),
             SizedBox(
               height: 15,
             ),
-            _infoRow('Delivery Services', 'ksh 100'),
-            SizedBox(
-              height: 20,
-            ),
-            _infoRow('Total Price', 'ksh 168'),
+            _infoRow('Total Price', '${order.grandtotal} KES'),
             SizedBox(
               height: 15,
             ),
@@ -105,14 +108,24 @@ class FinalCheckout extends StatelessWidget {
     );
   }
 
-  Widget _finalCheckoutDetails(Size size) {
+  Widget _finalCheckoutDetails(BuildContext context, Size size) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
         width: size.width,
         padding: EdgeInsets.only(bottom: 5, top: 5),
         child: FlatButton(
-          onPressed: () {},
+          onPressed: () {
+            databaseProvider.createOrder(order).then((value) {
+              dialogInfo(context,
+                  "We have received your order. Hang tight while we process it");
+              order.products = [];
+              Timer(Duration(seconds: 2), () {
+                Navigator.of(context)
+                    .pushReplacement(SlideRightTransition(page: MyApp()));
+              });
+            }).catchError((error) => dialogInfo(context, error.toString()));
+          },
           color: Colors.transparent,
           padding: EdgeInsets.all(8),
           shape: RoundedRectangleBorder(
@@ -137,7 +150,7 @@ class FinalCheckout extends StatelessWidget {
         fit: StackFit.expand,
         children: <Widget>[
           _backgroundColor(),
-          _finalCheckoutDetails(size),
+          _finalCheckoutDetails(context, size),
           _checkoutBody(size),
         ],
       ),

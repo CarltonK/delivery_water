@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/models/reviewModel.dart';
 import 'package:water_del/models/singleAddress.dart';
@@ -163,6 +164,21 @@ class DatabaseProvider {
   Future<void> uploadDP(String uid, String dp) async {
     try {
       await _db.collection('users').document(uid).updateData({'photoUrl': dp});
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> createOrder(OrderModel order) async {
+    List<dynamic> products = order.products;
+    products.forEach((element) {
+      int index = products.indexOf(element);
+      products.removeAt(index);
+      products.insert(index, element.toJson());
+    });
+    print(order.toFirestore());
+    try {
+      await _db.collection('orders').document().setData(order.toFirestore());
     } catch (e) {
       throw e.toString();
     }

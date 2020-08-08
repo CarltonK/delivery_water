@@ -3,7 +3,6 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/screens/authentication/main_authentication.dart';

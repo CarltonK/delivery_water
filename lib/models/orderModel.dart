@@ -24,18 +24,29 @@ class OrderModel with ChangeNotifier {
       this.grandtotal});
 
   addProduct(element) {
-    _products.add(element);
+    print(element.toJson());
+    if (_products.contains(element)) {
+      element.count++;
+    } else {
+      element.count++;
+      _products.add(element);
+    }
     calculateTotal();
   }
 
   removeProduct(int index) {
-    _products.removeAt(index);
+    print(_products[index].toJson());
+    if (_products[index].count <= 1) {
+      _products.removeAt(index);
+    } else {
+      _products[index].count--;
+    }
     calculateTotal();
   }
 
   calculateTotal() {
     for (var item in _products) {
-      grandtotal = grandtotal + (item.price * item.quantity);
+      grandtotal = grandtotal + (item.price * item.count);
       notifyListeners();
     }
   }
@@ -55,9 +66,8 @@ class OrderModel with ChangeNotifier {
 
   Map<String, dynamic> toFirestore() => {
         'supplier': supplier,
-        'grandtotal': grandtotal,
         'client': client,
-        'location': location,
+        'location': location.toFirestore(),
         'status': status,
         'date': date,
         'products': products

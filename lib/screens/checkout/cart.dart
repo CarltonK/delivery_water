@@ -31,14 +31,6 @@ class _CartScreenState extends State<CartScreen> {
         'Cart',
         style: headerOutlineBlack,
       ),
-      actions: <Widget>[
-        IconButton(
-            icon: Icon(
-              Icons.cancel,
-              color: Colors.black,
-            ),
-            onPressed: null)
-      ],
     );
   }
 
@@ -52,8 +44,9 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget singleItem(int index) {
     Product product = widget.orderModel.products[index];
+    print(product.toJson());
     return Dismissible(
-        key: Key(product.title),
+        key: Key(product.id),
         background: Container(
           margin: EdgeInsets.symmetric(vertical: 5),
           alignment: Alignment.centerRight,
@@ -102,6 +95,14 @@ class _CartScreenState extends State<CartScreen> {
           child: ListView.builder(
             itemCount: widget.orderModel.products.length,
             itemBuilder: (context, index) {
+              if (widget.orderModel.products.length == 0)
+                return Center(
+                  child: Text(
+                    'Your cart is empty',
+                    textAlign: TextAlign.center,
+                    style: normalOutlineBlack,
+                  ),
+                );
               return singleItem(index);
             },
           ),
@@ -134,8 +135,10 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
             RaisedButton(
-              onPressed: () =>
-                  Navigator.of(context).push(ScaleRoute(page: FinalCheckout())),
+              onPressed: () => Navigator.of(context).push(ScaleRoute(
+                  page: FinalCheckout(
+                order: widget.orderModel,
+              ))),
               color: Colors.blue,
               padding: EdgeInsets.all(8),
               shape: RoundedRectangleBorder(

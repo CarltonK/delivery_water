@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
 
@@ -8,6 +10,7 @@ class SingleCartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(model.toJson());
     return Container(
       decoration: BoxDecoration(
           color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
@@ -60,7 +63,7 @@ class SingleCartItem extends StatelessWidget {
               ),
               Container(
                 color: Colors.transparent,
-                child: Text(model.quantity.toString()),
+                child: Text(model.count.toString()),
               ),
               SizedBox(
                 height: 5,

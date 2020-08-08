@@ -55,7 +55,7 @@ class ProductInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
-    print(orderModel.toFirestore());
+    product.count = 0;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text(
@@ -70,16 +70,23 @@ class ProductInfoDialog extends StatelessWidget {
             height: 10,
           ),
           Text(
-            'Description\n${product.description ?? ''}',
+            'Description',
+            style: boldOutlineBlack,
+          ),
+          Text(
+            '${product.description ?? ''}',
             style: normalOutlineBlack,
           ),
           SizedBox(
             height: 10,
           ),
           Text(
-            'Price\n'
-            '${product.price.toStringAsFixed(2) ?? ''} KES',
+            'Price',
             style: boldOutlineBlack,
+          ),
+          Text(
+            '${product.price.toStringAsFixed(2) ?? ''} KES',
+            style: normalOutlineBlack,
           ),
           SizedBox(
             height: 10,
