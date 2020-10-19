@@ -67,6 +67,18 @@ describe('Naqua', () => {
         await firebase.assertSucceeds(testDoc.set({foo: "bar"}))
     })
 
+    it("Can't view a notification if not owner", async () => {
+        const db = getFirestore(theirAuth);
+        const testDoc = db.collection('users').doc(myID).collection('notifications').doc('not_one')
+        await firebase.assertFails(testDoc.get());
+    })
+
+    it("Can view a notification if is owner", async () => {
+        const db = getFirestore(myAuth);
+        const testDoc = db.collection('users').doc(myID).collection('notifications').doc('not_one')
+        await firebase.assertSucceeds(testDoc.get());
+    })
+
     it("Can't write an address if user is not owner", async () => {
         const db = getFirestore(theirAuth);
         const testDoc = db.collection('users').doc(myID).collection('addresses').doc('add_one')

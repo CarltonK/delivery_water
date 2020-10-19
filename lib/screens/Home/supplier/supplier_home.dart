@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:water_del/screens/home/profilePage.dart';
+import 'package:water_del/screens/home/supplier/orders_page.dart';
 import 'package:water_del/screens/home/supplier/product_page.dart';
 import 'package:water_del/screens/home/supplier/review_page.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
@@ -60,7 +61,9 @@ class _SupplierHomeState extends State<SupplierHome> {
     super.initState();
     _pageController = PageController();
     pages = [
-      Container(),
+      OrdersPage(
+        user: widget.user,
+      ),
       ProductPage(
         user: widget.user,
       ),

@@ -1,45 +1,30 @@
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/widgets/singleClientOrder.dart';
+import 'package:water_del/widgets/singleSupplierOrder.dart';
 
-class OrderHistory extends StatefulWidget {
+class OrdersPage extends StatefulWidget {
+  final FirebaseUser user;
+  OrdersPage({@required this.user});
+
   @override
-  _OrderHistoryState createState() => _OrderHistoryState();
+  _OrdersPageState createState() => _OrdersPageState();
 }
 
-String _uid;
-DatabaseProvider databaseProvider = DatabaseProvider();
-Future ordersFuture;
+class _OrdersPageState extends State<OrdersPage> {
+  DatabaseProvider database = DatabaseProvider();
+  Future ordersFuture;
 
-class _OrderHistoryState extends State<OrderHistory> {
-  Widget _appBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      title: Text(
-        'Orders',
-        style: headerOutlineBlack,
-      ),
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.black,
-        ),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _uid = context.read<AuthProvider>().currentUser.uid;
-    ordersFuture = databaseProvider.getOrdersClient(_uid);
+  Widget sorryText() {
+    return Center(
+        child: Text(
+      'You have not received any order(s)',
+      style: normalOutlineBlack,
+      textAlign: TextAlign.center,
+    ));
   }
 
   Widget ordersBodyBuilder(Size size) {
@@ -63,7 +48,7 @@ class _OrderHistoryState extends State<OrderHistory> {
                 addAutomaticKeepAlives: false,
                 itemBuilder: (context, index) {
                   OrderModel singleOrder = snapshot.data[index];
-                  return SingleClientOrder(order: singleOrder);
+                  return SingleSupplierOrder(order: singleOrder);
                 },
               ),
             );
@@ -78,15 +63,16 @@ class _OrderHistoryState extends State<OrderHistory> {
     );
   }
 
-  Widget sorryText() {
-    return Center(child: Text('This will contain a list of previous orders'));
+  @override
+  void initState() {
+    super.initState();
+    ordersFuture = database.getOrdersSupplier(widget.user.uid);
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: _appBar(context),
       backgroundColor: Colors.white,
       body: ordersBodyBuilder(size),
     );
