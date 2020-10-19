@@ -10,4 +10,3 @@ export const ff = superadmin.firestore;
 exports.productIdentifier = productOps.identifyProduct
 
 exports.newOrder = orderOps.newOrder
-
