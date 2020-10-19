@@ -14,7 +14,7 @@ ProductModel bottledWater = ProductModel(
     selected: true);
 
 ProductModel cartWater = ProductModel(
-    title: 'Cart',
+    title: 'Jerrycan',
     imgUrl: 'assets/images/handcart.png',
     selected: true,
     category: 'cart');

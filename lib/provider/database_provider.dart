@@ -183,4 +183,40 @@ class DatabaseProvider {
       throw e.toString();
     }
   }
+
+  Future<List<OrderModel>> getOrdersSupplier(String uid) async {
+    List<OrderModel> orders = [];
+    try {
+      QuerySnapshot query = await _db
+          .collection('orders')
+          .where('suppliers', arrayContains: uid)
+          .orderBy('date', descending: true)
+          .getDocuments();
+      query.documents.forEach((element) {
+        OrderModel order = OrderModel.fromFirestore(element);
+        orders.add(order);
+      });
+      return orders;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<List<OrderModel>> getOrdersClient(String uid) async {
+    List<OrderModel> orders = [];
+    try {
+      QuerySnapshot query = await _db
+          .collection('orders')
+          .where('client', isEqualTo: uid)
+          .orderBy('date', descending: true)
+          .getDocuments();
+      query.documents.forEach((element) {
+        OrderModel order = OrderModel.fromFirestore(element);
+        orders.add(order);
+      });
+      return orders;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }

@@ -20,14 +20,6 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/users/$(request.resource.data.supplier));  
     }
 
-    function isOrderCorrect() {
-      return request.resource.data.status == false
-        && request.resource.data.location != null
-        && request.resource.data.size() >= 5
-        && request.resource.data.products != null
-        && isClient(request.resource.data.client)
-    }
-
     function isValidReview(order) {
       return get(/databases/$(database)/documents/orders/$(order)).data.status == 'completed'
         && request.resource.data.title != null
@@ -35,13 +27,6 @@ service cloud.firestore {
         && request.resource.data.client == get(/databases/$(database)/documents/orders/$(order)).data.client;
     }
 
-    function isValidOrderClient(order) {
-      return resource.data.client == get(/databases/$(database)/documents/orders/$(order)).data.client
-    }
-
-    function isValidOrderSupplier(order) {
-      return request.auth.uid in get(/databases/$(database)/documents/orders/$(order)).data.suppliers
-    }
 
     function isOwner(uid) {
       return request.auth.uid == uid;
@@ -80,6 +65,9 @@ service cloud.firestore {
         allow create: if isAddressValid(userId);
         allow read: if isOwner(userId);
       }
+      match /notifications/{notification} {
+        allow read: if isOwner(userId)
+      }
     }
     match /rides/{rideId} {
       //Only a client can create
@@ -95,8 +83,26 @@ service cloud.firestore {
         && resource.data.ridestatus != true;
     }
     match /orders/{order} {
+
+      function isOrderCorrect() {
+        return request.resource.data.status == false
+          && request.resource.data.location != null
+          && request.resource.data.size() >= 5
+          && request.resource.data.products != null
+          && isClient(request.resource.data.client);
+      }
+
+      function isValidOrderClient() {
+        return request.auth.uid == resource.data.client;
+      }
+
+      function isValidOrderSupplier() {
+        let suppliersList = resource.data.suppliers;
+        return request.auth.uid in suppliersList;
+      }
+
       allow create: if isOrderCorrect();
-      allow read, update: if isValidOrderClient(order) || isValidOrderSupplier(order)
+      allow read, update: if isValidOrderClient() || isValidOrderSupplier();
     }
     match /reviews/{review} {
       allow create: if isAuthenticated() && isValidReview(request.resource.data.orderId);

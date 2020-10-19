@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1093517025643",
+    "firebase_url": "https://naqua-1b2bb.firebaseio.com",
+    "project_id": "naqua-1b2bb",
+    "storage_bucket": "naqua-1b2bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093517025643:android:868d2dfe90c2a81aa02c2e",
+        "android_client_info": {
+          "package_name": "com.water_del.nairobi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093517025643-go90al8dc7t207csgarra9bhrbt145r3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.water_del.nairobi",
+            "certificate_hash": "4d283a667d2e33f1beaf378dc024c31af9c1d2a8"
+          }
+        },
+        {
+          "client_id": "1093517025643-75n6h98ja7dcjtaaqss53l40cd1s73p7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW2ylkjGECuhEED3W5x2T0m2qtvF-HbZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093517025643-75n6h98ja7dcjtaaqss53l40cd1s73p7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

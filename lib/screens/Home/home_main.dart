@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +33,7 @@ class _HomeMainState extends State<HomeMain> {
   List<String> display = [];
   LocationModel myLocation;
   Future productFuture;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   Widget popupPlace() {
     return Container(
@@ -160,6 +162,11 @@ class _HomeMainState extends State<HomeMain> {
   void initState() {
     super.initState();
     _controller = PageController(initialPage: 0, viewportFraction: 0.5);
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('Message -> $message');
+      },
+    );
   }
 
   @override

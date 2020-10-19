@@ -82,7 +82,7 @@ class _CartScreenState extends State<CartScreen> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        height: size.height * 0.8,
+        height: size.height * 0.75,
         width: size.height,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(

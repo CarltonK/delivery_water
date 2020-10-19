@@ -158,7 +158,7 @@ class _CreateProductState extends State<CreateProduct> {
     DropdownMenuItem<dynamic>(
         value: 'cart',
         child: Text(
-          'Hand Cart',
+          'Jerrycan',
           style: normalOutlineBlack,
         )),
     DropdownMenuItem<dynamic>(
