@@ -25,7 +25,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final String url = 'assets/images/background.jpg';
-
+  final picker = ImagePicker();
   PageController _controller;
   DatabaseProvider _databaseProvider = DatabaseProvider();
   StorageProvider _storageProvider = StorageProvider();
@@ -313,10 +313,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> pickImage(ImageSource source) async {
     Navigator.of(context).pop();
-    await ImagePicker.pickImage(source: source).then((value) {
+    picker.getImage(source: source).then((value) {
       if (value != null) {
         setState(() {
-          _imageFile = value;
+          _imageFile = File(value.path);
         });
         dialogLoading(context, 'Uploading...');
         _changePic();

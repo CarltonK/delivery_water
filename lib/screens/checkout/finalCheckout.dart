@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:water_del/main.dart';
 import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/screens/authentication/main_authentication.dart';
-import 'package:water_del/screens/home/home_main.dart';
 import 'package:water_del/utilities/global/dialogs.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';

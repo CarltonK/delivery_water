@@ -21,6 +21,8 @@ export async function lipaNaMpesa(phone: number, amount: number) {
                 BusinessShortCode: shortCode,
                 Password: password,
                 Timestamp: timestamp,
+                // CustomerPayBillOnline
+                // CustomerBuyGoodsOnline
                 TransactionType: "CustomerBuyGoodsOnline",
                 Amount: amount,
                 PartyA: phone,
