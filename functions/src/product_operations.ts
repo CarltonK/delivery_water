@@ -25,7 +25,7 @@ export const identifyProduct = functions.region('europe-west3').firestore
                     })
                 console.log(`You have updated a product by ${supplier} as ${snapshot.id}`)
             } catch (error) {
-                throw new Error(`identifyProduct ERROR -> ${error}`)
+                console.error(`identifyProduct ERROR -> ${error}`)
             }
         }
     })

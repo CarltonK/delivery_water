@@ -2,17 +2,30 @@ import * as functions from 'firebase-functions'
 import {db, ff} from'./index'
 import * as notifcations from './notification_operations'
 import * as https from 'https'
+import { lipaNaMpesa } from './payments/mpesa/stk_push'
 
 export const newOrder = functions.region('europe-west3').firestore
     .document('/orders/{order}')
-    .onCreate(async snapshot => {
+    .onUpdate(async snapshot => {
         const batch = db.batch()
         try {
-            const key: string = 'AIzaSyAW2ylkjGECuhEED3W5x2T0m2qtvF-HbZY'
+            const key = process.env.API_KEY
             // Get Location Name
-            const coordinates = snapshot.get('location')
+            const oID = snapshot.after.id
+            const total: number = snapshot.after.get('grandtotal')
+            const client = snapshot.after.get('client')
+            const coordinates = snapshot.after.get('location')
+
             const latitude: number = coordinates['latitude']
             const longitude: number = coordinates['longitude']
+
+            const phone = await getUserPhone(client)
+            if (typeof(phone) === 'number') {
+                console.log(`M-PESA Transaction has been executed for Order No ${oID}`)
+                await lipaNaMpesa(phone,total)
+            }
+
+
             let deliveryLocation: string = ''
             https.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=sublocality&key=${key}`, (resp) => {
                 const code: number | undefined = resp.statusCode
@@ -27,17 +40,16 @@ export const newOrder = functions.region('europe-west3').firestore
                         console.log(deliveryLocation)
 
                         // Update USER
-                        const client = snapshot.get('client')
                         const clientRef = db.collection('users').doc(client)
                         batch.update(clientRef, {
-                            orderCount: ff.FieldValue.increment(1)
+                            orderCount: ff.FieldValue.increment(1),
                         })
 
                         // Update ORDER
-                        const orderRef = db.collection('orders').doc(snapshot.id)
+                        const orderRef = db.collection('orders').doc(oID)
                         const suppliers: string[] = []
                         const details: Map<string, string>[] = []
-                        const products: any[] = snapshot.get('products')
+                        const products: any[] = snapshot.after.get('products')
                         products.forEach(product => {
                             // Send key info to avoid querying for the product document 
                             const supplier: string = product['supplier']
@@ -55,7 +67,8 @@ export const newOrder = functions.region('europe-west3').firestore
                             }
                         })
                         batch.update(orderRef, {
-                            suppliers: suppliers
+                            suppliers: suppliers,
+                            transactionStatus: 'executed'
                         })
 
                         await batch.commit()
@@ -64,12 +77,12 @@ export const newOrder = functions.region('europe-west3').firestore
                         // 1) Notification to client
                         const clientDoc = await db.collection('users').doc(client).get()
                         const clientToken: string = clientDoc.get('token')
-                        await notifcations.singleNotificationSend(clientToken,`Your order has been received. Ref No. ${snapshot.id}`,'Good News')
+                        await notifcations.singleNotificationSend(clientToken,`Your order has been received. Ref No. ${oID}`,'Good News')
                         await db.collection('users').doc(client).collection('notifications').doc().set({
                             time: ff.Timestamp.now(),
-                            message: `Good News. Your order has been received. Ref No. ${snapshot.id}`
+                            message: `Good News. Your order has been received. Ref No. ${oID}`
                         })
-                        console.log(`A notification has been sent to the client ${client} for order with Ref No. ${snapshot.id}`)
+                        console.log(`A notification has been sent to the client ${client} for order with Ref No. ${oID}`)
 
                         // 2) Notification to suppliers
                         details.forEach(async (item: Map<string, string>) => {
@@ -89,7 +102,7 @@ export const newOrder = functions.region('europe-west3').firestore
                                 message: `You have received an order for ${count} ${title} at ${deliveryLocation}`
                             })
                         })
-                        console.log(`A notification has been sent to the following suppliers ${suppliers} for order with Ref No. ${snapshot.id}`)
+                        console.log(`A notification has been sent to the following suppliers ${suppliers} for order with Ref No. ${oID}`)
                     })
                 } 
             });
@@ -98,3 +111,19 @@ export const newOrder = functions.region('europe-west3').firestore
             throw error
         }
     })
+
+async function getUserPhone(uid: string) {
+    try {
+        const doc = await db.collection('users').doc(uid).get()
+        const phone: string | null = doc.get('phone')
+        if (typeof (phone) === 'string') {
+            const value: number = Number("254" + phone.slice(1))
+            return value
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.error(error)
+    }
+    return false
+}
