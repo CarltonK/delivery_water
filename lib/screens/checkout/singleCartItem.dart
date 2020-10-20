@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
 
