@@ -6,15 +6,15 @@ import { lipaNaMpesa } from './payments/mpesa/stk_push'
 
 export const newOrder = functions.region('europe-west3').firestore
     .document('/orders/{order}')
-    .onUpdate(async snapshot => {
+    .onCreate(async snapshot => {
         const batch = db.batch()
         try {
             const key = process.env.API_KEY
             // Get Location Name
-            const oID = snapshot.after.id
-            const total: number = snapshot.after.get('grandtotal')
-            const client = snapshot.after.get('client')
-            const coordinates = snapshot.after.get('location')
+            const oID = snapshot.id
+            const total: number = snapshot.get('grandtotal')
+            const client = snapshot.get('client')
+            const coordinates = snapshot.get('location')
 
             const latitude: number = coordinates['latitude']
             const longitude: number = coordinates['longitude']
@@ -49,7 +49,7 @@ export const newOrder = functions.region('europe-west3').firestore
                         const orderRef = db.collection('orders').doc(oID)
                         const suppliers: string[] = []
                         const details: Map<string, string>[] = []
-                        const products: any[] = snapshot.after.get('products')
+                        const products: any[] = snapshot.get('products')
                         products.forEach(product => {
                             // Send key info to avoid querying for the product document 
                             const supplier: string = product['supplier']
