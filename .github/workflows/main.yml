@@ -13,7 +13,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        channel: 'stable'
+        channel: 'beta'
 
     - run: flutter pub get
     # - run: flutter test --> Uncomment this line IF testing has been implemented
