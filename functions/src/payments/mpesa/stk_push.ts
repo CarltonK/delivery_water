@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const passKey: any = process.env.PASS_KEY
 const shortCode: any = process.env.SHORT_CODE
+const merchantCode: any = process.env.MERCHANT_CODE
 
 export async function lipaNaMpesa(phone: number, amount: number) {
     const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3)
@@ -26,7 +27,7 @@ export async function lipaNaMpesa(phone: number, amount: number) {
                 TransactionType: "CustomerBuyGoodsOnline",
                 Amount: amount,
                 PartyA: phone,
-                PartyB: 5329723,
+                PartyB: merchantCode,
                 PhoneNumber: phone,
                 CallBackURL: "https://europe-west1-naqua-1b2bb.cloudfunctions.net/mpesaMain/api/v1/nitumiekakitu/q0WnbvFGLsvMFbfEDW25",
                 AccountReference: phone,
