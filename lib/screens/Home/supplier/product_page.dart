@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -8,7 +8,7 @@ import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/widgets/global/create_product_dialog.dart';
 
 class ProductPage extends StatefulWidget {
-  final FirebaseUser user;
+  final auth.User user;
   ProductPage({@required this.user});
 
   @override

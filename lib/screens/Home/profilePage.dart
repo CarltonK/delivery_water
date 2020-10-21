@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -17,7 +16,7 @@ import 'package:water_del/widgets/setAddressWidget.dart';
 import 'package:water_del/widgets/setPhoneWidget.dart';
 
 class ProfilePage extends StatefulWidget {
-  final FirebaseUser user;
+  final auth.User user;
   ProfilePage({@required this.user});
   @override
   _ProfilePageState createState() => _ProfilePageState();

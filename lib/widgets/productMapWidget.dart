@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ import 'package:water_del/widgets/global/product_info_dialog.dart';
 
 class ProductMapWidget extends StatefulWidget {
   final LocationModel location;
-  final FirebaseUser user;
+  final auth.User user;
   final List<Product> products;
   ProductMapWidget(
       {@required this.products, @required this.user, @required this.location});

@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/provider/database_provider.dart';
 
 class MapWidget extends StatefulWidget {
-  final FirebaseUser user;
+  final auth.User user;
   final List<LocationModel> coordinates;
   MapWidget({@required this.coordinates, @required this.user});
 
