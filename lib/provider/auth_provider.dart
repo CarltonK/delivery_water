@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:water_del/models/userModel.dart';
@@ -9,24 +9,24 @@ import 'package:water_del/provider/database_provider.dart';
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class AuthProvider with ChangeNotifier {
-  final Firestore db = Firestore.instance;
+  final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final FirebaseAuth auth;
+  final Auth.FirebaseAuth auth;
   final GoogleSignIn googleSignIn = GoogleSignIn();
-  FirebaseUser currentUser;
+  Auth.User currentUser;
   UserModel userModel;
   Status _status = Status.Uninitialized;
   final Timestamp now = Timestamp.now();
   DatabaseProvider database = DatabaseProvider();
 
-  AuthProvider.instance() : auth = FirebaseAuth.instance {
-    auth.onAuthStateChanged.listen(_onAuthStateChanged);
+  AuthProvider.instance() : auth = Auth.FirebaseAuth.instance {
+    auth.authStateChanges().listen(_onAuthStateChanged);
   }
 
   Status get status => _status;
-  FirebaseUser get user => currentUser;
+  Auth.User get user => currentUser;
 
-  Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
+  Future<void> _onAuthStateChanged(Auth.User firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
     } else {
@@ -47,7 +47,7 @@ class AuthProvider with ChangeNotifier {
     _status = Status.Authenticating;
     notifyListeners();
     try {
-      AuthResult result = await auth.createUserWithEmailAndPassword(
+      Auth.UserCredential result = await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
       currentUser = result.user;
       String uid = currentUser.uid;
@@ -85,7 +85,7 @@ class AuthProvider with ChangeNotifier {
     _status = Status.Authenticating;
     notifyListeners();
     try {
-      AuthResult result = await auth.signInWithEmailAndPassword(
+      Auth.UserCredential result = await auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
       currentUser = result.user;
 
@@ -146,30 +146,31 @@ class AuthProvider with ChangeNotifier {
     return Future.delayed(Duration.zero);
   }
 
-  Future<FirebaseUser> signInWithGoogle() async {
+  Future<Auth.User> signInWithGoogle() async {
     try {
       final GoogleSignInAccount googleSignInAccount =
           await googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final Auth.AuthCredential credential = Auth.GoogleAuthProvider.credential(
         idToken: googleSignInAuthentication.idToken,
         accessToken: googleSignInAuthentication.accessToken,
       );
 
-      final AuthResult authResult = await auth.signInWithCredential(credential);
-      final FirebaseUser user = authResult.user;
+      final Auth.UserCredential authResult =
+          await auth.signInWithCredential(credential);
+      final Auth.User user = authResult.user;
 
       UserModel model = new UserModel(
-        photoUrl: user.photoUrl,
+        photoUrl: user.photoURL,
         email: user.email,
         lastLogin: now,
         fullName: user.displayName,
       );
       print(model.toFirestore());
 
-      db.collection('users').document(user.uid).get().then((value) async {
+      db.collection('users').doc(user.uid).get().then((value) async {
         if (value.exists) {
           print('${user.email} already exists');
           Future.delayed(Duration(seconds: 1),

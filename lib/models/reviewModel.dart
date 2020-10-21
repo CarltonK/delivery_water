@@ -12,7 +12,7 @@ class ReviewModel {
       {this.orderId, this.supplier, this.client, this.title, this.description});
 
   factory ReviewModel.fromFirestore(DocumentSnapshot snapshot) {
-    Map data = snapshot.data;
+    Map data = snapshot.data();
     return ReviewModel(
         orderId: data['orderId'],
         supplier: data['supplier'],

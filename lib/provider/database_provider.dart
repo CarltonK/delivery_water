@@ -9,7 +9,7 @@ import 'package:water_del/models/singleAddress.dart';
 import 'package:water_del/models/userModel.dart';
 
 class DatabaseProvider {
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging fcm = FirebaseMessaging();
   final Timestamp now = Timestamp.now();
 
@@ -22,7 +22,7 @@ class DatabaseProvider {
     user.uid = uid;
     try {
       user.token = await fcm.getToken();
-      await _db.collection("users").document(uid).setData(user.toFirestore());
+      await _db.collection("users").doc(uid).set(user.toFirestore());
     } catch (e) {
       print("saveUser ERROR -> ${e.toString()}");
     }
@@ -30,7 +30,7 @@ class DatabaseProvider {
 
   Future<void> setLastLogin(String uid, Timestamp now) async {
     try {
-      await _db.collection('users').document(uid).updateData(
+      await _db.collection('users').doc(uid).update(
         {'lastLogin': now},
       );
     } catch (e) {
@@ -39,14 +39,14 @@ class DatabaseProvider {
   }
 
   Future<UserModel> getUser(String uid) async {
-    var snap = await _db.collection('users').document(uid).get();
+    var snap = await _db.collection('users').doc(uid).get();
     return UserModel.fromFirestore(snap);
   }
 
   Stream<UserModel> streamUser(String uid) {
     return _db
         .collection('users')
-        .document(uid)
+        .doc(uid)
         .snapshots()
         .map((event) => UserModel.fromFirestore(event));
   }
@@ -55,10 +55,10 @@ class DatabaseProvider {
     try {
       await _db
           .collection('users')
-          .document(uid)
+          .doc(uid)
           .collection('addresses')
-          .document()
-          .setData(address.toFirestore());
+          .doc()
+          .set(address.toFirestore());
     } catch (e) {
       print("setAddress ERROR -> ${e.toString()}");
       return null;
@@ -69,12 +69,12 @@ class DatabaseProvider {
     try {
       QuerySnapshot snapshotAddresses = await _db
           .collection('users')
-          .document(uid)
+          .doc(uid)
           .collection('addresses')
           .orderBy('defaultAddress', descending: true)
-          .getDocuments();
+          .get();
       List<SingleAddress> addresses = [];
-      snapshotAddresses.documents.forEach((element) {
+      snapshotAddresses.docs.forEach((element) {
         SingleAddress address = SingleAddress.fromFirestore(element);
         addresses.add(address);
       });
@@ -89,8 +89,8 @@ class DatabaseProvider {
     try {
       await _db
           .collection('users')
-          .document(uid)
-          .updateData({'location': model.toFirestore()});
+          .doc(uid)
+          .update({'location': model.toFirestore()});
     } catch (e) {
       print('updateLocation ERROR -> ${e.toString()}');
       return null;
@@ -102,8 +102,8 @@ class DatabaseProvider {
     try {
       await _db
           .collection('users')
-          .document(uid)
-          .updateData({'phone': phone, 'clientStatus': status, 'natID': natId});
+          .doc(uid)
+          .update({'phone': phone, 'clientStatus': status, 'natID': natId});
     } catch (e) {
       print('updatePhoneandStatus ERROR -> ${e.toString()}');
       return null;
@@ -114,10 +114,10 @@ class DatabaseProvider {
     try {
       await _db
           .collection('users')
-          .document(uid)
+          .doc(uid)
           .collection('products')
-          .document()
-          .setData(product.toJson());
+          .doc()
+          .set(product.toJson());
     } catch (e) {
       print('postProduct ERROR -> ${e.toString()}');
       return null;
@@ -131,9 +131,9 @@ class DatabaseProvider {
           .collectionGroup('products')
           .where('supplier', isEqualTo: uid)
           .orderBy('price', descending: true)
-          .getDocuments();
-      snapshot.documents.forEach((element) {
-        Product product = Product.fromJson(element.data);
+          .get();
+      snapshot.docs.forEach((element) {
+        Product product = Product.fromJson(element.data());
         queryData.add(product);
       });
       return Future.value(queryData);
@@ -150,8 +150,8 @@ class DatabaseProvider {
           .collection('reviews')
           .where('supplier', isEqualTo: uid)
           .orderBy('time', descending: true)
-          .getDocuments();
-      snapshot.documents.forEach((element) {
+          .get();
+      snapshot.docs.forEach((element) {
         ReviewModel review = ReviewModel.fromFirestore(element);
         reviews.add(review);
       });
@@ -170,9 +170,9 @@ class DatabaseProvider {
             .collectionGroup('products')
             .where('category', whereIn: categories)
             .orderBy('price', descending: true)
-            .getDocuments();
-        snapshot.documents.forEach((element) {
-          Product product = Product.fromJson(element.data);
+            .get();
+        snapshot.docs.forEach((element) {
+          Product product = Product.fromJson(element.data());
           products.add(product);
         });
         return products;
@@ -185,7 +185,7 @@ class DatabaseProvider {
 
   Future<void> uploadDP(String uid, String dp) async {
     try {
-      await _db.collection('users').document(uid).updateData({'photoUrl': dp});
+      await _db.collection('users').doc(uid).update({'photoUrl': dp});
     } catch (e) {
       print('uploadDP ERROR -> ${e.toString()}');
     }
@@ -200,7 +200,7 @@ class DatabaseProvider {
     });
     print(order.toFirestore());
     try {
-      await _db.collection('orders').document().setData(order.toFirestore());
+      await _db.collection('orders').doc().set(order.toFirestore());
     } catch (e) {
       print('createOrder ERROR -> ${e.toString()}');
       return null;
@@ -214,8 +214,8 @@ class DatabaseProvider {
           .collection('orders')
           .where('suppliers', arrayContains: uid)
           .orderBy('date', descending: true)
-          .getDocuments();
-      query.documents.forEach((element) {
+          .get();
+      query.docs.forEach((element) {
         OrderModel order = OrderModel.fromFirestore(element);
         orders.add(order);
       });
@@ -232,8 +232,8 @@ class DatabaseProvider {
           .collection('orders')
           .where('client', isEqualTo: uid)
           .orderBy('date', descending: true)
-          .getDocuments();
-      query.documents.forEach((element) {
+          .get();
+      query.docs.forEach((element) {
         OrderModel order = OrderModel.fromFirestore(element);
         orders.add(order);
       });

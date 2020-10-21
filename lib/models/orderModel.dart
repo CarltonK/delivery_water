@@ -52,10 +52,10 @@ class OrderModel with ChangeNotifier {
   }
 
   factory OrderModel.fromFirestore(DocumentSnapshot snapshot) {
-    Map data = snapshot.data;
+    Map data = snapshot.data();
     Map loc = data['location'];
     return OrderModel(
-        id: snapshot.documentID,
+        id: snapshot.id,
         grandtotal: data['grandtotal'],
         suppliers: data['suppliers'],
         client: data['client'],
