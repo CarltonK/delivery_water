@@ -31,8 +31,10 @@ class AuthProvider with ChangeNotifier {
       _status = Status.Unauthenticated;
     } else {
       currentUser = firebaseUser;
-      Future.delayed(Duration(seconds: 1),
-          () => database.setLastLogin(currentUser.uid, now));
+      Future.delayed(
+        Duration(seconds: 1),
+        () => database.setLastLogin(currentUser.uid, now),
+      );
       _status = Status.Authenticated;
     }
     notifyListeners();
@@ -152,17 +154,19 @@ class AuthProvider with ChangeNotifier {
           await googleSignInAccount.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
-          idToken: googleSignInAuthentication.idToken,
-          accessToken: googleSignInAuthentication.accessToken);
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken,
+      );
 
       final AuthResult authResult = await auth.signInWithCredential(credential);
       final FirebaseUser user = authResult.user;
 
       UserModel model = new UserModel(
-          photoUrl: user.photoUrl,
-          email: user.email,
-          lastLogin: now,
-          fullName: user.displayName);
+        photoUrl: user.photoUrl,
+        email: user.email,
+        lastLogin: now,
+        fullName: user.displayName,
+      );
       print(model.toFirestore());
 
       db.collection('users').document(user.uid).get().then((value) async {
@@ -175,7 +179,7 @@ class AuthProvider with ChangeNotifier {
           await database.saveUser(model, user.uid);
         }
       });
-      return user;
+      return Future.value(user);
     } catch (e) {
       print('signInWithGoogle ERROR -> ${e.toString()}');
       return null;

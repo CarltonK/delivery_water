@@ -29,9 +29,13 @@ class DatabaseProvider {
   }
 
   Future<void> setLastLogin(String uid, Timestamp now) async {
-    await _db.collection('users').document(uid).updateData(
-      {'lastLogin': now},
-    );
+    try {
+      await _db.collection('users').document(uid).updateData(
+        {'lastLogin': now},
+      );
+    } catch (e) {
+      print("setLastLogin ERROR -> ${e.toString()}");
+    }
   }
 
   Future<UserModel> getUser(String uid) async {
@@ -48,12 +52,17 @@ class DatabaseProvider {
   }
 
   Future<void> setAddress(String uid, SingleAddress address) async {
-    await _db
-        .collection('users')
-        .document(uid)
-        .collection('addresses')
-        .document()
-        .setData(address.toFirestore());
+    try {
+      await _db
+          .collection('users')
+          .document(uid)
+          .collection('addresses')
+          .document()
+          .setData(address.toFirestore());
+    } catch (e) {
+      print("setAddress ERROR -> ${e.toString()}");
+      return null;
+    }
   }
 
   Future<List<SingleAddress>> getAddresses(String uid) async {
@@ -77,18 +86,28 @@ class DatabaseProvider {
   }
 
   Future<void> updateLocation(String uid, LocationModel model) async {
-    await _db
-        .collection('users')
-        .document(uid)
-        .updateData({'location': model.toFirestore()});
+    try {
+      await _db
+          .collection('users')
+          .document(uid)
+          .updateData({'location': model.toFirestore()});
+    } catch (e) {
+      print('updateLocation ERROR -> ${e.toString()}');
+      return null;
+    }
   }
 
   Future<void> updatePhoneandStatus(
       String uid, String phone, String natId, bool status) async {
-    await _db
-        .collection('users')
-        .document(uid)
-        .updateData({'phone': phone, 'clientStatus': status, 'natID': natId});
+    try {
+      await _db
+          .collection('users')
+          .document(uid)
+          .updateData({'phone': phone, 'clientStatus': status, 'natID': natId});
+    } catch (e) {
+      print('updatePhoneandStatus ERROR -> ${e.toString()}');
+      return null;
+    }
   }
 
   Future<void> postProduct(String uid, Product product) async {
@@ -100,7 +119,8 @@ class DatabaseProvider {
           .document()
           .setData(product.toJson());
     } catch (e) {
-      throw e.toString();
+      print('postProduct ERROR -> ${e.toString()}');
+      return null;
     }
   }
 
@@ -118,7 +138,8 @@ class DatabaseProvider {
       });
       return Future.value(queryData);
     } catch (e) {
-      throw e.toString();
+      print('getProducts ERROR -> ${e.toString()}');
+      return null;
     }
   }
 
@@ -136,7 +157,8 @@ class DatabaseProvider {
       });
       return Future.value(reviews);
     } catch (e) {
-      throw e.toString();
+      print('getReviews ERROR -> ${e.toString()}');
+      return null;
     }
   }
 
@@ -155,7 +177,7 @@ class DatabaseProvider {
         });
         return products;
       } catch (e) {
-        throw e.toString();
+        print('populateMap ERROR -> ${e.toString()}');
       }
     }
     return null;
@@ -165,7 +187,7 @@ class DatabaseProvider {
     try {
       await _db.collection('users').document(uid).updateData({'photoUrl': dp});
     } catch (e) {
-      throw e.toString();
+      print('uploadDP ERROR -> ${e.toString()}');
     }
   }
 
@@ -180,7 +202,8 @@ class DatabaseProvider {
     try {
       await _db.collection('orders').document().setData(order.toFirestore());
     } catch (e) {
-      throw e.toString();
+      print('createOrder ERROR -> ${e.toString()}');
+      return null;
     }
   }
 

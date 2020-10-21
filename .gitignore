@@ -29,7 +29,7 @@
 .pub-cache/
 .pub/
 /build/
-# /android/app/google-services.json
+/android/app/google-services.json
 
 # Test
 /test/node_modules/

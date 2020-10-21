@@ -14,21 +14,21 @@ class OrderModel with ChangeNotifier {
 
   List<dynamic> get _products => products;
 
-  OrderModel(
-      {this.id,
-      this.client,
-      this.location,
-      this.suppliers,
-      this.status,
-      this.products,
-      this.grandtotal});
+  OrderModel({
+    this.id,
+    this.client,
+    this.location,
+    this.suppliers,
+    this.status,
+    this.products,
+    this.grandtotal,
+  });
 
   addProduct(element) {
     print(element.toJson());
     if (_products.contains(element)) {
       element.count++;
     } else {
-      element.count++;
       _products.add(element);
     }
     calculateTotal();
@@ -47,8 +47,8 @@ class OrderModel with ChangeNotifier {
   calculateTotal() {
     for (var item in _products) {
       grandtotal = grandtotal + (item.price * item.count);
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   factory OrderModel.fromFirestore(DocumentSnapshot snapshot) {
