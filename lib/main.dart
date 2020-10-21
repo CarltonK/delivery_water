@@ -9,8 +9,8 @@ import 'package:water_del/screens/authentication/main_authentication.dart';
 import 'package:water_del/screens/home/home_main.dart';
 
 void main() {
-  Crashlytics.instance.enableInDevMode = false;
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(
     MultiProvider(
       providers: [
