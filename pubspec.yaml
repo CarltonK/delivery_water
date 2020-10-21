@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 1.0.8+1
+version: 1.0.9+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -13,22 +13,23 @@ dependencies:
     sdk: flutter
 
   bottom_navy_bar: ^5.4.0
-  google_fonts:
-  provider: 
+  google_fonts: ^1.1.1
+  provider: ^4.3.2+2 
   intl: ^0.16.1
-  firebase_auth:
-  firebase_analytics:
-  cloud_firestore:
-  firebase_messaging:
-  firebase_crashlytics:
-  firebase_storage:
-  image_picker:
-  firebase_performance: 
-  google_sign_in:
+  firebase_auth: ^0.18.1+2
+  firebase_analytics: ^6.0.2
+  cloud_firestore: ^0.14.1+3
+  firebase_messaging: ^7.0.3
+  firebase_crashlytics: ^0.2.1+1
+  firebase_storage: ^4.0.1
+  firebase_core: ^0.5.0+1
+  image_picker: ^0.6.7+12
+  firebase_performance: ^0.4.0+2 
+  google_sign_in: ^4.5.5
   google_maps_flutter: ^0.5.27+3
   permission_handler: ^3.1.0
   location: ^2.3.5
-  flutter_spinkit: 
+  flutter_spinkit: ^4.1.2+1 
   cupertino_icons: ^0.1.3
 
 dev_dependencies:
@@ -50,5 +51,3 @@ flutter_icons:
   android: true
   image_path_ios: "assets/launcher/waterdel.png"
   image_path_android: "assets/launcher/waterdel.png"
-  # adaptive_icon_background: "assets/launcher/waterdel.png"
-  # adaptive_icon_foreground: "assets/launcher/waterdel.png"

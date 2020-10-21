@@ -32,7 +32,7 @@ class UserModel {
       this.token});
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data;
+    Map data = doc.data();
     return UserModel(
         fullName: data['fullName'] ?? '',
         natID: data['natID'],

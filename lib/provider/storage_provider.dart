@@ -24,7 +24,8 @@ class StorageProvider {
       String urlResult = await taskSnapshot.ref.getDownloadURL();
       return urlResult;
     } catch (e) {
-      throw e.toString();
+      print('startUpload ERROR -> ${e.toString()}');
+      return null;
     }
   }
 }

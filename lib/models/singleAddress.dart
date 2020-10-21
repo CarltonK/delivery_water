@@ -17,7 +17,7 @@ class SingleAddress {
       this.defaultAddress});
 
   factory SingleAddress.fromFirestore(DocumentSnapshot snapshot) {
-    Map data = snapshot.data;
+    Map data = snapshot.data();
     return SingleAddress(
         additionalinfo: data['additionalinfo'],
         defaultAddress: data['defaultAddress'],
