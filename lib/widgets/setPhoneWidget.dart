@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:water_del/provider/database_provider.dart';
@@ -6,7 +6,7 @@ import 'package:water_del/utilities/global/dialogs.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class SetPhoneWidget extends StatefulWidget {
-  final FirebaseUser user;
+  final auth.User user;
   SetPhoneWidget({@required this.user});
   @override
   _SetPhoneWidgetState createState() => _SetPhoneWidgetState();
