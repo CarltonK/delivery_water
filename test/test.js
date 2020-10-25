@@ -1,6 +1,5 @@
 const assert = require('assert');
 const firebase = require('@firebase/testing');
-const { title } = require('process');
 
 const PROJECT_ID = 'naqua-1b2bb';
 const myID = "user_abc";
@@ -15,6 +14,10 @@ function getFirestore(auth) {
 function getAdminFirestore() {
     return firebase.initializeAdminApp({projectId: PROJECT_ID}).firestore();
 }
+
+beforeEach(async () => {
+    await firebase.clearFirestoreData({projectId: PROJECT_ID});
+});
 
 describe('Naqua', () => {
 
