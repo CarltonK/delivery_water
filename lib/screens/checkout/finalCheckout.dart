@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:water_del/main.dart';
@@ -45,7 +44,9 @@ class FinalCheckout extends StatelessWidget {
   Widget _paymentMethodCard(String asset) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: ListTile(
         leading: Image.asset(asset),
         contentPadding: EdgeInsets.all(12),
@@ -82,19 +83,17 @@ class FinalCheckout extends StatelessWidget {
         width: size.height,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(36),
-                bottomRight: Radius.circular(36))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(36),
+            bottomRight: Radius.circular(36),
+          ),
+        ),
         child: Column(
           children: <Widget>[
             _paymentMethodCard('assets/logos/mpesa_logo.png'),
-            _paymentMethodCard('assets/logos/cash.png'),
-            Expanded(child: Container()),
-            _infoRow(
-                'ITEMS (${order.products.length})', '${order.grandtotal} KES'),
-            SizedBox(
-              height: 15,
+            Expanded(
+              child: Container(),
             ),
             _infoRow('Total Price', '${order.grandtotal} KES'),
             SizedBox(
@@ -115,14 +114,24 @@ class FinalCheckout extends StatelessWidget {
         child: FlatButton(
           onPressed: () {
             databaseProvider.createOrder(order).then((value) {
-              dialogInfo(context,
-                  "We have received your order. Hang tight while we process it");
+              dialogInfo(
+                context,
+                "We have received your order. Enter your MPESA PIN to process your transaction",
+              );
               order.products = [];
               Timer(Duration(seconds: 2), () {
-                Navigator.of(context)
-                    .pushReplacement(SlideRightTransition(page: MyApp()));
+                Navigator.of(context).pushReplacement(
+                  SlideRightTransition(
+                    page: MyApp(),
+                  ),
+                );
               });
-            }).catchError((error) => dialogInfo(context, error.toString()));
+            }).catchError(
+              (error) => dialogInfo(
+                context,
+                error.toString(),
+              ),
+            );
           },
           color: Colors.transparent,
           padding: EdgeInsets.all(8),

@@ -191,14 +191,14 @@ class DatabaseProvider {
     }
   }
 
-  Future<void> createOrder(OrderModel order) async {
+  Future createOrder(OrderModel order) async {
+    print(order);
     List<dynamic> products = order.products;
     products.forEach((element) {
       int index = products.indexOf(element);
       products.removeAt(index);
       products.insert(index, element.toJson());
     });
-    print(order.toFirestore());
     try {
       await _db.collection('orders').doc().set(order.toFirestore());
     } catch (e) {

@@ -35,42 +35,44 @@ class _HomeMainState extends State<HomeMain> {
   Future productFuture;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  Widget popupPlace() {
-    return Container(
-      decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(12)),
-      child: PopupMenuButton(
-        tooltip: 'Place',
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        itemBuilder: (context) {
-          var list = List<PopupMenuEntry<Object>>();
-          list.add(PopupMenuItem(
-            child: Text('Delivery Location'),
-            value: 1,
-          ));
-          list.add(
-            PopupMenuDivider(
-              height: 5,
-            ),
-          );
-          list.add(
-            CheckedPopupMenuItem(
-              child: Text(
-                "Home",
-                style: normalOutlineBlack,
-              ),
-              value: 2,
-              checked: true,
-            ),
-          );
-          return list;
-        },
-        offset: Offset(0, 100),
-        icon: Icon(CupertinoIcons.location_solid),
-      ),
-    );
-  }
+  // Widget popupPlace() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //         color: Colors.blue.withOpacity(0.4),
+  //         borderRadius: BorderRadius.circular(12)),
+  //     child: PopupMenuButton(
+  //       tooltip: 'Place',
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //       itemBuilder: (context) {
+  //         var list = List<PopupMenuEntry<Object>>();
+  //         list.add(
+  //           PopupMenuItem(
+  //             child: Text('Delivery Location'),
+  //             value: 1,
+  //           ),
+  //         );
+  //         list.add(
+  //           PopupMenuDivider(
+  //             height: 5,
+  //           ),
+  //         );
+  //         list.add(
+  //           CheckedPopupMenuItem(
+  //             child: Text(
+  //               "Home",
+  //               style: normalOutlineBlack,
+  //             ),
+  //             value: 2,
+  //             checked: true,
+  //           ),
+  //         );
+  //         return list;
+  //       },
+  //       offset: Offset(0, 100),
+  //       icon: Icon(CupertinoIcons.location_solid),
+  //     ),
+  //   );
+  // }
 
   Widget _profilePage() {
     return Positioned(
@@ -163,6 +165,7 @@ class _HomeMainState extends State<HomeMain> {
   @override
   void initState() {
     super.initState();
+    userCurrent = context.read<AuthProvider>().currentUser;
     _controller = PageController(initialPage: 0, viewportFraction: 0.5);
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -254,15 +257,15 @@ class _HomeMainState extends State<HomeMain> {
         status: false,
         products: [],
       ),
-      child: Consumer<OrderModel>(
-        builder: (context, OrderModel value, child) => Stack(
-          children: [
-            display.length == 0 ? baseMap() : productMap(),
-            value.products.length > 0 ? CartIcon() : Container(),
-            _profilePage(),
-            _bottomSelection()
-          ],
-        ),
+      child: Stack(
+        children: [
+          display.length == 0 ? baseMap() : productMap(),
+          CartIcon(
+            location: myLocation,
+          ),
+          _profilePage(),
+          _bottomSelection()
+        ],
       ),
     );
   }
@@ -270,60 +273,58 @@ class _HomeMainState extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Consumer<AuthProvider>(
-      builder: (context, AuthProvider value, child) {
-        userCurrent = value.currentUser;
-        return Scaffold(
-          body: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: SystemUiOverlayStyle.light,
-            child: StreamBuilder<UserModel>(
-              stream: _databaseProvider.streamUser(userCurrent.uid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        if (snapshot.data.clientStatus) ...[
-                          Container(
-                            height: size.height,
-                            width: size.width,
-                            child: clientPage(),
-                          )
-                        ],
-                        if (!snapshot.data.clientStatus) ...[
-                          Container(
-                            height: size.height,
-                            width: size.width,
-                            child: SupplierHome(
-                              user: userCurrent,
-                            ),
-                          )
-                        ]
-                      ],
-                    ),
-                  );
-                }
-                return Center(
-                  child: SpinKitFoldingCube(
-                    size: 150,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                );
-              },
-            ),
-          ),
-        );
-      },
+    return Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: StreamBuilder<UserModel>(
+          stream: _databaseProvider.streamUser(userCurrent.uid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (snapshot.data.clientStatus) ...[
+                      Container(
+                        height: size.height,
+                        width: size.width,
+                        child: clientPage(),
+                      )
+                    ],
+                    if (!snapshot.data.clientStatus) ...[
+                      Container(
+                        height: size.height,
+                        width: size.width,
+                        child: SupplierHome(
+                          user: userCurrent,
+                        ),
+                      )
+                    ]
+                  ],
+                ),
+              );
+            }
+            return Center(
+              child: SpinKitFoldingCube(
+                size: 150,
+                color: Theme.of(context).primaryColor,
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
 
 class CartIcon extends StatelessWidget {
+  static OrderModel model;
+  final LocationModel location;
+  CartIcon({@required this.location});
   @override
   Widget build(BuildContext context) {
-    OrderModel model = Provider.of<OrderModel>(context);
+    model = context.watch<OrderModel>();
+    model.location = location;
     int items = model.products.length;
-    print(items);
     return Positioned(
       top: 40,
       left: 10,
