@@ -45,10 +45,12 @@ class _HomeMainState extends State<HomeMain> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         itemBuilder: (context) {
           var list = List<PopupMenuEntry<Object>>();
-          list.add(PopupMenuItem(
-            child: Text('Delivery Location'),
-            value: 1,
-          ));
+          list.add(
+            PopupMenuItem(
+              child: Text('Delivery Location'),
+              value: 1,
+            ),
+          );
           list.add(
             PopupMenuDivider(
               height: 5,

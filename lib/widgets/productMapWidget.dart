@@ -86,7 +86,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
       markers: _markers.values.toSet(),
       initialCameraPosition: CameraPosition(
         target: LatLng(lat, lon),
-        zoom: 15,
+        zoom: 11.5,
         bearing: 45,
       ),
     );
