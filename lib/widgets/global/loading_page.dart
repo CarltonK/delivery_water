@@ -5,9 +5,9 @@ class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget spinner() {
-      return SpinKitWave(
+      return SpinKitFoldingCube(
         color: Theme.of(context).primaryColor,
-        size: 200,
+        size: 150,
       );
     }
 

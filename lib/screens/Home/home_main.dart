@@ -113,7 +113,9 @@ class _HomeMainState extends State<HomeMain> {
       child: Card(
         elevation: 8,
         shadowColor: Colors.grey[50],
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Container(
           height: 120,
           width: 120,
@@ -189,10 +191,11 @@ class _HomeMainState extends State<HomeMain> {
           );
         }
         return Center(
-            child: SpinKitFoldingCube(
-          size: 150,
-          color: Theme.of(context).primaryColor,
-        ));
+          child: SpinKitFoldingCube(
+            size: 150,
+            color: Theme.of(context).primaryColor,
+          ),
+        );
       },
     );
   }
@@ -226,16 +229,18 @@ class _HomeMainState extends State<HomeMain> {
             );
           case ConnectionState.waiting:
             return Center(
-                child: SpinKitFoldingCube(
-              size: 150,
-              color: Theme.of(context).primaryColor,
-            ));
+              child: SpinKitFoldingCube(
+                size: 150,
+                color: Theme.of(context).primaryColor,
+              ),
+            );
         }
         return Center(
-            child: SpinKitFoldingCube(
-          size: 150,
-          color: Theme.of(context).primaryColor,
-        ));
+          child: SpinKitFoldingCube(
+            size: 150,
+            color: Theme.of(context).primaryColor,
+          ),
+        );
       },
     );
   }
@@ -250,14 +255,15 @@ class _HomeMainState extends State<HomeMain> {
         products: [],
       ),
       child: Consumer<OrderModel>(
-          builder: (context, OrderModel value, child) => Stack(
-                children: [
-                  display.length == 0 ? baseMap() : productMap(),
-                  value.products.length > 0 ? CartIcon() : Container(),
-                  _profilePage(),
-                  _bottomSelection()
-                ],
-              )),
+        builder: (context, OrderModel value, child) => Stack(
+          children: [
+            display.length == 0 ? baseMap() : productMap(),
+            value.products.length > 0 ? CartIcon() : Container(),
+            _profilePage(),
+            _bottomSelection()
+          ],
+        ),
+      ),
     );
   }
 
@@ -298,10 +304,11 @@ class _HomeMainState extends State<HomeMain> {
                   );
                 }
                 return Center(
-                    child: SpinKitFoldingCube(
-                  size: 150,
-                  color: Theme.of(context).primaryColor,
-                ));
+                  child: SpinKitFoldingCube(
+                    size: 150,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                );
               },
             ),
           ),
@@ -322,21 +329,29 @@ class CartIcon extends StatelessWidget {
       left: 10,
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).push(SlideLeftTransition(
+          Navigator.of(context).push(
+            SlideLeftTransition(
               page: CartScreen(
-            orderModel: model,
-          )));
+                orderModel: model,
+              ),
+            ),
+          );
         },
         child: Container(
           height: 48,
           width: 48,
           decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.4), shape: BoxShape.circle),
+            color: Colors.blue.withOpacity(0.4),
+            shape: BoxShape.circle,
+          ),
           child: Stack(
             overflow: Overflow.visible,
             alignment: Alignment.center,
             children: [
-              Positioned(bottom: 5, child: Icon(Icons.shopping_cart)),
+              Positioned(
+                bottom: 5,
+                child: Icon(Icons.shopping_cart),
+              ),
               Positioned(
                 top: 8,
                 child: Text(

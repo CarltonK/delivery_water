@@ -43,15 +43,16 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
       setState(() {
         _markers.clear();
         for (var item in widget.products) {
-          print(item.details);
+          // print(item.details);
           double latitude = item.details['location']['latitude'];
           double longitude = item.details['location']['longitude'];
           String itemIndex = widget.products.indexOf(item).toString();
           final marker = Marker(
-              markerId: MarkerId(itemIndex),
-              onTap: () => showDetailsDialog(item),
-              position: LatLng(latitude, longitude),
-              icon: pinLocationIcon);
+            markerId: MarkerId(itemIndex),
+            onTap: () => showDetailsDialog(item),
+            position: LatLng(latitude, longitude),
+            icon: pinLocationIcon,
+          );
           _markers[itemIndex] = marker;
         }
       });
@@ -60,8 +61,9 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
 
   void setCustomMapPin() async {
     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/images/map_marker.png');
+      ImageConfiguration(devicePixelRatio: 2.5),
+      'assets/images/map_marker.png',
+    );
   }
 
   @override
@@ -78,11 +80,15 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
     double lat = myLocation.latitude;
     double lon = myLocation.longitude;
     return GoogleMap(
-        onMapCreated: _onMapCreated,
-        myLocationEnabled: true,
-        zoomControlsEnabled: false,
-        markers: _markers.values.toSet(),
-        initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 15, bearing: 45));
+      onMapCreated: _onMapCreated,
+      myLocationEnabled: true,
+      zoomControlsEnabled: false,
+      markers: _markers.values.toSet(),
+      initialCameraPosition: CameraPosition(
+        target: LatLng(lat, lon),
+        zoom: 15,
+        bearing: 45,
+      ),
+    );
   }
 }
