@@ -8,6 +8,8 @@ import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
 import 'package:water_del/screens/authentication/main_authentication.dart';
 import 'package:water_del/screens/home/home_main.dart';
+import 'package:water_del/widgets/global/custome_info_dialog.dart';
+import 'package:water_del/widgets/global/loading_page.dart';
 
 void main() {
   runApp(
@@ -43,19 +45,27 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder(
         future: Firebase.initializeApp(),
         builder: (_, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-            FlutterError.onError =
-                FirebaseCrashlytics.instance.recordFlutterError;
-            return ChangeNotifierProvider(
-              create: (context) => AuthProvider.instance(),
-              child: Consumer(builder: (context, AuthProvider value, child) {
-                if (value.status == Status.Authenticated) return HomeMain();
-                return MainAuthentication();
-              }),
-            );
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+            case ConnectionState.done:
+              FirebaseCrashlytics.instance
+                  .setCrashlyticsCollectionEnabled(true);
+              FlutterError.onError =
+                  FirebaseCrashlytics.instance.recordFlutterError;
+              return ChangeNotifierProvider(
+                create: (context) => AuthProvider.instance(),
+                child: Consumer(builder: (context, AuthProvider value, child) {
+                  if (value.status == Status.Authenticated) return HomeMain();
+                  return MainAuthentication();
+                }),
+              );
+            case ConnectionState.waiting:
+              return LoadingPage();
+            case ConnectionState.none:
+              return InfoDialog(message: 'Firebase is not initialized');
+            default:
+              return Container();
           }
-          return Container();
         },
       ),
     );

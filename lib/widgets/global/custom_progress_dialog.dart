@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 class CustomProgressDialog extends StatelessWidget {
   final String message;
-
   CustomProgressDialog({@required this.message});
 
   @override
@@ -16,7 +15,8 @@ class CustomProgressDialog extends StatelessWidget {
         Text(
           message,
           style: GoogleFonts.muli(
-              textStyle: TextStyle(color: Colors.black, fontSize: 16)),
+            textStyle: TextStyle(color: Colors.black, fontSize: 16),
+          ),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 10),
