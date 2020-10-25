@@ -25,17 +25,19 @@ class OrderModel with ChangeNotifier {
   });
 
   addProduct(element) {
-    print(element.toJson());
+    // print('Added product: ${element.toJson()}');
     if (_products.contains(element)) {
-      element.count++;
+      int index = _products.indexOf(element);
+      _products[index].count++;
     } else {
+      element.count = 1;
       _products.add(element);
     }
     calculateTotal();
   }
 
   removeProduct(int index) {
-    print(_products[index].toJson());
+    print('Removed product: ${_products[index].toJson()}');
     if (_products[index].count <= 1) {
       _products.removeAt(index);
     } else {
@@ -46,22 +48,25 @@ class OrderModel with ChangeNotifier {
 
   calculateTotal() {
     for (var item in _products) {
-      grandtotal = grandtotal + (item.price * item.count);
+      grandtotal = (item.price * item.count);
     }
     notifyListeners();
+    // print('Total: $grandtotal');
+    // print('All Products: $_products');
   }
 
   factory OrderModel.fromFirestore(DocumentSnapshot snapshot) {
     Map data = snapshot.data();
     Map loc = data['location'];
     return OrderModel(
-        id: snapshot.id,
-        grandtotal: data['grandtotal'],
-        suppliers: data['suppliers'],
-        client: data['client'],
-        location: LocationModel.fromFirestore(loc),
-        status: data['status'],
-        products: data['products']);
+      id: snapshot.id,
+      grandtotal: data['grandtotal'],
+      suppliers: data['suppliers'],
+      client: data['client'],
+      location: LocationModel.fromFirestore(loc),
+      status: data['status'],
+      products: data['products'],
+    );
   }
 
   Map<String, dynamic> toFirestore() => {
@@ -70,6 +75,6 @@ class OrderModel with ChangeNotifier {
         'location': location.toFirestore(),
         'status': status,
         'date': date,
-        'products': products
+        'products': products,
       };
 }

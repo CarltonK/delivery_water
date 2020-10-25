@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:water_del/screens/checkout/finalCheckout.dart';
 import 'package:water_del/screens/checkout/singleCartItem.dart';
+import 'package:water_del/utilities/global/dialogs.dart';
 import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/models/product.dart';
 
 class CartScreen extends StatefulWidget {
   final OrderModel orderModel;
@@ -42,42 +42,6 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget singleItem(int index) {
-    Product product = widget.orderModel.products[index];
-    print(product.toJson());
-    return Dismissible(
-        key: Key(product.id),
-        background: Container(
-          margin: EdgeInsets.symmetric(vertical: 5),
-          alignment: Alignment.centerRight,
-          decoration: BoxDecoration(
-            color: Colors.red,
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Icon(
-                CupertinoIcons.delete_solid,
-                color: Colors.white,
-              ),
-              Icon(
-                CupertinoIcons.delete_solid,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-        onDismissed: (direction) {
-          widget.orderModel.removeProduct(index);
-          // setState(() {
-          //   itemsCart.removeAt(index);
-          // });
-          // Provider.of<OrderModel>(context).removeProduct(index);
-        },
-        child: SingleCartItem(model: product));
-  }
-
   Widget _cartBody(Size size) {
     return Align(
       alignment: Alignment.topCenter,
@@ -86,25 +50,18 @@ class _CartScreenState extends State<CartScreen> {
         width: size.height,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(36),
-                bottomRight: Radius.circular(36))),
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(36),
+            bottomRight: Radius.circular(36),
+          ),
+        ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: ListView.builder(
-            itemCount: widget.orderModel.products.length,
-            itemBuilder: (context, index) {
-              if (widget.orderModel.products.length == 0)
-                return Center(
-                  child: Text(
-                    'Your cart is empty',
-                    textAlign: TextAlign.center,
-                    style: normalOutlineBlack,
-                  ),
-                );
-              return singleItem(index);
-            },
+          child: ListView(
+            children: widget.orderModel.products
+                .map((e) => SingleCartItem(model: e))
+                .toList(),
           ),
         ),
       ),
@@ -135,10 +92,15 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
             RaisedButton(
-              onPressed: () => Navigator.of(context).push(ScaleRoute(
-                  page: FinalCheckout(
-                order: widget.orderModel,
-              ))),
+              onPressed: () => widget.orderModel.products.length == 0
+                  ? dialogInfo(context, 'There are no items in your cart')
+                  : Navigator.of(context).push(
+                      ScaleRoute(
+                        page: FinalCheckout(
+                          order: widget.orderModel,
+                        ),
+                      ),
+                    ),
               color: Colors.blue,
               padding: EdgeInsets.all(8),
               shape: RoundedRectangleBorder(

@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class ProductInfoDialog extends StatelessWidget {
   final Product product;
-  final OrderModel orderModel;
-  ProductInfoDialog({@required this.product, @required this.orderModel});
+  ProductInfoDialog({@required this.product});
   static Size size;
 
   Widget _cancelButton(BuildContext context) {
     return FlatButton(
-        onPressed: () => Navigator.of(context).pop(),
-        child: Icon(
-          Icons.cancel,
-          color: Colors.red,
-          size: 30,
-        ));
+      onPressed: () => Navigator.of(context).pop(),
+      child: Icon(
+        Icons.cancel,
+        color: Colors.red,
+        size: 30,
+      ),
+    );
   }
 
   Widget _addButton(BuildContext context) {
     return FlatButton(
-        onPressed: () {
-          orderModel.addProduct(product);
-        },
-        child: Icon(
-          Icons.add_shopping_cart,
-          color: Colors.green,
-          size: 30,
-        ));
+      onPressed: () {
+        // orderModel.addProduct(product);
+        // print(orderModel.products);
+        // Navigate to CART Screen
+        // orderModel.addProduct(product);
+        // Navigator.of(context).push(
+        //   SlideLeftTransition(
+        //     page: CartScreen(
+        //       orderModel: orderModel,
+        //     ),
+        //   ),
+        // );
+      },
+      child: Icon(
+        Icons.add_shopping_cart,
+        color: Colors.green,
+        size: 30,
+      ),
+    );
   }
 
   Widget sellerContainer() {

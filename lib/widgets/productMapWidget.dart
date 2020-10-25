@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
-import 'package:water_del/widgets/global/product_info_dialog.dart';
 
 class ProductMapWidget extends StatefulWidget {
   final LocationModel location;
@@ -26,15 +25,8 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
   OrderModel order;
   BitmapDescriptor pinLocationIcon;
 
-  Future showDetailsDialog(Product product) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => ProductInfoDialog(
-        product: product,
-        orderModel: order,
-      ),
-    );
+  productAdder(Product product) {
+    order.addProduct(product);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -49,7 +41,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
           String itemIndex = widget.products.indexOf(item).toString();
           final marker = Marker(
             markerId: MarkerId(itemIndex),
-            onTap: () => showDetailsDialog(item),
+            onTap: () => productAdder(item),
             position: LatLng(latitude, longitude),
             icon: pinLocationIcon,
           );
@@ -69,7 +61,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
   @override
   void initState() {
     order = context.read<OrderModel>();
-    order.location = widget.location;
+    print(order.client);
     setCustomMapPin();
     super.initState();
   }

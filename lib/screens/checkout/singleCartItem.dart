@@ -6,12 +6,22 @@ class SingleCartItem extends StatelessWidget {
   final Product model;
   SingleCartItem({@required this.model});
 
+  addProduct(BuildContext context) {
+    print('I want to add this product');
+  }
+
+  removeProduct() {
+    print('I want to remove this product');
+  }
+
   @override
   Widget build(BuildContext context) {
     print(model.toJson());
     return Container(
       decoration: BoxDecoration(
-          color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8),
+      ),
       margin: EdgeInsets.symmetric(vertical: 5),
       padding: EdgeInsets.all(8),
       child: Row(
@@ -21,11 +31,12 @@ class SingleCartItem extends StatelessWidget {
             height: 100,
             width: 100,
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.asset(
-                  'assets/launcher/waterdel.png',
-                  fit: BoxFit.fitHeight,
-                )),
+              borderRadius: BorderRadius.circular(6),
+              child: Image.asset(
+                'assets/launcher/waterdel.png',
+                fit: BoxFit.fitHeight,
+              ),
+            ),
           ),
           Column(
             children: <Widget>[
@@ -40,21 +51,24 @@ class SingleCartItem extends StatelessWidget {
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.white),
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                ),
                 child: IconButton(
-                    icon: Icon(
-                      Icons.add,
-                      color: Colors.green,
-                    ),
-                    padding: EdgeInsets.all(1),
-                    constraints: BoxConstraints(
-                        maxHeight: 30,
-                        maxWidth: 30,
-                        minHeight: 30,
-                        minWidth: 30),
-                    iconSize: 20,
-                    onPressed: null),
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.green,
+                  ),
+                  padding: EdgeInsets.all(1),
+                  constraints: BoxConstraints(
+                    maxHeight: 30,
+                    maxWidth: 30,
+                    minHeight: 30,
+                    minWidth: 30,
+                  ),
+                  iconSize: 20,
+                  onPressed: null,
+                ),
               ),
               SizedBox(
                 height: 5,
@@ -68,21 +82,24 @@ class SingleCartItem extends StatelessWidget {
               ),
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: Colors.white),
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                ),
                 child: IconButton(
-                    icon: Icon(
-                      Icons.remove,
-                      color: Colors.red,
-                    ),
-                    padding: EdgeInsets.all(1),
-                    constraints: BoxConstraints(
-                        maxHeight: 30,
-                        maxWidth: 30,
-                        minHeight: 30,
-                        minWidth: 30),
-                    iconSize: 20,
-                    onPressed: null),
+                  icon: Icon(
+                    Icons.remove,
+                    color: Colors.red,
+                  ),
+                  padding: EdgeInsets.all(1),
+                  constraints: BoxConstraints(
+                    maxHeight: 30,
+                    maxWidth: 30,
+                    minHeight: 30,
+                    minWidth: 30,
+                  ),
+                  iconSize: 20,
+                  onPressed: null,
+                ),
               )
             ],
           )
