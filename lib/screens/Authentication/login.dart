@@ -82,7 +82,7 @@ class LoginPage extends StatelessWidget {
 
   Future<bool> serverCall(UserModel user) async {
     result = await userProvider.signInEmailPass(user);
-    print('This is the result: $result');
+    // print('This is the result: $result');
 
     if (result == 'Invalid credentials. Please try again') {
       return false;
