@@ -58,11 +58,18 @@ class _CartScreenState extends State<CartScreen> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: ListView(
-            children: widget.orderModel.products
-                .map((e) => SingleCartItem(model: e))
-                .toList(),
-          ),
+          child: widget.orderModel.products.length > 0
+              ? ListView(
+                  children: widget.orderModel.products
+                      .map((e) => SingleCartItem(model: e))
+                      .toList(),
+                )
+              : Center(
+                  child: Text(
+                    'There are no items in your cart',
+                    style: subheaderOutlineBlack,
+                  ),
+                ),
         ),
       ),
     );

@@ -15,7 +15,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        Provider(
+        ChangeNotifierProvider(
           create: (context) => AuthProvider.instance(),
         ),
         Provider(
@@ -52,13 +52,10 @@ class MyApp extends StatelessWidget {
                   .setCrashlyticsCollectionEnabled(true);
               FlutterError.onError =
                   FirebaseCrashlytics.instance.recordFlutterError;
-              return ChangeNotifierProvider(
-                create: (context) => AuthProvider.instance(),
-                child: Consumer(builder: (context, AuthProvider value, child) {
-                  if (value.status == Status.Authenticated) return HomeMain();
-                  return MainAuthentication();
-                }),
-              );
+              return Consumer(builder: (context, AuthProvider value, child) {
+                if (value.status == Status.Authenticated) return HomeMain();
+                return MainAuthentication();
+              });
             case ConnectionState.waiting:
               return LoadingPage();
             case ConnectionState.none:
