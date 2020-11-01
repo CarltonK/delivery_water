@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class SingleCartItem extends StatelessWidget {
   final Product model;
-  SingleCartItem({@required this.model});
-
-  addProduct(BuildContext context) {
-    print('I want to add this product');
-  }
-
-  removeProduct() {
-    print('I want to remove this product');
-  }
+  final OrderModel order;
+  SingleCartItem({@required this.model, this.order});
 
   @override
   Widget build(BuildContext context) {
-    print(model.toJson());
+    // print(model.toJson());
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
@@ -67,7 +61,7 @@ class SingleCartItem extends StatelessWidget {
                     minWidth: 30,
                   ),
                   iconSize: 20,
-                  onPressed: null,
+                  onPressed: () => order.addProduct(model),
                 ),
               ),
               SizedBox(
@@ -98,7 +92,8 @@ class SingleCartItem extends StatelessWidget {
                     minWidth: 30,
                   ),
                   iconSize: 20,
-                  onPressed: null,
+                  onPressed: () =>
+                      order.removeProduct(order.products.indexOf(model)),
                 ),
               )
             ],

@@ -61,7 +61,10 @@ class _CartScreenState extends State<CartScreen> {
           child: widget.orderModel.products.length > 0
               ? ListView(
                   children: widget.orderModel.products
-                      .map((e) => SingleCartItem(model: e))
+                      .map((e) => SingleCartItem(
+                            model: e,
+                            order: widget.orderModel,
+                          ))
                       .toList(),
                 )
               : Center(
