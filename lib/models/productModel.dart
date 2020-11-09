@@ -27,7 +27,7 @@ ProductModel tankedWater = ProductModel(
 
 ProductModel exhausterService = ProductModel(
     title: 'Exhauster',
-    imgUrl: 'assets/images/tanker.png',
+    imgUrl: 'assets/images/exhauster.png',
     selected: true,
     category: 'exhauster');
 
