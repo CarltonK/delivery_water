@@ -21,7 +21,7 @@ ProductModel cartWater = ProductModel(
 
 ProductModel tankedWater = ProductModel(
     title: 'Tanker',
-    imgUrl: 'assets/images/tanker.png',
+    imgUrl: 'assets/images/tanker.jpg',
     selected: true,
     category: 'tanker');
 
