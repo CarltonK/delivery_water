@@ -14,11 +14,11 @@ steps:
     args:
       - '-c'
       - |
-          npm install -g firebase-tools
-          npm install --save firebase-functions@latest
-          npm install -g tslint
+          # npm install -g firebase-tools
+          # npm install --save firebase-functions@latest
+          # npm install -g tslint
 
-          pwd
+          ls -la
 
           # firebase deploy --only firestore:rules --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}
 
