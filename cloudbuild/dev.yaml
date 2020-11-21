@@ -1,0 +1,13 @@
+steps:
+  # Install Node modules
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: 'functions'
+    args: ['install']
+
+  # # Deploy firestore security rules
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   args: ['functions', 'deploy', '--only', 'firestore:rules','--project', '$_PROJECT_NAME', '--token', '$_FIREBASE_TOKEN']
+    
+  # Deploy cloud functions
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['functions', 'deploy', 'mpesaMain', '--project', '$_PROJECT_NAME','--trigger-http','--runtime','nodejs10','--source','/../functions']
