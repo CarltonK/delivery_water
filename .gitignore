@@ -11,6 +11,8 @@
 .gradle/
 .github/
 
+.env
+
 # IntelliJ related
 *.iml
 *.ipr

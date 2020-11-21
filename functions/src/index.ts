@@ -27,7 +27,7 @@ const main = express()
 main.use('/api/v1', app)
 main.use(express.json())
 
-export const mpesaMain = functions.region('europe-west1').https.onRequest(main)
+export const mpesaMain = functions.region('europe-west3').https.onRequest(main)
 
 // M-PESA Endpoints
 // 1) Lipa Na Mpesa Online Callback URL
