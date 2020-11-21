@@ -20,7 +20,7 @@ steps:
 
           firebase deploy --only firestore:rules --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}
 
-          cd ./functions
+          cd ./../functions
           npm install
 
           npm run build
