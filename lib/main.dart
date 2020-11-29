@@ -56,15 +56,17 @@ class MyApp extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
             case ConnectionState.done:
-              FirebaseCrashlytics.instance
-                  .setCrashlyticsCollectionEnabled(true);
-              FlutterError.onError =
-                  FirebaseCrashlytics.instance.recordFlutterError;
-              return Consumer(builder: (context, AuthProvider value, child) {
-                Provider.of<OrderModel>(context).client = value.currentUser.uid;
-                if (value.status == Status.Authenticated) return HomeMain();
-                return MainAuthentication();
-              });
+              if (snapshot.hasData) {
+                FirebaseCrashlytics.instance
+                    .setCrashlyticsCollectionEnabled(true);
+                FlutterError.onError =
+                    FirebaseCrashlytics.instance.recordFlutterError;
+                return Consumer(builder: (context, AuthProvider value, child) {
+                  if (value.status == Status.Authenticated) return HomeMain();
+                  return MainAuthentication();
+                });
+              }
+              return LoadingPage();
             case ConnectionState.waiting:
               return LoadingPage();
             case ConnectionState.none:

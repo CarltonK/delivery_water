@@ -265,6 +265,7 @@ class _HomeMainState extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    Provider.of<OrderModel>(context).client = userCurrent.uid;
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -324,9 +325,7 @@ class CartIcon extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             SlideLeftTransition(
-              page: CartScreen(
-                orderModel: model,
-              ),
+              page: CartScreen(),
             ),
           );
         },
