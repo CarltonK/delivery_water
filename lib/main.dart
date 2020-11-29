@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/screens/Authentication/main_authentication.dart';
 import 'package:water_del/screens/Home/home_main.dart';
 import 'package:water_del/widgets/global/custome_info_dialog.dart';
@@ -21,6 +22,13 @@ void main() {
         Provider(
           create: (context) => DatabaseProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => OrderModel(
+            grandtotal: 0,
+            status: false,
+            products: [],
+          ),
+        )
       ],
       child: MyApp(),
     ),
@@ -53,6 +61,7 @@ class MyApp extends StatelessWidget {
               FlutterError.onError =
                   FirebaseCrashlytics.instance.recordFlutterError;
               return Consumer(builder: (context, AuthProvider value, child) {
+                Provider.of<OrderModel>(context).client = value.currentUser.uid;
                 if (value.status == Status.Authenticated) return HomeMain();
                 return MainAuthentication();
               });

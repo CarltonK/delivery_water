@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:water_del/screens/checkout/finalCheckout.dart';
 import 'package:water_del/screens/checkout/singleCartItem.dart';
 import 'package:water_del/utilities/global/dialogs.dart';
@@ -96,7 +97,7 @@ class _CartScreenState extends State<CartScreen> {
                   style: normalDescription,
                 ),
                 Text(
-                  '${widget.orderModel.grandtotal.toStringAsFixed(2)} KES',
+                  '${Provider.of<OrderModel>(context).grandtotal.toStringAsFixed(2)} KES',
                   style: headerOutlineWhite,
                 )
               ],
@@ -130,16 +131,22 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _cartAppBar(),
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          _backgroundColor(),
-          _finalCartDetails(size),
-          _cartBody(size),
-        ],
+    return Consumer<OrderModel>(
+      builder: (context, OrderModel value, child) {
+        print(value);
+        return child;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: _cartAppBar(),
+        body: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            _backgroundColor(),
+            _finalCartDetails(size),
+            _cartBody(size),
+          ],
+        ),
       ),
     );
   }
