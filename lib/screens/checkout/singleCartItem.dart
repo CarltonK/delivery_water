@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
 import 'package:water_del/utilities/styles.dart';
@@ -61,7 +62,9 @@ class SingleCartItem extends StatelessWidget {
                     minWidth: 30,
                   ),
                   iconSize: 20,
-                  onPressed: () => order.addProduct(model),
+                  onPressed: () =>
+                      Provider.of<OrderModel>(context, listen: false)
+                          .addProduct(model),
                 ),
               ),
               SizedBox(
@@ -93,7 +96,8 @@ class SingleCartItem extends StatelessWidget {
                   ),
                   iconSize: 20,
                   onPressed: () =>
-                      order.removeProduct(order.products.indexOf(model)),
+                      Provider.of<OrderModel>(context, listen: false)
+                          .removeProduct(order.products.indexOf(model)),
                 ),
               )
             ],

@@ -185,6 +185,7 @@ class _HomeMainState extends State<HomeMain> {
       stream: LocationProvider().locationStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          Provider.of<OrderModel>(context).location = snapshot.data;
           List<LocationModel> locations = [];
           locations.insert(0, snapshot.data);
           myLocation = snapshot.data;
@@ -249,30 +250,22 @@ class _HomeMainState extends State<HomeMain> {
   }
 
   Widget clientPage() {
-    return ChangeNotifierProvider(
-      create: (context) => OrderModel(
-        client: userCurrent.uid,
-        grandtotal: 0,
-        location: myLocation,
-        status: false,
-        products: [],
-      ),
-      child: Stack(
-        children: [
-          display.length == 0 ? baseMap() : productMap(),
-          CartIcon(
-            location: myLocation,
-          ),
-          _profilePage(),
-          _bottomSelection()
-        ],
-      ),
+    return Stack(
+      children: [
+        display.length == 0 ? baseMap() : productMap(),
+        CartIcon(
+          location: myLocation,
+        ),
+        _profilePage(),
+        _bottomSelection()
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    Provider.of<OrderModel>(context).client = userCurrent.uid;
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -332,9 +325,7 @@ class CartIcon extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             SlideLeftTransition(
-              page: CartScreen(
-                orderModel: model,
-              ),
+              page: CartScreen(),
             ),
           );
         },
