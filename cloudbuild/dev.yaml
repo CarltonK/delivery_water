@@ -26,15 +26,14 @@ steps:
           npm run build
           firebase deploy --only functions --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}
 
+          firebase emulators:start --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}
+
   - id: Test
     name: node:10.22-alpine
     entrypoint: sh
     args:
       - '-c'
       - |
-
-          firebase emulators:start --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}
-
           cd ./test
           npm install
           npm test
