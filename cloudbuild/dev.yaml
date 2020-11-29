@@ -14,6 +14,8 @@ steps:
     args:
       - '-c'
       - |
+          apt-get install openjdk-7-jre
+
           npm install -g firebase-tools
           npm install --save firebase-functions@latest
           npm install -g tslint
