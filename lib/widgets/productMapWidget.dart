@@ -28,19 +28,6 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
 
   productAdder(Product product, int index) {
     order.addProduct(product);
-<<<<<<< HEAD
-    final snackBar = SnackBar(
-      content: Text('${product.title} was added to your cart'),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
-          order.removeProduct(index);
-        },
-      ),
-    );
-    Scaffold.of(context).showSnackBar(snackBar);
-||||||| 93adcdb
-=======
     final snackBar = SnackBar(
       content: Text('${product.title} was added to your cart'),
       action: SnackBarAction(
@@ -55,7 +42,6 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
       ),
     );
     Scaffold.of(context).showSnackBar(snackBar);
->>>>>>> a5d7778056cc22f312c38a2932376ecf7adf40df
   }
 
   void _onMapCreated(GoogleMapController controller) {
