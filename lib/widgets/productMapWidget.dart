@@ -25,8 +25,18 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
   OrderModel order;
   BitmapDescriptor pinLocationIcon;
 
-  productAdder(Product product) {
+  productAdder(Product product, int index) {
     order.addProduct(product);
+    final snackBar = SnackBar(
+      content: Text('${product.title} was added to your cart'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          order.removeProduct(index);
+        },
+      ),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -41,7 +51,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
           String itemIndex = widget.products.indexOf(item).toString();
           final marker = Marker(
             markerId: MarkerId(itemIndex),
-            onTap: () => productAdder(item),
+            onTap: () => productAdder(item, widget.products.indexOf(item)),
             position: LatLng(latitude, longitude),
             icon: pinLocationIcon,
           );
