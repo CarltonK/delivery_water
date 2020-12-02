@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:water_del/screens/checkout/finalCheckout.dart';
 import 'package:water_del/screens/checkout/singleCartItem.dart';
 import 'package:water_del/utilities/global/dialogs.dart';
@@ -8,13 +9,13 @@ import 'package:water_del/utilities/styles.dart';
 import 'package:water_del/models/orderModel.dart';
 
 class CartScreen extends StatefulWidget {
-  final OrderModel orderModel;
-  CartScreen({@required this.orderModel});
   @override
   _CartScreenState createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
+  OrderModel orderModel;
+
   Widget _cartAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
@@ -58,11 +59,21 @@ class _CartScreenState extends State<CartScreen> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
-          child: ListView(
-            children: widget.orderModel.products
-                .map((e) => SingleCartItem(model: e))
-                .toList(),
-          ),
+          child: orderModel.products.length > 0
+              ? ListView(
+                  children: orderModel.products
+                      .map((e) => SingleCartItem(
+                            model: e,
+                            order: orderModel,
+                          ))
+                      .toList(),
+                )
+              : Center(
+                  child: Text(
+                    'There are no items in your cart',
+                    style: subheaderOutlineBlack,
+                  ),
+                ),
         ),
       ),
     );
@@ -86,19 +97,17 @@ class _CartScreenState extends State<CartScreen> {
                   style: normalDescription,
                 ),
                 Text(
-                  '${widget.orderModel.grandtotal.toStringAsFixed(2)} KES',
+                  '${Provider.of<OrderModel>(context).grandtotal.toStringAsFixed(2)} KES',
                   style: headerOutlineWhite,
                 )
               ],
             ),
             RaisedButton(
-              onPressed: () => widget.orderModel.products.length == 0
+              onPressed: () => orderModel.products.length == 0
                   ? dialogInfo(context, 'There are no items in your cart')
                   : Navigator.of(context).push(
                       ScaleRoute(
-                        page: FinalCheckout(
-                          order: widget.orderModel,
-                        ),
+                        page: FinalCheckout(),
                       ),
                     ),
               color: Colors.blue,
@@ -120,6 +129,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    orderModel = Provider.of<OrderModel>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _cartAppBar(),

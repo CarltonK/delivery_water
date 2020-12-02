@@ -8,20 +8,20 @@ class LocationProvider {
       StreamController<LocationModel>();
   Stream<LocationModel> get locationStream => _locationController.stream;
 
-  LocationModel _currentLocation;
+  LocationModel currentLocation;
   Location location = Location();
 
   Future<LocationModel> getLocation() async {
     try {
       var userLocation = await location.getLocation();
-      _currentLocation = LocationModel(
+      currentLocation = LocationModel(
         latitude: userLocation.latitude,
         longitude: userLocation.longitude,
       );
     } on Exception catch (e) {
       print('getLocation ERROR -> ${e.toString()}');
     }
-    return _currentLocation;
+    return currentLocation;
   }
 
   LocationProvider() {

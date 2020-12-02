@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:water_del/models/locationModel.dart';
 import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/models/product.dart';
+import 'package:water_del/utilities/global/dialogs.dart';
 
 class ProductMapWidget extends StatefulWidget {
   final LocationModel location;
@@ -27,6 +28,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
 
   productAdder(Product product, int index) {
     order.addProduct(product);
+<<<<<<< HEAD
     final snackBar = SnackBar(
       content: Text('${product.title} was added to your cart'),
       action: SnackBarAction(
@@ -37,6 +39,23 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
       ),
     );
     Scaffold.of(context).showSnackBar(snackBar);
+||||||| 93adcdb
+=======
+    final snackBar = SnackBar(
+      content: Text('${product.title} was added to your cart'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          order.removeProduct(index);
+          dialogInfo(
+            context,
+            '${widget.products[index].title} was removed from your cart',
+          );
+        },
+      ),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
+>>>>>>> a5d7778056cc22f312c38a2932376ecf7adf40df
   }
 
   void _onMapCreated(GoogleMapController controller) {

@@ -21,13 +21,13 @@ ProductModel cartWater = ProductModel(
 
 ProductModel tankedWater = ProductModel(
     title: 'Tanker',
-    imgUrl: 'assets/images/tanker.png',
+    imgUrl: 'assets/images/water.png',
     selected: true,
     category: 'tanker');
 
 ProductModel exhausterService = ProductModel(
     title: 'Exhauster',
-    imgUrl: 'assets/images/tanker.png',
+    imgUrl: 'assets/images/exhauster.png',
     selected: true,
     category: 'exhauster');
 

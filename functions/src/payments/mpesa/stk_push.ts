@@ -29,7 +29,7 @@ export async function lipaNaMpesa(phone: number, amount: number) {
                 PartyA: phone,
                 PartyB: merchantCode,
                 PhoneNumber: phone,
-                CallBackURL: "https://europe-west1-naqua-1b2bb.cloudfunctions.net/mpesaMain/api/v1/nitumiekakitu/q0WnbvFGLsvMFbfEDW25",
+                CallBackURL: "https://europe-west3-naqua-1b2bb.cloudfunctions.net/mpesaMain/api/v1/nitumiekakitu/q0WnbvFGLsvMFbfEDW25",
                 AccountReference: phone,
                 TransactionDesc: "New Order"
             }

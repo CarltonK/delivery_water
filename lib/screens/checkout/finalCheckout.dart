@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:water_del/main.dart';
 import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/provider/database_provider.dart';
@@ -9,9 +10,6 @@ import 'package:water_del/utilities/global/pageTransitions.dart';
 import 'package:water_del/utilities/styles.dart';
 
 class FinalCheckout extends StatelessWidget {
-  final OrderModel order;
-  FinalCheckout({@required this.order});
-
   final DatabaseProvider databaseProvider = DatabaseProvider();
 
   Widget _checkoutAppBar(BuildContext context) {
@@ -75,7 +73,7 @@ class FinalCheckout extends StatelessWidget {
     );
   }
 
-  Widget _checkoutBody(Size size) {
+  Widget _checkoutBody(Size size, BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
@@ -95,7 +93,8 @@ class FinalCheckout extends StatelessWidget {
             Expanded(
               child: Container(),
             ),
-            _infoRow('Total Price', '${order.grandtotal} KES'),
+            _infoRow('Total Price',
+                '${Provider.of<OrderModel>(context).grandtotal.toStringAsFixed(2)} KES'),
             SizedBox(
               height: 15,
             ),
@@ -113,12 +112,15 @@ class FinalCheckout extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 5, top: 5),
         child: FlatButton(
           onPressed: () {
-            databaseProvider.createOrder(order).then((value) {
+            databaseProvider
+                .createOrder(Provider.of<OrderModel>(context, listen: false))
+                .then((value) {
               dialogInfo(
                 context,
                 "We have received your order. Enter your MPESA PIN to process your transaction",
               );
-              order.products = [];
+              Provider.of<OrderModel>(context, listen: false).products = [];
+              Provider.of<OrderModel>(context, listen: false).grandtotal = 0;
               Timer(Duration(seconds: 2), () {
                 Navigator.of(context).pushReplacement(
                   SlideRightTransition(
@@ -158,7 +160,7 @@ class FinalCheckout extends StatelessWidget {
         children: <Widget>[
           _backgroundColor(),
           _finalCheckoutDetails(context, size),
-          _checkoutBody(size),
+          _checkoutBody(size, context),
         ],
       ),
     );

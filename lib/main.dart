@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:water_del/models/orderModel.dart';
 import 'package:water_del/screens/Authentication/main_authentication.dart';
 import 'package:water_del/screens/Home/home_main.dart';
 import 'package:water_del/widgets/global/custome_info_dialog.dart';
@@ -15,12 +16,19 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        Provider(
+        ChangeNotifierProvider(
           create: (context) => AuthProvider.instance(),
         ),
         Provider(
           create: (context) => DatabaseProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => OrderModel(
+            grandtotal: 0,
+            status: false,
+            products: [],
+          ),
+        )
       ],
       child: MyApp(),
     ),
@@ -48,17 +56,17 @@ class MyApp extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
             case ConnectionState.done:
-              FirebaseCrashlytics.instance
-                  .setCrashlyticsCollectionEnabled(true);
-              FlutterError.onError =
-                  FirebaseCrashlytics.instance.recordFlutterError;
-              return ChangeNotifierProvider(
-                create: (context) => AuthProvider.instance(),
-                child: Consumer(builder: (context, AuthProvider value, child) {
+              if (snapshot.hasData) {
+                FirebaseCrashlytics.instance
+                    .setCrashlyticsCollectionEnabled(true);
+                FlutterError.onError =
+                    FirebaseCrashlytics.instance.recordFlutterError;
+                return Consumer(builder: (context, AuthProvider value, child) {
                   if (value.status == Status.Authenticated) return HomeMain();
                   return MainAuthentication();
-                }),
-              );
+                });
+              }
+              return LoadingPage();
             case ConnectionState.waiting:
               return LoadingPage();
             case ConnectionState.none:
