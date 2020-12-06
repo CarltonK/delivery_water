@@ -65,6 +65,10 @@ service cloud.firestore {
         allow create: if isAddressValid(userId);
         allow read: if isOwner(userId);
       }
+
+      match /notifications/{notification} {
+        allow read, write: if isOwner(userId);
+      }
     }
     match /rides/{rideId} {
       //Only a client can create
