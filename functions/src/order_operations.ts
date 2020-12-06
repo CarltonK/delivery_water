@@ -1,9 +1,10 @@
-import { regionalFunctions, db, ff } from './index'
+import { db, ff } from './index'
+import * as functions from 'firebase-functions'
 import * as notifcations from './notification_operations'
 import * as https from 'https'
 import { lipaNaMpesa } from './payments/mpesa/stk_push'
 
-export const newOrder = regionalFunctions.region('europe-west3').firestore
+export const newOrder = functions.region('europe-west3').firestore
     .document('/orders/{order}')
     .onCreate(async snapshot => {
         const batch = db.batch()

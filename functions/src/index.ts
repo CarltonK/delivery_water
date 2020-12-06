@@ -9,7 +9,7 @@ import * as mpesa from './mpesa_base'
 
 export const db = superadmin.firestore()
 export const ff = superadmin.firestore;
-export const regionalFunctions = functions.region('europe-west1')
+const regionalFunctions = functions.region('europe-west1')
 
 exports.productIdentifier = productOps.identifyProduct
 
