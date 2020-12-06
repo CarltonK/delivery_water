@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions'
-import {db} from'./index'
+import { db } from './index'
 
 export const identifyProduct = functions.region('europe-west3').firestore
     .document('/users/{user}/products/{product}')

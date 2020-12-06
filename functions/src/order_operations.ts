@@ -1,5 +1,5 @@
+import { db, ff } from './index'
 import * as functions from 'firebase-functions'
-import {db, ff} from'./index'
 import * as notifcations from './notification_operations'
 import * as https from 'https'
 import { lipaNaMpesa } from './payments/mpesa/stk_push'
@@ -37,7 +37,7 @@ export const newOrder = functions.region('europe-west3').firestore
                     resp.on('end', async () => {
                         const parsedData = JSON.parse(data)
                         deliveryLocation = parsedData['results'][0]['name']
-                        console.log(deliveryLocation)
+                        // console.log(deliveryLocation)
 
                         // Update USER
                         const clientRef = db.collection('users').doc(client)

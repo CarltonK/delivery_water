@@ -9,6 +9,7 @@ import * as mpesa from './mpesa_base'
 
 export const db = superadmin.firestore()
 export const ff = superadmin.firestore;
+const regionalFunctions = functions.region('europe-west3')
 
 exports.productIdentifier = productOps.identifyProduct
 
@@ -27,7 +28,7 @@ const main = express()
 main.use('/api/v1', app)
 main.use(express.json())
 
-export const mpesaMain = functions.region('europe-west3').https.onRequest(main)
+export const mpesaMain = regionalFunctions.https.onRequest(main)
 
 // M-PESA Endpoints
 // 1) Lipa Na Mpesa Online Callback URL
