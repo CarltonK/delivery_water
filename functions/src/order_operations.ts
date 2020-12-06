@@ -36,7 +36,7 @@ export const newOrder = regionalFunctions.region('europe-west3').firestore
                     resp.on('end', async () => {
                         const parsedData = JSON.parse(data)
                         deliveryLocation = parsedData['results'][0]['name']
-                        console.log(deliveryLocation)
+                        // console.log(deliveryLocation)
 
                         // Update USER
                         const clientRef = db.collection('users').doc(client)
