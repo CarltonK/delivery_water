@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
-      title: 'Naqua',
+      title: 'Maji Mtaani',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         accentColor: Colors.pink[200],
