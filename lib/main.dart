@@ -37,6 +37,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final FirebaseAnalytics analytics = FirebaseAnalytics();
+  final futureApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: FutureBuilder(
-        future: Firebase.initializeApp(),
+        future: futureApp,
         builder: (_, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
