@@ -1,0 +1,22 @@
+version: '3.3' # Requires Docker engine 18.02.0+\
+
+services:
+  naqua:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:   # Binds volume to enable working through docker locally
+      - type: bind
+        source: .
+        target: /app/
+    ports:
+      - 5001:5001
+      - 8080:8080
+      - 8085:8085
+      - 4001:4001
+      - 4000:4000
+    network_mode: "host"
+    # attach terminal
+    tty: true
+    environment: 
+      NODE_ENV: "local"
