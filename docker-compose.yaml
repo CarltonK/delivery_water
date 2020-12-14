@@ -15,7 +15,6 @@ services:
       - 8085:8085
       - 4001:4001
       - 4000:4000
-    network_mode: "host"
     # attach terminal
     tty: true
     environment: 

@@ -28,6 +28,7 @@
     },
     "ui": {
       "enabled": true,
+      "host": "localhost",
       "port": 4000
     }
   }
