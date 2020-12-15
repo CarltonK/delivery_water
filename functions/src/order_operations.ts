@@ -101,6 +101,10 @@ export const newOrder = functions.region('europe-west3').firestore
                                 time: ff.Timestamp.now(),
                                 message: `You have received an order for ${count} ${title} at ${deliveryLocation}`
                             })
+                            // Set supplier as busy
+                            await db.collection('users').doc(supplier).update({
+                                isOccupied: true
+                            })
                         })
                         console.log(`A notification has been sent to the following suppliers ${suppliers} for order with Ref No. ${oID}`)
                     })
