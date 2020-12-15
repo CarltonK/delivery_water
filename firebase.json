@@ -23,8 +23,13 @@
     "pubsub": {
       "port": 8085
     },
+    "auth": {
+      "port": 4001
+    },
     "ui": {
-      "enabled": true
+      "enabled": true,
+      "host": "localhost",
+      "port": 4000
     }
   }
 }
