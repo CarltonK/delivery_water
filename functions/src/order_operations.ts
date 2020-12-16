@@ -25,7 +25,6 @@ export const newOrder = functions.region('europe-west3').firestore
                 await lipaNaMpesa(phone,total)
             }
 
-
             let deliveryLocation: string = ''
             https.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=5000&type=sublocality&key=${key}`, (resp) => {
                 const code: number | undefined = resp.statusCode
@@ -101,18 +100,22 @@ export const newOrder = functions.region('europe-west3').firestore
                                 time: ff.Timestamp.now(),
                                 message: `You have received an order for ${count} ${title} at ${deliveryLocation}`
                             })
+                            // Set supplier as busy
+                            await db.collection('users').doc(supplier).update({
+                                isOccupied: true
+                            })
                         })
                         console.log(`A notification has been sent to the following suppliers ${suppliers} for order with Ref No. ${oID}`)
                     })
                 } 
             });
 
-            } catch (error) {
-            throw error
+        } catch (error) {
+            console.error(error)
         }
     })
 
-async function getUserPhone(uid: string) {
+async function getUserPhone(uid: string): Promise<number | boolean> {
     try {
         const doc = await db.collection('users').doc(uid).get()
         const phone: string | null = doc.get('phone')
@@ -124,6 +127,6 @@ async function getUserPhone(uid: string) {
         }
     } catch (error) {
         console.error(error)
+        return false
     }
-    return false
 }

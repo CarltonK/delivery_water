@@ -1,19 +1,5 @@
 // import * as functions from 'firebase-functions'
 import { Request, Response } from "express"
-// import { lipaNaMpesa } from './payments/mpesa/stk_push'
-
-// export const payAdminSecure = functions.firestore
-//     .document('payments/Admin/remittances/{doc}')
-//     .onCreate(async snapshot => {
-//         try {
-//             const model: PayAdminDocModel = snapshot.data() as PayAdminDocModel
-//             const phone: number = Number("254" + model.phone.slice(1))
-//             const amount = 10
-//             await lipaNaMpesa(phone, amount)
-//         } catch (error) {
-//             console.error(error)
-//         }
-//     })
 
 export function mpesaLnmCallbackForOrder(request: Request, response: Response) {
     try {

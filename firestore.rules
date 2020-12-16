@@ -27,7 +27,6 @@ service cloud.firestore {
         && request.resource.data.client == get(/databases/$(database)/documents/orders/$(order)).data.client;
     }
 
-
     function isOwner(uid) {
       return request.auth.uid == uid;
     }
@@ -43,23 +42,31 @@ service cloud.firestore {
       && request.resource.data.address != null;
     }
 
+    // BASE
     match /{document=**} {
       allow read, write: if false;
     }
-     match /{path=**}/products/{product} {
-        allow create: if isSupplier(request.resource.data.supplier) && isProductCorrect();
-        allow update: if isSupplier(resource.data.supplier);
-        allow read: if isAuthenticated();
+
+    // PRODUCTS - Collection Group Scope
+    match /{path=**}/products/{product} {
+      // Only write a product if supplier
+      allow create: if isSupplier(request.resource.data.supplier) && isProductCorrect();
+      allow update: if isSupplier(resource.data.supplier);
+      //Any authenticated user can view products
+      allow read: if isAuthenticated();
     }
+
+    // THIS IS THE ADMIN VAULT
     match /private/{docId} {
+      // Nobody has any access
       allow read, write: if false;
     }
+
+    // USERS
     match /users/{userId} {
       //A user can do everything apart from delete their profile
       allow get, create, update: if isOwner(userId);
-      //Only write a product if supplier
-      //Any authenticated user can view products
-      //Refactor to match any collection group queries
+      
       match /addresses/{address} {
         allow update, delete: if isOwner(userId);
         allow create: if isAddressValid(userId);
@@ -69,7 +76,16 @@ service cloud.firestore {
       match /notifications/{notification} {
         allow read, write: if isOwner(userId);
       }
+
+      // TODO - Create a subcolletion titled public
+      //        Store public info about user which can be queried by anybody but only changed by one
+      //        More secure since it can be isolated and treated as a collection group query
+      //        Cloud function to automatically create a public profile
+      //        Required data - email,full name
+      //        Optional data - ID, address
     }
+
+    // RIDES
     match /rides/{rideId} {
       //Only a client can create
       allow create: if request.auth.uid == request.resource.data.client;
@@ -83,6 +99,8 @@ service cloud.firestore {
       allow delete: if resource.data.client == request.auth.uid
         && resource.data.ridestatus != true;
     }
+
+    // ORDERS
     match /orders/{order} {
 
       function isOrderCorrect() {
@@ -103,11 +121,15 @@ service cloud.firestore {
       }
 
       allow create: if isOrderCorrect();
-      allow read, update: if isValidOrderClient() || isValidOrderSupplier();
+      allow read: if isValidOrderClient() || isValidOrderSupplier();
     }
+
+    // REVIEWS
     match /reviews/{review} {
       allow create: if isAuthenticated() && isValidReview(request.resource.data.orderId);
       allow read: if isAuthenticated();
+
+      // TODO - could be a collection group under orders
     }
   }
 }

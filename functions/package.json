@@ -3,7 +3,8 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
-    "serve": "npm run kill && npm run build && firebase emulators:start",
+    "serve": "npm run kill && npm run build && firebase emulators:start --import=./data",
+    "local": "npm run build && firebase emulators:start --import=./data",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "kill": "kill -9 $(ps aux | grep '\\sjava\\s' | awk '{print $2}') || true",
