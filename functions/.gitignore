@@ -5,6 +5,9 @@
 # Typescript v1 declaration files
 typings/
 
+# Firestore data
+data
+
 node_modules/
 lib/
 .service-account.json
