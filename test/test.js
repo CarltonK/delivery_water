@@ -208,7 +208,7 @@ describe('Naqua', () => {
 
     })
 
-    it("Can only allow creation of only valid orders", async () => {
+    it("Can only allow creation of valid orders", async () => {
         const db = getFirestore(myAuth)
         const order = db.collection('orders').doc('order_one')
 
@@ -230,7 +230,7 @@ describe('Naqua', () => {
         await firebase.assertFails(order.get())
     })
 
-    it ("Can't only allow clients not associated with the order to view the order", async () => {
+    it ("Can't allow clients not associated with the order to view the order", async () => {
         const db = getFirestore(myAuth)
         const order = db.collection('orders').doc('order_one')
 
@@ -239,7 +239,7 @@ describe('Naqua', () => {
         await firebase.assertFails(order.get())
     })
 
-    it ("Can't only allow clients not associated with the order to view the order", async () => {
+    it ("Can't allow suppliers not associated with the order to view the order", async () => {
         const db = getFirestore(myAuth)
         const order = db.collection('orders').doc('order_one')
 
@@ -257,11 +257,12 @@ describe('Naqua', () => {
         await firebase.assertSucceeds(order.get())
     })
 
-    it ("Can only allow suppliers associated with the order to view the order", async () => {
+    it ("Can only allow suppliers associated with the order to view the order if they are not occupied", async () => {
         const db = getFirestore(theirAuth)
         const order = db.collection('orders').doc('order_three')
 
         const admin = getAdminFirestore()
+        await admin.collection('users').doc(theirID).set({ isOccupied: false })
         await admin.collection('orders').doc('order_three').set({suppliers: [theirID]})
         await firebase.assertSucceeds(order.get())
     })
@@ -320,4 +321,5 @@ describe('Naqua', () => {
 
 after(async () => {
     await firebase.clearFirestoreData({projectId: PROJECT_ID});
+    Promise.all(firebase.apps().map(app => app.delete()))
 });
