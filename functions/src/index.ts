@@ -12,7 +12,7 @@ export const ff = superadmin.firestore;
 const regionalFunctions = functions.region('europe-west3')
 
 // Runtime options
-regionalFunctions.runWith({ memory: '512MB' , timeoutSeconds: 30 })
+regionalFunctions.runWith({ memory: '512MB', timeoutSeconds: 30 })
 
 // New Product
 exports.productIdentifier = productOps.identifyProduct
