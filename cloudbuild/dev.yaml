@@ -21,7 +21,7 @@ steps:
           firebase deploy --only firestore:rules --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}
 
           cd ./functions
-          npm install
+          npm i
 
           npm run build
           firebase deploy --only functions --project=${PROJECT_ID} --token=${_FIREBASE_TOKEN}

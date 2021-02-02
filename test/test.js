@@ -106,70 +106,70 @@ describe('Naqua', () => {
         await firebase.assertSucceeds(testDoc.get());
     })
 
-    it("Can query rides if i am client", async () => {
-        const db = getFirestore(myAuth)
-        const testQuery = db.collection('rides').where('client','==',myID)
-        await firebase.assertSucceeds(testQuery.get())
-    })
+    // it("Can query rides if i am client", async () => {
+    //     const db = getFirestore(myAuth)
+    //     const testQuery = db.collection('rides').where('client','==',myID)
+    //     await firebase.assertSucceeds(testQuery.get())
+    // })
 
-    it("Can't query all rides", async () => {
-        const db = getFirestore(myAuth)
-        const testQuery = db.collection('rides')
-        await firebase.assertFails(testQuery.get())
-    })
+    // it("Can't query all rides", async () => {
+    //     const db = getFirestore(myAuth)
+    //     const testQuery = db.collection('rides')
+    //     await firebase.assertFails(testQuery.get())
+    // })
 
-    it("Can't create a ride document if client is not signed in user", async () => {
-        const db = getFirestore(null)
-        const testDoc = db.collection('rides').doc('ride_one');
-        await firebase.assertFails(testDoc.set({client: null}))
-    })
+    // it("Can't create a ride document if client is not signed in user", async () => {
+    //     const db = getFirestore(null)
+    //     const testDoc = db.collection('rides').doc('ride_one');
+    //     await firebase.assertFails(testDoc.set({client: null}))
+    // })
 
-    it("Can create a ride document if client is signed in user", async () => {
-        const db = getFirestore(myAuth)
-        const testDoc = db.collection('rides').doc('ride_two');
-        await firebase.assertSucceeds(testDoc.set({"client": myID}))
-    })
+    // it("Can create a ride document if client is signed in user", async () => {
+    //     const db = getFirestore(myAuth)
+    //     const testDoc = db.collection('rides').doc('ride_two');
+    //     await firebase.assertSucceeds(testDoc.set({"client": myID}))
+    // })
 
-    it("Can update a ride document if user is client", async () => {
-        const admin = getAdminFirestore();
-        const rideId = "ride_one";
-        const setupDoc = admin.collection('rides').doc(rideId);
-        await setupDoc.set({client: myID, rider: theirID})
-        const db = getFirestore(myAuth)
-        const testDoc = db.collection('rides').doc(rideId);
-        await firebase.assertSucceeds(testDoc.update({status: true}))
-    })
+    // it("Can update a ride document if user is client", async () => {
+    //     const admin = getAdminFirestore();
+    //     const rideId = "ride_one";
+    //     const setupDoc = admin.collection('rides').doc(rideId);
+    //     await setupDoc.set({client: myID, rider: theirID})
+    //     const db = getFirestore(myAuth)
+    //     const testDoc = db.collection('rides').doc(rideId);
+    //     await firebase.assertSucceeds(testDoc.update({status: true}))
+    // })
 
-    it("Can update a ride document if user is rider", async () => {
-        const admin = getAdminFirestore();
-        const rideId = "ride_one";
-        const setupDoc = admin.collection('rides').doc(rideId);
-        await setupDoc.set({client: myID, rider: theirID})
+    // it("Can update a ride document if user is rider", async () => {
+    //     const admin = getAdminFirestore();
+    //     const rideId = "ride_one";
+    //     const setupDoc = admin.collection('rides').doc(rideId);
+    //     await setupDoc.set({client: myID, rider: theirID})
         
-        const db = getFirestore(theirAuth)
-        const testDoc = db.collection('rides').doc("ride_one");
-        await firebase.assertSucceeds(testDoc.update({status: false}))
-    })
+    //     const db = getFirestore(theirAuth)
+    //     const testDoc = db.collection('rides').doc("ride_one");
+    //     await firebase.assertSucceeds(testDoc.update({status: false}))
+    // })
 
-    it("Can allow a client to delete a ride if ride status is false", async () => {
-        const db = getFirestore(myAuth)
-        const testDoc = db.collection('rides').doc('ride_three')
-        await testDoc.set({client: myID, ridestatus: false})
-        await firebase.assertSucceeds(testDoc.delete())
-    })
+    // it("Can allow a client to delete a ride if ride status is false", async () => {
+    //     const db = getFirestore(myAuth)
+    //     const testDoc = db.collection('rides').doc('ride_three')
+    //     await testDoc.set({client: myID, ridestatus: false})
+    //     await firebase.assertSucceeds(testDoc.delete())
+    // })
 
-    it("Can't allow a client to delete a ride if ride status is true", async () => {
-        const db = getFirestore(myAuth)
-        const testDoc = db.collection('rides').doc('ride_three')
-        await testDoc.set({client: myID, ridestatus: true})
-        await firebase.assertFails(testDoc.delete())
-    })
+    // it("Can't allow a client to delete a ride if ride status is true", async () => {
+    //     const db = getFirestore(myAuth)
+    //     const testDoc = db.collection('rides').doc('ride_three')
+    //     await testDoc.set({client: myID, ridestatus: true})
+    //     await firebase.assertFails(testDoc.delete())
+    // })
 
-    it("Can't allow a rider to delete a ride", async () => {
-        const db = getFirestore(theirAuth)
-        const testDoc = db.collection('rides').doc('ride_one')
-        await firebase.assertFails(testDoc.delete())
-    })
+    // it("Can't allow a rider to delete a ride", async () => {
+    //     const db = getFirestore(theirAuth)
+    //     const testDoc = db.collection('rides').doc('ride_one')
+    //     await firebase.assertFails(testDoc.delete())
+    // })
 
     it("Can't allow unauthenticated users to view a product", async () => {
         const db = getFirestore(null)
@@ -279,7 +279,7 @@ describe('Naqua', () => {
         await firebase.assertSucceeds(review.get())
     })
 
-    it ("Can't allow supplers to write reviews", async () => {
+    it ("Can't allow suppliers to write reviews", async () => {
         const db = getFirestore(myAuth)
         const review = db.collection('reviews').doc('review_one')
 
