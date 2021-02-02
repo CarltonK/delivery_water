@@ -337,7 +337,7 @@ class CartIcon extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: Stack(
-            overflow: Overflow.visible,
+            clipBehavior: Clip.antiAlias,
             alignment: Alignment.center,
             children: [
               Positioned(
