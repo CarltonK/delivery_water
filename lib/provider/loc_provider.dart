@@ -1,7 +1,6 @@
 import 'dart:async';
-
 import 'package:location/location.dart';
-import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/models.dart';
 
 class LocationProvider {
   StreamController<LocationModel> _locationController =

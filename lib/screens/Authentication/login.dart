@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/auth_provider.dart';
-import 'package:water_del/screens/authentication/reset_password.dart';
-import 'package:water_del/utilities/global/dialogs.dart';
-import 'package:water_del/utilities/global/pageTransitions.dart';
-import 'package:water_del/utilities/global/social_buttons.dart';
-import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/utilities/utilities.dart';
 
 class LoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();

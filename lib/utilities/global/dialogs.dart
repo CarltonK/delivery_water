@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:water_del/widgets/global/custom_progress_dialog.dart';
-import 'package:water_del/widgets/global/custome_info_dialog.dart';
+import 'package:water_del/widgets/widgets.dart';
 import 'package:water_del/widgets/global/exit_dialog.dart';
 
 Future dialogInfo(BuildContext context, String message) {

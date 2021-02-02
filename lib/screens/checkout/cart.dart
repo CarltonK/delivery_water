@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/screens/checkout/finalCheckout.dart';
-import 'package:water_del/screens/checkout/singleCartItem.dart';
-import 'package:water_del/utilities/global/dialogs.dart';
-import 'package:water_del/utilities/global/pageTransitions.dart';
-import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/models/orderModel.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/utilities/utilities.dart';
 
 class CartScreen extends StatefulWidget {
   @override

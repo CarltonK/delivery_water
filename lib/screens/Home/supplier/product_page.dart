@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:water_del/models/product.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/widgets/global/create_product_dialog.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/widgets.dart';
 
 class ProductPage extends StatefulWidget {
   final auth.User user;
