@@ -23,14 +23,17 @@ class _SupplierHomeState extends State<SupplierHome> {
 
   static menuItemTemplate(String title, IconData icon, Color color) {
     return BottomNavyBarItem(
-        textAlign: TextAlign.center,
-        icon: Icon(icon),
-        title: Text(
-          title,
-          style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w700, letterSpacing: 0.5),
+      textAlign: TextAlign.center,
+      icon: Icon(icon),
+      title: Text(
+        title,
+        style: GoogleFonts.montserrat(
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
         ),
-        activeColor: color);
+      ),
+      activeColor: color,
+    );
   }
 
   List<BottomNavyBarItem> items = [
@@ -49,8 +52,13 @@ class _SupplierHomeState extends State<SupplierHome> {
             Icons.person,
             color: Colors.black,
           ),
-          onPressed: () => Navigator.of(context)
-              .push(SlideLeftTransition(page: ProfilePage(user: widget.user))),
+          onPressed: () => Navigator.of(context).push(
+            SlideLeftTransition(
+              page: ProfilePage(
+                user: widget.user,
+              ),
+            ),
+          ),
         )
       ],
     );
@@ -103,9 +111,10 @@ class _SupplierHomeState extends State<SupplierHome> {
         ),
       ),
       bottomNavigationBar: BottomNavyBar(
-          items: items,
-          selectedIndex: _currentIndex,
-          onItemSelected: itemSelector),
+        items: items,
+        selectedIndex: _currentIndex,
+        onItemSelected: itemSelector,
+      ),
     );
   }
 }
