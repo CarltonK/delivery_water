@@ -2,6 +2,7 @@ version: '3.3' # Requires Docker engine 18.02.0+\
 
 services:
   naqua:
+    container_name: naqua
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,3 +20,9 @@ services:
     tty: true
     environment: 
       NODE_ENV: "local"
+      API_KEY: ""
+      CONSUMER_KEY: ""
+      CONSUMER_SECRET: ""
+      PASS_KEY: ""
+      SHORT_CODE: ""
+      MERCHANT_CODE: ""
