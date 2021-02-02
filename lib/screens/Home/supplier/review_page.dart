@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:water_del/models/reviewModel.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/utilities/utilities.dart';
 
 class ReviewPage extends StatefulWidget {
   final auth.User user;

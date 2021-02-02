@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/widgets/singleSupplierOrder.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/widgets.dart';
 
 class OrdersPage extends StatefulWidget {
   final auth.User user;

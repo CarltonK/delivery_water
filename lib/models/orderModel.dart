@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:water_del/models/locationModel.dart';
+import 'package:water_del/models/models.dart';
 
 class OrderModel with ChangeNotifier {
   String id;

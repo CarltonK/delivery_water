@@ -7,13 +7,6 @@ class CartModel {
   CartModel({this.price, this.imgUrl, this.title, this.quantity});
 }
 
-CartModel bottledWater = CartModel(
-    imgUrl:
-        'https://images.unsplash.com/photo-1563340605-4b8bfa223b32?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
-    price: 50,
-    quantity: 3,
-    title: 'Bottled Water');
-
 CartModel bottledWater1 = CartModel(
     imgUrl:
         'https://images.unsplash.com/photo-1563340605-4b8bfa223b32?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
@@ -29,7 +22,6 @@ CartModel bottledWater2 = CartModel(
     title: 'Bottled Water 2');
 
 List<CartModel> itemsCart = [
-  bottledWater,
   bottledWater1,
   bottledWater2,
 ];

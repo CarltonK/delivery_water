@@ -1,12 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:water_del/models/locationModel.dart';
-import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/models/product.dart';
-import 'package:water_del/models/reviewModel.dart';
-import 'package:water_del/models/singleAddress.dart';
-import 'package:water_del/models/userModel.dart';
+import 'package:water_del/models/models.dart';
 
 class DatabaseProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;

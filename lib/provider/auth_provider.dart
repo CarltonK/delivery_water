@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/database_provider.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 

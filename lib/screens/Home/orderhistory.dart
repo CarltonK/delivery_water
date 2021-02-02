@@ -1,11 +1,10 @@
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/provider/auth_provider.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/widgets/singleClientOrder.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/widgets.dart';
 
 class OrderHistory extends StatefulWidget {
   @override

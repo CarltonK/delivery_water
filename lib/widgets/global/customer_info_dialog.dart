@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/utilities/utilities.dart';
 
 class InfoDialog extends StatelessWidget {
   final String message;

@@ -4,16 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:water_del/models/singleAddress.dart';
-import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/provider/storage_provider.dart';
-import 'package:water_del/screens/home/orderhistory.dart';
-import 'package:water_del/utilities/global/dialogs.dart';
-import 'package:water_del/utilities/global/pageTransitions.dart';
-import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/widgets/setAddressWidget.dart';
-import 'package:water_del/widgets/setPhoneWidget.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/widgets.dart';
 
 class ProfilePage extends StatefulWidget {
   final auth.User user;

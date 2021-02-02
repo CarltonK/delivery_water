@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/auth_provider.dart';
-import 'package:water_del/utilities/global/dialogs.dart';
-import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/utilities/utilities.dart';
 
 class ResetPassword extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();

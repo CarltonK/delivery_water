@@ -4,13 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/screens/Authentication/main_authentication.dart';
-import 'package:water_del/screens/Home/home_main.dart';
-import 'package:water_del/widgets/global/custome_info_dialog.dart';
-import 'package:water_del/widgets/global/loading_page.dart';
-import 'provider/auth_provider.dart';
-import 'provider/database_provider.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/widgets/widgets.dart';
+import 'provider/provider.dart';
 
 void main() {
   runApp(

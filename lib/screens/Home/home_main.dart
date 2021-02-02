@@ -4,21 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'package:water_del/models/locationModel.dart';
-import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/models/product.dart';
-import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/auth_provider.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/provider/loc_provider.dart';
-import 'package:water_del/screens/home/profilePage.dart';
-import 'package:water_del/screens/home/supplier/supplier_home.dart';
-import 'package:water_del/utilities/global/pageTransitions.dart';
-import 'package:water_del/utilities/styles.dart';
-import 'package:water_del/models/productModel.dart';
-import 'package:water_del/widgets/mapWidget.dart';
-import 'package:water_del/widgets/productMapWidget.dart';
-import 'package:water_del/screens/checkout/cart.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/widgets.dart';
 
 class HomeMain extends StatefulWidget {
   @override

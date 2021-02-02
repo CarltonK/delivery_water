@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:water_del/screens/authentication/login.dart';
-import 'package:water_del/screens/authentication/registration.dart';
-import 'package:water_del/utilities/styles.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/utilities/utilities.dart';
 
 class MainAuthentication extends StatefulWidget {
   @override
