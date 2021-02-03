@@ -9,10 +9,13 @@ import * as mpesa from './mpesa_base'
 
 export const db = superadmin.firestore()
 export const ff = superadmin.firestore;
-const regionalFunctions = functions.region('europe-west3')
 
-// Runtime options
-regionalFunctions.runWith({ memory: '512MB', timeoutSeconds: 30 })
+// Define functions
+const regionalFunctions = functions.runWith({ 
+    memory: '512MB', 
+    timeoutSeconds: 30,
+}).region('europe-west3')
+
 
 // New Product
 exports.productIdentifier = productOps.identifyProduct
