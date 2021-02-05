@@ -1,9 +1,13 @@
-import { db, ff, regionalFunctions } from './index'
+import { db, ff } from './index'
+import * as functions from 'firebase-functions'
 import * as notifcations from './notification_operations'
 import * as https from 'https'
 import { lipaNaMpesa } from './payments/mpesa/stk_push'
 
-export const newOrder = regionalFunctions.firestore
+export const newOrder = functions.runWith({
+    memory: '512MB',
+    timeoutSeconds: 30,
+}).region('europe-west3').firestore
     .document('/orders/{order}')
     .onCreate(async snapshot => {
         const batch = db.batch()
@@ -19,9 +23,9 @@ export const newOrder = regionalFunctions.firestore
             const longitude: number = coordinates['longitude']
 
             const phone = await getUserPhone(client)
-            if (typeof(phone) === 'number') {
+            if (typeof (phone) === 'number') {
                 console.log(`M-PESA Transaction has been executed for Order No ${oID}`)
-                await lipaNaMpesa(phone,total)
+                await lipaNaMpesa(phone, total)
             }
 
             let deliveryLocation: string = ''
@@ -55,8 +59,8 @@ export const newOrder = regionalFunctions.firestore
                             const count: number = product['count']
                             const obj = new Map()
                             obj.set('supplier', supplier)
-                            obj.set('count',count)
-                            obj.set('title',title)
+                            obj.set('count', count)
+                            obj.set('title', title)
                             details.push(obj)
 
                             // Update the order document with various suppliers
@@ -75,7 +79,7 @@ export const newOrder = regionalFunctions.firestore
                         // 1) Notification to client
                         const clientDoc = await db.collection('users').doc(client).get()
                         const clientToken: string = clientDoc.get('token')
-                        await notifcations.singleNotificationSend(clientToken,`Your order has been received. Ref No. ${oID}`,'Good News')
+                        await notifcations.singleNotificationSend(clientToken, `Your order has been received. Ref No. ${oID}`, 'Good News')
                         await db.collection('users').doc(client).collection('notifications').doc().set({
                             time: ff.Timestamp.now(),
                             message: `Good News. Your order has been received. Ref No. ${oID}`
@@ -94,7 +98,7 @@ export const newOrder = regionalFunctions.firestore
                             const supplierDoc = await db.collection('users').doc(supplier).get()
                             const supplierToken: string = supplierDoc.get('token')
                             // Send notification
-                            await notifcations.singleNotificationSend(supplierToken,messageContent,messageTitle)
+                            await notifcations.singleNotificationSend(supplierToken, messageContent, messageTitle)
                             await db.collection('users').doc(supplier).collection('notifications').doc().set({
                                 time: ff.Timestamp.now(),
                                 message: `You have received an order for ${count} ${title} at ${deliveryLocation}`
@@ -106,7 +110,7 @@ export const newOrder = regionalFunctions.firestore
                         })
                         console.log(`A notification has been sent to the following suppliers ${suppliers} for order with Ref No. ${oID}`)
                     })
-                } 
+                }
             });
 
         } catch (error) {

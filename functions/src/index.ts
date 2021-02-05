@@ -11,7 +11,7 @@ export const db = superadmin.firestore()
 export const ff = superadmin.firestore;
 
 // Define functions
-export const regionalFunctions = functions.runWith({ 
+const regionalFunctions = functions.runWith({ 
     memory: '512MB', 
     timeoutSeconds: 30,
 }).region('europe-west3')

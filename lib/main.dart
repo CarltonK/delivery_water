@@ -10,6 +10,7 @@ import 'package:water_del/widgets/widgets.dart';
 import 'provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
