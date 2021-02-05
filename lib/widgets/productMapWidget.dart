@@ -41,7 +41,8 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
         },
       ),
     );
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // Scaffold.of(context).showSnackBar(snackBar);
   }
 
   void _onMapCreated(GoogleMapController controller) {
