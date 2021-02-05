@@ -39,7 +39,7 @@ export const newOrder = functions.runWith({
                     resp.on('end', async () => {
                         const parsedData = JSON.parse(data)
                         deliveryLocation = parsedData['results'][0]['name']
-                        // console.log(deliveryLocation)
+                        console.log('There are products to deliver to: ',deliveryLocation)
 
                         // Update USER
                         const clientRef = db.collection('users').doc(client)
