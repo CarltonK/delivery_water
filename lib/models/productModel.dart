@@ -10,7 +10,7 @@ class ProductModel {
 ProductModel bottledWater = ProductModel(
     title: 'Bottled Water',
     category: 'bottled',
-    imgUrl: 'assets/images/bottledwater.png',
+    imgUrl: 'assets/images/bottled.png',
     selected: true);
 
 ProductModel cartWater = ProductModel(
