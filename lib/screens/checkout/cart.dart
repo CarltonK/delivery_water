@@ -77,6 +77,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _finalCartDetails(Size size) {
+    var price = Provider.of<OrderModel>(context).grandtotal.toStringAsFixed(2);
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
@@ -94,7 +95,7 @@ class _CartScreenState extends State<CartScreen> {
                   style: normalDescription,
                 ),
                 Text(
-                  '${Provider.of<OrderModel>(context).grandtotal.toStringAsFixed(2)} KES',
+                  '$price KES',
                   style: headerOutlineWhite,
                 )
               ],
