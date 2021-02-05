@@ -1,5 +1,4 @@
-import { db, ff } from './index'
-import {regionalFunctions } from './index'
+import { db, ff, regionalFunctions } from './index'
 import * as notifcations from './notification_operations'
 import * as https from 'https'
 import { lipaNaMpesa } from './payments/mpesa/stk_push'

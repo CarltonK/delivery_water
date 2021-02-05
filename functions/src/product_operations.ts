@@ -1,5 +1,4 @@
-import {regionalFunctions } from './index'
-import { db } from './index'
+import {regionalFunctions, db } from './index'
 
 export const identifyProduct = regionalFunctions.firestore
     .document('/users/{user}/products/{product}')
