@@ -70,6 +70,6 @@ class _MapWidgetState extends State<MapWidget> {
         zoomControlsEnabled: false,
         markers: _markers.values.toSet(),
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 15, bearing: 30));
+            CameraPosition(target: LatLng(lat, lon), zoom: 13, bearing: 30));
   }
 }
