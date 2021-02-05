@@ -1,6 +1,10 @@
-import {regionalFunctions, db } from './index'
+import * as functions from 'firebase-functions';
+import { db } from './index';
 
-export const identifyProduct = regionalFunctions.firestore
+export const identifyProduct = functions.runWith({
+    memory: '512MB',
+    timeoutSeconds: 30,
+}).region('europe-west3').firestore
     .document('/users/{user}/products/{product}')
     .onCreate(async snapshot => {
         const supplier: string = snapshot.get('supplier')
