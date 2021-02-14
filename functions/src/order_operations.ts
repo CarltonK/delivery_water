@@ -80,7 +80,7 @@ export const newOrder = functions.runWith({
             const clientDoc = await db.collection('users').doc(client).get()
             const clientToken: string = clientDoc.get('token')
 
-            const promises: Promise<any>[] = [
+            const promisesClient: Promise<any>[] = [
                 notifcations.singleNotificationSend(clientToken, `Your order has been received. Ref No. ${oID}`, 'Good News'),
                 db.collection('users').doc(client).collection('notifications').doc().set({
                     time: ff.Timestamp.now(),
@@ -88,7 +88,7 @@ export const newOrder = functions.runWith({
                 })
             ]
 
-            await Promise.all(promises)
+            await Promise.all(promisesClient)
             console.log(`A notification has been sent to the client ${client} for order with Ref No. ${oID}`)
 
             // 2) Notification to suppliers
