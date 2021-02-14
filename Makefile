@@ -4,3 +4,5 @@ build:
 	docker-compose up --build
 kill:
 	docker-compose down
+export:
+	firebase emulators:export ./data

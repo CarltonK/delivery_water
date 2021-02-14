@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y nodejs adoptopenjdk-8-hotspot
 
 # Install nodemon global
 RUN npm install -g nodemon
+RUN npm install -g typescript
 
 # download and install firebase CLI
 RUN wget -nv -O firebase https://firebase.tools/bin/linux/latest
@@ -34,5 +35,9 @@ RUN mkdir -p /app
 COPY . /app/
 
 WORKDIR /app
+
+RUN cd functions
+
+RUN npm install
 
 ENTRYPOINT [ "make", "run" ]
