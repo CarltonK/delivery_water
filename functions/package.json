@@ -3,6 +3,7 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
+    "build:dev": "tsc --watch",
     "serve": "npm run kill && npm run build && firebase emulators:start --import=./data",
     "local": "npm run build && firebase emulators:start --import=./data",
     "shell": "npm run build && firebase functions:shell",
