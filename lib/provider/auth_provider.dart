@@ -48,7 +48,9 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     try {
       Auth.UserCredential result = await auth.createUserWithEmailAndPassword(
-          email: user.email, password: user.password);
+        email: user.email,
+        password: user.password,
+      );
       currentUser = result.user;
       String uid = currentUser.uid;
 
@@ -168,21 +170,17 @@ class AuthProvider with ChangeNotifier {
         lastLogin: now,
         fullName: user.displayName,
       );
-      print(model.toFirestore());
 
       db.collection('users').doc(user.uid).get().then((value) async {
         if (value.exists) {
-          print('${user.email} already exists');
           Future.delayed(Duration(seconds: 1),
               () => database.setLastLogin(currentUser.uid, now));
         } else {
-          print("Let's create a user document");
           await database.saveUser(model, user.uid);
         }
       });
       return Future.value(user);
     } catch (e) {
-      print('signInWithGoogle ERROR -> ${e.toString()}');
       return null;
     }
   }

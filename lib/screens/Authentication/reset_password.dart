@@ -14,7 +14,6 @@ class ResetPassword extends StatelessWidget {
 
   void handleEmail(String value) {
     email = value.trim();
-    print('Email -> $email');
   }
 
   Widget _resetEmailField(BuildContext context) {
@@ -41,7 +40,6 @@ class ResetPassword extends StatelessWidget {
 
   Future<bool> serverCall(UserModel user) async {
     result = await AuthProvider.instance().resetPass(user);
-    print('This is the result: $result');
 
     if (result == "Please register first") {
       return false;
