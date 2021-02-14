@@ -25,22 +25,18 @@ class SignUpPage extends StatelessWidget {
 
   void handleName(String value) {
     name = value.trim();
-    print('Name -> $name');
   }
 
   void handleEmail(String value) {
     email = value.trim();
-    print('Email -> $email');
   }
 
   void handlePassword(String value) {
     password = value.trim();
-    print('Password -> $password');
   }
 
   void handlePassword2(String value) {
     password2 = value.trim();
-    print('Password(2) -> $password2');
   }
 
   Widget _introText() {
@@ -147,7 +143,6 @@ class SignUpPage extends StatelessWidget {
 
   Future<bool> serverCall(UserModel user) async {
     result = await userProvider.createUserEmailPass(user);
-    print('This is the result: $result');
 
     if (result == 'Your password is weak. Please choose another') {
       return false;
@@ -172,7 +167,6 @@ class SignUpPage extends StatelessWidget {
           new UserModel(email: email, password: password, fullName: name);
       serverCall(user).then((value) {
         if (value) {
-          print(value);
         } else {
           dialogInfo(context, result);
         }

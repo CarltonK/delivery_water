@@ -21,12 +21,10 @@ class LoginPage extends StatelessWidget {
 
   void handleEmail(String value) {
     email = value.trim();
-    print('Email -> $email');
   }
 
   void handlePassword(String value) {
     password = value.trim();
-    print('Password -> $password');
   }
 
   Widget _introText() {
@@ -108,12 +106,10 @@ class LoginPage extends StatelessWidget {
       UserModel user = new UserModel(email: email, password: password);
       serverCall(user).then((value) {
         if (value) {
-          print(value);
         } else {
           dialogInfo(context, result);
         }
       }).catchError((error) {
-        print(error);
         dialogInfo(context, error.toString());
       });
     }
@@ -121,32 +117,32 @@ class LoginPage extends StatelessWidget {
 
   Widget _loginButton(BuildContext context) {
     return Positioned(
-        bottom: 20,
-        right: 15,
-        child: userProvider.status == Status.Authenticating
-            ? Center(
-                child: CircularProgressIndicator(
-                backgroundColor: Theme.of(context).primaryColor,
-              ))
-            : Container(
-                height: 60,
-                width: 60,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Theme.of(context).primaryColor),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => _loginBtnPressed(context),
+      bottom: 20,
+      right: 15,
+      child: userProvider.status == Status.Authenticating
+          ? Center(
+              child: CircularProgressIndicator(
+              backgroundColor: Theme.of(context).primaryColor,
+            ))
+          : Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).primaryColor),
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
                 ),
-              ));
+                onPressed: () => _loginBtnPressed(context),
+              ),
+            ),
+    );
   }
 
   Future<bool> serverCallReset(UserModel user) async {
     resultReset = await userProvider.resetPass(user);
-    print('This is the result: $resultReset');
 
     if (resultReset == "Please register first") {
       return false;
@@ -159,16 +155,18 @@ class LoginPage extends StatelessWidget {
 
   Widget _forgotPasswordButton(BuildContext context) {
     return Positioned(
-        bottom: 20,
-        child: FlatButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .push(SlideRightTransition(page: ResetPassword()));
-            },
-            child: Text(
-              'Forgot Password ?',
-              style: normalOutlineBlack,
-            )));
+      bottom: 20,
+      child: TextButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(SlideRightTransition(page: ResetPassword()));
+        },
+        child: Text(
+          'Forgot Password ?',
+          style: normalOutlineBlack,
+        ),
+      ),
+    );
   }
 
   @override

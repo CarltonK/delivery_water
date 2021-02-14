@@ -165,6 +165,7 @@ class DatabaseProvider {
             .collectionGroup('products')
             .where('category', whereIn: categories)
             .orderBy('price', descending: true)
+            .limit(10)
             .get();
         snapshot.docs.forEach((element) {
           Product product = Product.fromJson(element.data());
