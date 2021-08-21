@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/Authentication/reset_password.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
 
