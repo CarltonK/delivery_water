@@ -41,7 +41,7 @@ class _ProductMapWidgetState extends State<ProductMapWidget> {
         },
       ),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    Scaffold.of(context).showSnackBar(snackBar);
     // Scaffold.of(context).showSnackBar(snackBar);
   }
 

@@ -3,12 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/Home/landing.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
 import 'package:water_del/widgets/widgets.dart';
+import 'package:water_del/widgets/cartbottomsheet.dart';
+
+import '../merchant_screen.dart';
 
 class HomeMain extends StatefulWidget {
   @override
@@ -170,6 +175,461 @@ class _HomeMainState extends State<HomeMain> {
     super.dispose();
   }
 
+  Widget clientPage() {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        automaticallyImplyLeading: true,
+        title: Text(
+          'Hi Clinton',
+          style: TextStyle(
+              fontFamily: 'Ubuntu', fontSize: 17, color: Colors.black),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            child: InkWell(
+              onTap: () async {
+                await showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return // showModalBottomSheet(context: , builder: null)
+                          NewerrWidget();
+                    });
+              },
+              child: Icon(
+                Icons.card_travel_rounded,
+                color: Colors.black,
+                size: 24,
+              ),
+            ),
+          )
+        ],
+        centerTitle: true,
+        elevation: 0,
+      ),
+
+      //Drawer
+      drawer: Drawer(
+        elevation: 16,
+        child: Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            color: Colors.black,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Color(0x023474E0),
+                  ),
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.network(
+                      'https://picsum.photos/seed/246/600',
+                    ),
+                  ),
+                ),
+              ),
+              Text(
+                'Abraham',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  color: Colors.white,
+                  fontSize: 17,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Align(
+                  alignment: Alignment(0, -0.15),
+                  child: Container(
+                    width: 350,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF4D4D4D),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text('Profile',
+                          style: TextStyle(
+                            color: Colors.white,
+                          )),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                child: Align(
+                  alignment: Alignment(0, -0.15),
+                  child: Container(
+                      width: 350,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF4D4D4D),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          // Icon(icon:Icons.)
+                        ],
+                      )),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Container(
+          height: 800,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.topToBottom,
+                            duration: Duration(milliseconds: 300),
+                            reverseDuration: Duration(milliseconds: 300),
+                            child: LandingWidget(),
+                          ),
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                                width: 350,
+                                height: 250,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(20),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Image.network(
+                                    'https://firebasestorage.googleapis.com/v0/b/wallpaper-f46f1.appspot.com/o/maps.jpg?alt=media&token=473e1061-1968-4035-a9f6-f82d49de7695' ??
+                                        CircularProgressIndicator(),
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(150, 200, 0, 0),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: 40,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                  child: Text(
+                                    'Explore',
+                                    style: TextStyle(
+                                        fontFamily: 'Ubuntu',
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment(-0.85, 0),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                        child: Text(
+                          'Recent',
+                          style: TextStyle(
+                            fontFamily: 'Ubuntu',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      child: Container(
+                        width: 350,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFD3D3D3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  SlideLeftTransition(
+                                    page: MerchantProfileWidget(),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment(0.05, -0.55),
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        child: Text(
+                                          'Water Tanker',
+                                          style: TextStyle(
+                                            fontFamily: 'Ubuntu',
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment(0, 0),
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        child: Text(
+                                          '28th July',
+                                          style: TextStyle(
+                                            fontFamily: 'Ubuntu',
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment(1, 0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color(0x9CF8F7F7),
+                                  borderRadius: BorderRadius.circular(10),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(1),
+                                    child: Image.network(
+                                      'https://images.unsplash.com/photo-1596792598780-6777ec5b57ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      child: Container(
+                        width: 350,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFD3D3D3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment(0.05, -0.55),
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                      child: Text(
+                                        'Bottled Water',
+                                        style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment(0, 0),
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                      child: Text(
+                                        '14th July',
+                                        style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment(1, 0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color(0x9CF8F7F7),
+                                  borderRadius: BorderRadius.circular(10),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(1),
+                                    child: Image.network(
+                                      'https://images.unsplash.com/photo-1595994195534-d5219f02f99f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      child: Container(
+                        width: 350,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFD3D3D3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment(0.05, -0.55),
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                      child: Text(
+                                        'Exhauster',
+                                        style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment(0, 0),
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                      child: Text(
+                                        '1st June',
+                                        style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment(1, 0),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color(0x9CF8F7F7),
+                                  borderRadius: BorderRadius.circular(10),
+                                  shape: BoxShape.rectangle,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(1),
+                                    child: Image.network(
+                                      'https://images.unsplash.com/photo-1501700493788-fa1a4fc9fe62?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=681&q=80',
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget baseMap() {
     return StreamBuilder<LocationModel>(
       stream: LocationProvider().locationStream,
@@ -239,63 +699,65 @@ class _HomeMainState extends State<HomeMain> {
     );
   }
 
-  Widget clientPage() {
-    return Stack(
-      children: [
-        display.length == 0 ? baseMap() : productMap(),
-        CartIcon(
-          location: myLocation,
-        ),
-        _profilePage(),
-        _bottomSelection()
-      ],
-    );
-  }
+  // Widget clientPage() {
+  //   return Stack(
+  //     children: [
+  //       display.length == 0 ? baseMap() : productMap(),
+  //       CartIcon(
+  //         location: myLocation,
+  //       ),
+  //       _profilePage(),
+  //       _bottomSelection()
+  //     ],
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Provider.of<OrderModel>(context).client = userCurrent.uid;
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: StreamBuilder<UserModel>(
-          stream: _databaseProvider.streamUser(userCurrent.uid),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    if (snapshot.data.clientStatus) ...[
-                      Container(
-                        height: size.height,
-                        width: size.width,
-                        child: clientPage(),
-                      )
-                    ],
-                    if (!snapshot.data.clientStatus) ...[
-                      Container(
-                        height: size.height,
-                        width: size.width,
-                        child: SupplierHome(
-                          user: userCurrent,
-                        ),
-                      )
-                    ]
-                  ],
-                ),
-              );
-            }
-            return Center(
-              child: SpinKitFoldingCube(
-                size: 150,
-                color: Theme.of(context).primaryColor,
-              ),
-            );
-          },
-        ),
-      ),
-    );
+    return clientPage();
+
+    // Scaffold(
+    //   body: AnnotatedRegion<SystemUiOverlayStyle>(
+    //     value: SystemUiOverlayStyle.light,
+    //     child: StreamBuilder<UserModel>(
+    //       stream: _databaseProvider.streamUser(userCurrent.uid),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.hasData) {
+    //           return SingleChildScrollView(
+    //             child: Column(
+    //               children: [
+    //                 if (snapshot.data.clientStatus) ...[
+    //                   Container(
+    //                     height: size.height,
+    //                     width: size.width,
+    //                     child: clientPage(),
+    //                   )
+    //                 ],
+    //                 if (!snapshot.data.clientStatus) ...[
+    //                   Container(
+    //                     height: size.height,
+    //                     width: size.width,
+    //                     child: SupplierHome(
+    //                       user: userCurrent,
+    //                     ),
+    //                   )
+    //                 ]
+    //               ],
+    //             ),
+    //           );
+    //         }
+    //         return Center(
+    //           child: SpinKitFoldingCube(
+    //             size: 150,
+    //             color: Theme.of(context).primaryColor,
+    //           ),
+    //         );
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 }
 
