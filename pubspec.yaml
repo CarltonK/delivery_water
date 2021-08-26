@@ -35,6 +35,7 @@ dependencies:
   cached_network_image: 2.5.1
   font_awesome_flutter:
   geolocator:
+  floating_action_bubble: 
   page_transition:
   timeago:
   url_launcher:

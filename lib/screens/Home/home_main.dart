@@ -68,7 +68,19 @@ class _HomeMainState extends State<HomeMain> {
   //     ),
   //   );
   // }
-
+    Widget yesExit(BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        AuthProvider.instance().logout();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      child: Text(
+        'YES',
+       
+      ),
+    );
+  }
   Widget _profilePage() {
     return Positioned(
       top: 40,
@@ -183,16 +195,17 @@ class _HomeMainState extends State<HomeMain> {
         iconTheme: IconThemeData(color: Colors.black),
         automaticallyImplyLeading: true,
         title: Text(
-          'Hi Clinton',
+          'Welcome',
           style: TextStyle(
               fontFamily: 'Ubuntu', fontSize: 17, color: Colors.black),
         ),
         actions: [
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: InkWell(
               onTap: () async {
                 await showModalBottomSheet(
+                  
                     context: context,
                     builder: (context) {
                       return // showModalBottomSheet(context: , builder: null)
@@ -245,7 +258,7 @@ class _HomeMainState extends State<HomeMain> {
                 ),
               ),
               Text(
-                'Abraham',
+                'User',
                 style: TextStyle(
                   fontFamily: 'Ubuntu',
                   color: Colors.white,
@@ -272,24 +285,68 @@ class _HomeMainState extends State<HomeMain> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Align(
-                  alignment: Alignment(0, -0.15),
-                  child: Container(
-                      width: 350,
-                      height: 70,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF4D4D4D),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          // Icon(icon:Icons.)
-                        ],
-                      )),
+              GestureDetector(
+                   onTap: () {
+                                Navigator.of(context).push(
+                                  SlideLeftTransition(
+                                    page: MerchantProfileWidget(),
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Align(
+                    alignment: Alignment(0, -0.15),
+                    child: Container(
+                        width: 350,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF4D4D4D),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                        child: Text('Merchant Page',
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
+                      ),),
+                  ),
                 ),
-              )
+              ),
+                GestureDetector(
+                  onTap: ()async {
+                            await AuthProvider.instance().logout();
+        await Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.topToBottom,
+                            duration: Duration(milliseconds: 300),
+                            reverseDuration: Duration(milliseconds: 300),
+                            child: MainAuthentication(),
+                          ),
+                        );
+
+                  },
+                                  child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Align(
+                    alignment: Alignment(0, -0.15),
+                    child: Container(
+                        width: 350,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF4D4D4D),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                        child: Text('Sign Out',
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
+                      ),),
+                  ),
+              ),
+                )
             ],
           ),
         ),
@@ -427,7 +484,7 @@ class _HomeMainState extends State<HomeMain> {
                                         padding:
                                             EdgeInsets.fromLTRB(20, 0, 0, 0),
                                         child: Text(
-                                          '28th July',
+                                          '28th Aug',
                                           style: TextStyle(
                                             fontFamily: 'Ubuntu',
                                           ),
@@ -505,7 +562,7 @@ class _HomeMainState extends State<HomeMain> {
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       child: Text(
-                                        '14th July',
+                                        '14th August',
                                         style: TextStyle(
                                           fontFamily: 'Ubuntu',
                                         ),

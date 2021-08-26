@@ -4,20 +4,25 @@ import 'package:water_del/provider/auth_provider.dart';
 class SocialButtons extends StatelessWidget {
   //Social Buttons
   Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
+    return
+    Container(
+      width: 10,
+      height:10
     );
+    //  GestureDetector(
+    //   onTap: onTap,
+    //   child: Container(
+    //     height: 60.0,
+    //     width: 60.0,
+    //     decoration: BoxDecoration(
+    //       shape: BoxShape.circle,
+    //       color: Colors.white,
+    //       image: DecorationImage(
+    //         image: logo,
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   @override

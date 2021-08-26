@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'add_products.dart';
 
 class ItemsLIstWidget extends StatefulWidget {
@@ -10,14 +9,24 @@ class ItemsLIstWidget extends StatefulWidget {
   _ItemsLIstWidgetState createState() => _ItemsLIstWidgetState();
 }
 
-class _ItemsLIstWidgetState extends State<ItemsLIstWidget> {
+class _ItemsLIstWidgetState extends State<ItemsLIstWidget> with SingleTickerProviderStateMixin{
+  Animation<double> _animation;
+  AnimationController _animationController;
   TextEditingController textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
+  textController = TextEditingController();      
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 260),
+    );
+
+    final curvedAnimation = CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
     super.initState();
-    textController = TextEditingController();
+
   }
 
   @override
@@ -25,6 +34,50 @@ class _ItemsLIstWidgetState extends State<ItemsLIstWidget> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: Color(0xFFF1F4F8),
+      floatingActionButton: FloatingActionBubble(
+        // Menu items
+        items: <Bubble>[
+
+          // Floating action menu item
+          Bubble(
+            title:"Add Product",
+            iconColor :Colors.white,
+            bubbleColor : Colors.blue,
+            icon:Icons.book,
+            titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
+            onPress: () {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                child: AddproductWidget(),
+                              );
+                            },
+                          );
+                        
+              _animationController.reverse();
+            },
+          ),
+
+        ],
+
+        // animation controller
+        animation: _animation,
+
+        // On pressed change animation state
+        onPress: _animationController.isCompleted
+            ? _animationController.reverse
+            : _animationController.forward,
+        
+        // Floating Action button Icon color
+        iconColor: Colors.blue,
+
+        // Flaoting Action button Icon 
+        icon: AnimatedIcons.add_event,
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -178,19 +231,7 @@ class _ItemsLIstWidgetState extends State<ItemsLIstWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       InkWell(
-                        onTap: () async {
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.8,
-                                child: AddproductWidget(),
-                              );
-                            },
-                          );
-                        },
+
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           height: 80,
@@ -288,18 +329,20 @@ class _ItemsLIstWidgetState extends State<ItemsLIstWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       InkWell(
-                        onTap: () async {
-                          await showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.8,
-                                child: AddproductWidget(),
-                              );
-                            },
-                          );
+                        onTap: ()  {
+                        // onTap: () async {
+                        //   await showModalBottomSheet(
+                        //     isScrollControlled: true,
+                        //     context: context,
+                        //     builder: (context) {
+                        //       return Container(
+                        //         height:
+                        //             MediaQuery.of(context).size.height * 0.8,
+                        //         child: AddproductWidget(),
+                        //       );
+                        //     },
+                        //   );
+                        // },
                         },
                         child: Container(
                           width: MediaQuery.of(context).size.width,
@@ -403,3 +446,4 @@ class _ItemsLIstWidgetState extends State<ItemsLIstWidget> {
     );
   }
 }
+

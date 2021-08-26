@@ -35,7 +35,7 @@ class _AddproductWidgetState extends State<AddproductWidget> {
             child: Padding(
               padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
               child: Text(
-                'Update Products',
+                'Add Products',
                 style: TextStyle(
                   fontFamily: 'Ubuntu',
                   color: Colors.black,
@@ -152,7 +152,7 @@ class _AddproductWidgetState extends State<AddproductWidget> {
                       labelStyle: TextStyle(
                         fontFamily: 'Ubuntu',
                       ),
-                      hintText: 'e.g water bottle',
+                      hintText: 'e.g 200',
                       hintStyle: TextStyle(
                         fontFamily: 'Ubuntu',
                       ),
