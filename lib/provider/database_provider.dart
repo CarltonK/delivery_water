@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:water_del/models/models.dart';
 
@@ -7,7 +8,7 @@ class DatabaseProvider {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging fcm = FirebaseMessaging();
   final Timestamp now = Timestamp.now();
-
+final FirebaseAuth _auth = FirebaseAuth.instance;
   DatabaseProvider() {
     print('Firestore has been initialized');
   }
@@ -22,7 +23,31 @@ class DatabaseProvider {
       print("saveUser ERROR -> ${e.toString()}");
     }
   }
+  String greetingMessage(){
 
+  var timeNow = DateTime.now().hour;
+  
+  if (timeNow <= 12) {
+    return 'Good Morning';
+  } else if ((timeNow > 12) && (timeNow <= 16)) {
+  return 'Good Afternoon';
+  } else if ((timeNow > 16) && (timeNow < 20)) {
+  return 'Good Evening';
+  } else {
+  return 'Good Night';
+  }
+}
+  getCurrentUser() async {
+    // final FirebaseUser user = _auth.currentUser;
+    //c
+    // // Similarly we can get email as well
+    // //final uemail = user.email;
+    // print(uid);
+    // //print(uemail);
+    final FirebaseAuth user = _auth.currentUser as FirebaseAuth;
+    final uid = user.currentUser.uid;
+    final firstname = user.currentUser.displayName[0];
+     return firstname;  }
   Future<void> setLastLogin(String uid, Timestamp now) async {
     try {
       await _db.collection('users').doc(uid).update(

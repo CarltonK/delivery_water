@@ -5,7 +5,7 @@ import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/provider.dart';
 import 'package:water_del/utilities/utilities.dart';
 import 'package:water_del/widgets/widgets.dart';
-
+import 'package:lottie/lottie.dart';
 class OrdersPage extends StatefulWidget {
   final auth.User user;
   OrdersPage({@required this.user});
@@ -54,10 +54,13 @@ class _OrdersPageState extends State<OrdersPage> {
             );
             break;
           default:
-            return SpinKitFadingCircle(
-              color: Theme.of(context).primaryColor,
-              size: size.height / 4,
-            );
+            return Center(
+          child: Container(
+            height: 80,
+            width: 120,
+            child: LottieBuilder.asset('assets/lottie/fluid_loader.json'),
+          ),
+        );
         }
       },
     );

@@ -39,7 +39,6 @@ class _MapWidgetState extends State<MapWidget> {
       });
     });
   }
-
   void setCustomMapPin() async {
     pinLocationIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
@@ -50,7 +49,7 @@ class _MapWidgetState extends State<MapWidget> {
   void initState() {
     setCustomMapPin();
     Future.delayed(
-        Duration(seconds: 1),
+    Duration(seconds: 1),
         () => _databaseProvider
             .updateLocation(widget.user.uid, myLocation)
             .then((value) => print('We have updated the location of the user'))
@@ -62,14 +61,19 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   Widget build(BuildContext context) {
     myLocation = widget.coordinates[0];
-    double lat = myLocation.latitude;
-    double lon = myLocation.longitude;
+    // double lat = myLocation.latitude;
+    // double lon = myLocation.longitude;
+      double lat =-1.2320662;
+    double lon = 36.8780867;
+    
     return GoogleMap(
         onMapCreated: _onMapCreated,
         myLocationEnabled: true,
         zoomControlsEnabled: false,
         markers: _markers.values.toSet(),
+        myLocationButtonEnabled: true,
         initialCameraPosition:
-            CameraPosition(target: LatLng(lat, lon), zoom: 13, bearing: 30));
+            CameraPosition(target: LatLng(lat, lon), zoom: 13, bearing: 30)
+            );
   }
 }

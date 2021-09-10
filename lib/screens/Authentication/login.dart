@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/provider.dart';
@@ -80,7 +81,7 @@ class LoginPage extends StatelessWidget {
     // print('This is the result: $result');
 
     if (result == 'Invalid credentials. Please try again') {
-      return false;
+      return  Fluttertoast.showToast(msg: "Invalid Credentials");;
     } else if (result == "The email format entered is invalid") {
       return false;
     } else if (result == "Please register first") {

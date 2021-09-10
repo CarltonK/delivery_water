@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/provider.dart';
 import 'package:water_del/utilities/utilities.dart';
-
+import 'package:lottie/lottie.dart';
 class ReviewPage extends StatefulWidget {
   final auth.User user;
   ReviewPage({@required this.user});
@@ -85,10 +85,13 @@ class _ReviewPageState extends State<ReviewPage> {
               },
             );
           default:
-            return SpinKitFadingCircle(
-              color: Theme.of(context).primaryColor,
-              size: size.height / 4,
-            );
+            return Center(
+          child: Container(
+            height: 80,
+            width: 120,
+            child: LottieBuilder.asset('assets/lottie/fluid_loader.json'),
+          ),
+        );
         }
       },
     );

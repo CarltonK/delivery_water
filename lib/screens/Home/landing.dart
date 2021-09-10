@@ -1,34 +1,174 @@
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
-import 'package:water_del/models/locationModel.dart';
-import 'package:water_del/models/orderModel.dart';
-import 'package:water_del/models/product.dart';
-import 'package:water_del/models/userModel.dart';
-import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/provider/loc_provider.dart';
-import 'package:water_del/widgets/bottomdialigue.dart';
-import 'package:water_del/widgets/mapWidget.dart';
-import 'package:water_del/widgets/productMapWidget.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import 'home_main.dart';
-
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:water_del/models/models.dart';
+import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/screens.dart';
+import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/widgets.dart';
+import 'package:lottie/lottie.dart';
 class LandingWidget extends StatefulWidget {
-  LandingWidget({Key key}) : super(key: key);
-
   @override
   _LandingWidgetState createState() => _LandingWidgetState();
 }
 
 class _LandingWidgetState extends State<LandingWidget> {
+  PageController _controller;
   var userCurrent;
   UserModel userModel;
   DatabaseProvider _databaseProvider = DatabaseProvider();
   List<String> display = [];
   LocationModel myLocation;
   Future productFuture;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  Widget popupPlace() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.blue.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(12)),
+      child: PopupMenuButton(
+        tooltip: 'Place',
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        itemBuilder: (context) {
+          var list = List<PopupMenuEntry<Object>>();
+          list.add(
+            PopupMenuItem(
+              child: Text('Delivery Location'),
+              value: 1,
+            ),
+          );
+          list.add(
+            PopupMenuDivider(
+              height: 5,
+            ),
+          );
+          list.add(
+            CheckedPopupMenuItem(
+              child: Text(
+                "Home",
+                style: normalOutlineBlack,
+              ),
+              value: 2,
+              checked: true,
+            ),
+          );
+          return list;
+        },
+        offset: Offset(0, 100),
+        icon: Icon(CupertinoIcons.location_solid),
+      ),
+    );
+  }
+
+  // Widget _profilePage() {
+  //   return Positioned(
+  //     top: 40,
+  //     right: 10,
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         Navigator.of(context).push(SlideLeftTransition(
+  //             page: ProfilePage(
+  //           user: userCurrent,
+  //         )));
+  //       },
+  //       child: Container(
+  //         height: 48,
+  //         width: 48,
+  //         decoration: BoxDecoration(
+  //             color: Colors.blue.withOpacity(0.4), shape: BoxShape.circle),
+  //         child: Center(
+  //           child: Icon(
+  //             CupertinoIcons.person_solid,
+  //             size: 30,
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _singleItem(int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          listMainItems[index].selected = !listMainItems[index].selected;
+          !listMainItems[index].selected
+              ? display.add(listMainItems[index].category)
+              : display.remove(listMainItems[index].category);
+          productFuture = _databaseProvider.populateMap(display);
+        });
+      },
+      child: Card(
+        elevation: 8,
+        shadowColor: Colors.grey[50],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Container(
+          height: 120,
+          width: 120,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: listMainItems[index].selected
+                  ? Colors.grey[50]
+                  : Colors.pink[200]),
+          padding: EdgeInsets.symmetric(vertical: 5),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Image.asset(
+                listMainItems[index].imgUrl,
+                height: 105,
+                fit: BoxFit.contain,
+              ),
+              Text(
+                listMainItems[index].title,
+                style: normalOutlineBlack,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomSelection() {
+    return Positioned(
+      bottom: 5,
+      left: 5,
+      right: 5,
+      child: Container(
+        height: 150,
+        child: PageView.builder(
+          controller: _controller,
+          itemCount: listMainItems.length,
+          itemBuilder: (context, index) => _singleItem(index),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    userCurrent = context.read<AuthProvider>().currentUser;
+    _controller = PageController(initialPage: 0, viewportFraction: 0.5);
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('Message -> $message');
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   Widget baseMap() {
     return StreamBuilder<LocationModel>(
       stream: LocationProvider().locationStream,
@@ -44,9 +184,10 @@ class _LandingWidgetState extends State<LandingWidget> {
           );
         }
         return Center(
-          child: SpinKitFoldingCube(
-            size: 150,
-            color: Theme.of(context).primaryColor,
+          child: Container(
+            height: 80,
+            width: 120,
+            child: LottieBuilder.asset('assets/lottie/fluid_loader.json'),
           ),
         );
       },
@@ -69,6 +210,7 @@ class _LandingWidgetState extends State<LandingWidget> {
             return Center(
               child: Text(
                 'There are no products',
+                style: normalOutlineBlack,
               ),
             );
           case ConnectionState.active:
@@ -76,22 +218,26 @@ class _LandingWidgetState extends State<LandingWidget> {
             return Center(
               child: Text(
                 'There are no products',
+                style: normalOutlineBlack,
               ),
             );
           case ConnectionState.waiting:
             return Center(
-              child: SpinKitFoldingCube(
-                size: 150,
-                color: Theme.of(context).primaryColor,
-              ),
-            );
-        }
-        return Center(
-          child: SpinKitFoldingCube(
-            size: 150,
-            color: Theme.of(context).primaryColor,
+          child: Container(
+            height: 80,
+            width: 120,
+            child: LottieBuilder.asset('assets/lottie/fluid_loader.json'),
           ),
         );
+        }
+        return Center(
+        child: Container(
+          height: 80,
+          width: 120,
+          child: LottieBuilder.asset('assets/lottie/fluid_loader.json'),
+        ),
+        );
+        
       },
     );
   }
@@ -100,258 +246,108 @@ class _LandingWidgetState extends State<LandingWidget> {
     return Stack(
       children: [
         display.length == 0 ? baseMap() : productMap(),
-
+        // CartIcon(
+        //   location: myLocation,
+        // ),
         // _profilePage(),
-        // _bottomSelection()
+        _bottomSelection()
       ],
     );
   }
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    Provider.of<OrderModel>(context).client = userCurrent.uid;
     return Scaffold(
-      key: scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            clientPage(),
-            Align(
-              alignment: Alignment(0.25, 0),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 500, 0, 0),
-                child: Container(
-                  width: 350,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          await showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.8,
-                                  child: BottomdialogueWidget(),
-                                );
-                              });
-                        },
-                        child: Container(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Align(
-                                  alignment: Alignment(0.05, -0.55),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Text(
-                                      'Bottled Water',
-                                      style: TextStyle(
-                                        fontFamily: 'Ubuntu',
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment(0, 0),
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                    child: Text(
-                                      'Available',
-                                      style: TextStyle(
-                                        fontFamily: 'Ubuntu',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.8,
-                                  child: BottomdialogueWidget(),
-                                );
-                              });
-                        },
-                        child: Align(
-                          alignment: Alignment(1, 0),
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.25,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              shape: BoxShape.rectangle,
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(1),
-                                child: Image.network(
-                                  'https://images.unsplash.com/photo-1595994195534-d5219f02f99f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: StreamBuilder<UserModel>(
+          stream: _databaseProvider.streamUser(userCurrent.uid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (snapshot.data.clientStatus) ...[
+                      Container(
+                        height: size.height,
+                        width: size.width,
+                        child: 
+                        clientPage(),
                       )
                     ],
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment(0.25, 0),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 300, 0, 0),
-                child: Container(
-                  width: 350,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          await showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.8,
-                                  child: BottomdialogueWidget(),
-                                );
-                              });
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment(0.05, -0.55),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: Text(
-                                    'Exhauster',
-                                    style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Color(0xFFFBF7F7),
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment(0, 0),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: Text(
-                                    'Available',
-                                    style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Color(0xFFF2EFEF),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment(1, 0),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.25,
-                          height: 80,
-                          decoration: BoxDecoration(
-                            color: Color(0xD6FFFFFF),
-                            borderRadius: BorderRadius.circular(10),
-                            shape: BoxShape.rectangle,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(1),
-                              child: Image.network(
-                                'https://images.unsplash.com/photo-1501700493788-fa1a4fc9fe62?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=681&q=80',
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                    if (!snapshot.data.clientStatus) ...[
+                      Container(
+                        height: size.height,
+                        width: size.width,
+                        child: SupplierHome(
+                          user: userCurrent,
                         ),
                       )
-                    ],
-                  ),
+                    ]
+                  ],
                 ),
-              ),
+              );
+            }
+            return Center(
+          child: Container(
+            height: 80,
+            width: 120,
+            child: LottieBuilder.asset('assets/lottie/fluid_loader.json'),
+          ),
+        );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class CartIcon extends StatelessWidget {
+  static OrderModel model;
+  final LocationModel location;
+  CartIcon({@required this.location});
+  @override
+  Widget build(BuildContext context) {
+    model = context.watch<OrderModel>();
+    model.location = location;
+    int items = model.products.length;
+    return Positioned(
+      top: 40,
+      left: 10,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            SlideLeftTransition(
+              page: CartScreen(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment(0, -1),
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Color(0xBFA5A5A5),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.search_sharp,
-                          color: Colors.white,
-                          size: 24,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+          );
+        },
+        child: Container(
+          height: 48,
+          width: 48,
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.4),
+            shape: BoxShape.circle,
+          ),
+          child: Stack(
+            clipBehavior: Clip.antiAlias,
+            alignment: Alignment.center,
+            children: [
+              Positioned(
+                bottom: 5,
+                child: Icon(Icons.shopping_cart),
               ),
-            )
-          ],
+              Positioned(
+                top: 8,
+                child: Text(
+                  items.toString() ?? '0',
+                  style: boldOutlineWhite,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

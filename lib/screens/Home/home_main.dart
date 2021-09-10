@@ -1,26 +1,31 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
-import 'package:water_del/provider/provider.dart';
-import 'package:water_del/screens/Home/landing.dart';
+import 'package:water_del/provider/auth_provider.dart';
+import 'package:water_del/provider/database_provider.dart';
+import 'package:water_del/provider/loc_provider.dart';
+import 'package:water_del/screens/Home/mapwidget.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
+import 'package:water_del/widgets/global/Recent_transactions.dart';
 import 'package:water_del/widgets/widgets.dart';
 import 'package:water_del/widgets/cartbottomsheet.dart';
-
 import '../merchant_screen.dart';
+import 'landing.dart';
 
 class HomeMain extends StatefulWidget {
   @override
   _HomeMainState createState() => _HomeMainState();
 }
 
+//  1a1f24
 class _HomeMainState extends State<HomeMain> {
+
   PageController _controller;
   var userCurrent;
   UserModel userModel;
@@ -30,45 +35,7 @@ class _HomeMainState extends State<HomeMain> {
   Future productFuture;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  // Widget popupPlace() {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //         color: Colors.blue.withOpacity(0.4),
-  //         borderRadius: BorderRadius.circular(12)),
-  //     child: PopupMenuButton(
-  //       tooltip: 'Place',
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  //       itemBuilder: (context) {
-  //         var list = List<PopupMenuEntry<Object>>();
-  //         list.add(
-  //           PopupMenuItem(
-  //             child: Text('Delivery Location'),
-  //             value: 1,
-  //           ),
-  //         );
-  //         list.add(
-  //           PopupMenuDivider(
-  //             height: 5,
-  //           ),
-  //         );
-  //         list.add(
-  //           CheckedPopupMenuItem(
-  //             child: Text(
-  //               "Home",
-  //               style: normalOutlineBlack,
-  //             ),
-  //             value: 2,
-  //             checked: true,
-  //           ),
-  //         );
-  //         return list;
-  //       },
-  //       offset: Offset(0, 100),
-  //       icon: Icon(CupertinoIcons.location_solid),
-  //     ),
-  //   );
-  // }
-    Widget yesExit(BuildContext context) {
+  Widget yesExit(BuildContext context) {
     return FlatButton(
       onPressed: () {
         AuthProvider.instance().logout();
@@ -77,10 +44,10 @@ class _HomeMainState extends State<HomeMain> {
       },
       child: Text(
         'YES',
-       
       ),
     );
   }
+
   Widget _profilePage() {
     return Positioned(
       top: 40,
@@ -190,680 +157,172 @@ class _HomeMainState extends State<HomeMain> {
   Widget clientPage() {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
-        automaticallyImplyLeading: true,
-        title: Text(
-          'Welcome',
-          style: TextStyle(
-              fontFamily: 'Ubuntu', fontSize: 17, color: Colors.black),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: InkWell(
-              onTap: () async {
-                await showModalBottomSheet(
-                  
-                    context: context,
-                    builder: (context) {
-                      return // showModalBottomSheet(context: , builder: null)
-                          NewerrWidget();
-                    });
-              },
-              child: Icon(
-                Icons.card_travel_rounded,
-                color: Colors.black,
-                size: 24,
-              ),
-            ),
-          )
-        ],
-        centerTitle: true,
-        elevation: 0,
-      ),
+      backgroundColor: Colors.grey[900],
 
-      //Drawer
-      drawer: Drawer(
-        elevation: 16,
-        child: Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            color: Colors.black,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Color(0x023474E0),
-                  ),
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child: Image.network(
-                      'https://picsum.photos/seed/246/600',
-                    ),
-                  ),
-                ),
-              ),
-              Text(
-                'User',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  color: Colors.white,
-                  fontSize: 17,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Align(
-                  alignment: Alignment(0, -0.15),
-                  child: Container(
-                    width: 350,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF4D4D4D),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: Text('Profile',
-                          style: TextStyle(
-                            color: Colors.white,
-                          )),
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                   onTap: () {
-                                Navigator.of(context).push(
-                                  SlideLeftTransition(
-                                    page: MerchantProfileWidget(),
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Align(
-                    alignment: Alignment(0, -0.15),
-                    child: Container(
-                        width: 350,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF4D4D4D),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                        child: Text('Merchant Page',
-                            style: TextStyle(
-                              color: Colors.white,
-                            )),
-                      ),),
-                  ),
-                ),
-              ),
-                GestureDetector(
-                  onTap: ()async {
-                            await AuthProvider.instance().logout();
-        await Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.topToBottom,
-                            duration: Duration(milliseconds: 300),
-                            reverseDuration: Duration(milliseconds: 300),
-                            child: MainAuthentication(),
-                          ),
-                        );
-
-                  },
-                                  child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  child: Align(
-                    alignment: Alignment(0, -0.15),
-                    child: Container(
-                        width: 350,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Color(0xFF4D4D4D),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                        child: Text('Sign Out',
-                            style: TextStyle(
-                              color: Colors.white,
-                            )),
-                      ),),
-                  ),
-              ),
-                )
-            ],
-          ),
-        ),
-      ),
       body: SafeArea(
-        child: Container(
-          height: 800,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.topToBottom,
-                            duration: Duration(milliseconds: 300),
-                            reverseDuration: Duration(milliseconds: 300),
-                            child: LandingWidget(),
-                          ),
-                        );
-                      },
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                                width: 350,
-                                height: 250,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
-                                  borderRadius: BorderRadius.circular(20),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(
-                                    'https://firebasestorage.googleapis.com/v0/b/wallpaper-f46f1.appspot.com/o/maps.jpg?alt=media&token=473e1061-1968-4035-a9f6-f82d49de7695' ??
-                                        CircularProgressIndicator(),
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(150, 200, 0, 0),
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                height: 40,
-                                width: 150,
-                                decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Center(
-                                  child: Text(
-                                    'Explore',
-                                    style: TextStyle(
-                                        fontFamily: 'Ubuntu',
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
+        child: SingleChildScrollView(
+          child: Container(
+            height: 800,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // image
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 16, 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        color: Colors.blue,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment(-0.85, 0),
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                        child: Text(
-                          'Recent',
-                          style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.bold,
+                            child: Image.network(
+                              'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                      child: Container(
-                        width: 350,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFD3D3D3),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  SlideLeftTransition(
-                                    page: MerchantProfileWidget(),
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment(0.05, -0.55),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                        child: Text(
-                                          'Water Tanker',
-                                          style: TextStyle(
-                                            fontFamily: 'Ubuntu',
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w800,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment(0, 0),
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                        child: Text(
-                                          '28th Aug',
-                                          style: TextStyle(
-                                            fontFamily: 'Ubuntu',
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(2, 15, 5, 0),
+                        child: InkWell(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                duration: Duration(milliseconds: 200),
+                                reverseDuration: Duration(milliseconds: 200),
+                                child: Container(),
+                                // CartWidget(),
                               ),
-                            ),
-                            Align(
-                              alignment: Alignment(1, 0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  color: Color(0x9CF8F7F7),
-                                  borderRadius: BorderRadius.circular(10),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(1),
-                                    child: Image.network(
-                                      'https://images.unsplash.com/photo-1596792598780-6777ec5b57ee?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+                            );
+                          },
+                          child: Icon(
+                            Icons.shopping_bag,
+                            color: Colors.white,
+                            size: 35,
+                          ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                      child: Container(
-                        width: 350,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFD3D3D3),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment(0.05, -0.55),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        'Bottled Water',
-                                        style: TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment(0, 0),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '14th August',
-                                        style: TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment(1, 0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  color: Color(0x9CF8F7F7),
-                                  borderRadius: BorderRadius.circular(10),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(1),
-                                    child: Image.network(
-                                      'https://images.unsplash.com/photo-1595994195534-d5219f02f99f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-                      child: Container(
-                        width: 350,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFD3D3D3),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment(0.05, -0.55),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        'Exhauster',
-                                        style: TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w800,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment(0, 0),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '1st June',
-                                        style: TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment(1, 0),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  color: Color(0x9CF8F7F7),
-                                  borderRadius: BorderRadius.circular(10),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(1),
-                                    child: Image.network(
-                                      'https://images.unsplash.com/photo-1501700493788-fa1a4fc9fe62?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=681&q=80',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              )
-            ],
+
+                //  Good Morning
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          _databaseProvider.greetingMessage(),
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontFamily: 'Lexend Deca',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                //  Name
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          "Sang",
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontFamily: 'Lexend Deca',
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: Text(
+                          "👋🏿",
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                //  Map
+                  HomeMap(),
+                //  Recent
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Recent",
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontFamily: 'Lexend Deca',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w200),
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 15, 6),
+                  child: Recent(),
+                ),
+
+              //   No products 
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "No Recent transactions",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Lexend Deca',
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget baseMap() {
-    return StreamBuilder<LocationModel>(
-      stream: LocationProvider().locationStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          Provider.of<OrderModel>(context).location = snapshot.data;
-          List<LocationModel> locations = [];
-          locations.insert(0, snapshot.data);
-          myLocation = snapshot.data;
-          return MapWidget(
-            coordinates: locations,
-            user: userCurrent,
-          );
-        }
-        return Center(
-          child: SpinKitFoldingCube(
-            size: 150,
-            color: Theme.of(context).primaryColor,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget productMap() {
-    return FutureBuilder<List<Product>>(
-      future: productFuture,
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            if (snapshot.hasData && snapshot.data.length > 0) {
-              return ProductMapWidget(
-                products: snapshot.data,
-                user: userCurrent,
-                location: myLocation,
-              );
-            }
-            return Center(
-              child: Text(
-                'There are no products',
-                style: normalOutlineBlack,
-              ),
-            );
-          case ConnectionState.active:
-          case ConnectionState.none:
-            return Center(
-              child: Text(
-                'There are no products',
-                style: normalOutlineBlack,
-              ),
-            );
-          case ConnectionState.waiting:
-            return Center(
-              child: SpinKitFoldingCube(
-                size: 150,
-                color: Theme.of(context).primaryColor,
-              ),
-            );
-        }
-        return Center(
-          child: SpinKitFoldingCube(
-            size: 150,
-            color: Theme.of(context).primaryColor,
-          ),
-        );
-      },
-    );
-  }
-
-  // Widget clientPage() {
-  //   return Stack(
-  //     children: [
-  //       display.length == 0 ? baseMap() : productMap(),
-  //       CartIcon(
-  //         location: myLocation,
-  //       ),
-  //       _profilePage(),
-  //       _bottomSelection()
-  //     ],
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Provider.of<OrderModel>(context).client = userCurrent.uid;
     return clientPage();
-
-    // Scaffold(
-    //   body: AnnotatedRegion<SystemUiOverlayStyle>(
-    //     value: SystemUiOverlayStyle.light,
-    //     child: StreamBuilder<UserModel>(
-    //       stream: _databaseProvider.streamUser(userCurrent.uid),
-    //       builder: (context, snapshot) {
-    //         if (snapshot.hasData) {
-    //           return SingleChildScrollView(
-    //             child: Column(
-    //               children: [
-    //                 if (snapshot.data.clientStatus) ...[
-    //                   Container(
-    //                     height: size.height,
-    //                     width: size.width,
-    //                     child: clientPage(),
-    //                   )
-    //                 ],
-    //                 if (!snapshot.data.clientStatus) ...[
-    //                   Container(
-    //                     height: size.height,
-    //                     width: size.width,
-    //                     child: SupplierHome(
-    //                       user: userCurrent,
-    //                     ),
-    //                   )
-    //                 ]
-    //               ],
-    //             ),
-    //           );
-    //         }
-    //         return Center(
-    //           child: SpinKitFoldingCube(
-    //             size: 150,
-    //             color: Theme.of(context).primaryColor,
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ),
-    // );
-  }
-}
-
-class CartIcon extends StatelessWidget {
-  static OrderModel model;
-  final LocationModel location;
-  CartIcon({@required this.location});
-  @override
-  Widget build(BuildContext context) {
-    model = context.watch<OrderModel>();
-    model.location = location;
-    int items = model.products.length;
-    return Positioned(
-      top: 40,
-      left: 10,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            SlideLeftTransition(
-              page: CartScreen(),
-            ),
-          );
-        },
-        child: Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.4),
-            shape: BoxShape.circle,
-          ),
-          child: Stack(
-            clipBehavior: Clip.antiAlias,
-            alignment: Alignment.center,
-            children: [
-              Positioned(
-                bottom: 5,
-                child: Icon(Icons.shopping_cart),
-              ),
-              Positioned(
-                top: 8,
-                child: Text(
-                  items.toString() ?? '0',
-                  style: boldOutlineWhite,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
