@@ -11,6 +11,8 @@ import { dailySupplierPayment } from './scheduled_operations';
 export const db = superadmin.firestore();
 export const ff = superadmin.firestore;
 
+// Comment added to trigger cloud build
+
 // Define functions
 const regionalFunctions = functions.runWith({ 
     memory: '512MB', 
