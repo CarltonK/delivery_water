@@ -9,6 +9,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  algolia: null
   auto_size_text: null
   bottom_navy_bar: ^5.4.0
   cached_network_image: 2.5.1

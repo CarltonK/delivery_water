@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:water_del/screens/Authentication/merchantservices.dart';
 import 'landing.dart';
 
 class HomeMap extends StatefulWidget {
@@ -58,7 +59,9 @@ class _HomeMapState extends State<HomeMap> {
                                                       builder: (context) {
                                                         return Container(
                                                           height: 750,
-                                                          child: LandingWidget(),
+                                                          child: 
+                                                          // Landing();
+                                                          MarkersMap(),
                                                         );
                                                       },
                                                     );
@@ -129,7 +132,9 @@ class _HomeMapState extends State<HomeMap> {
                                                                           true,
                                                                       context: context,
                                                                       builder: (context) {
-                                                                        return LandingWidget();
+                                                                        return 
+                                                                        MarkersMap();
+                                                                        // LandingWidget();
                                                                       },
                                                                     );
                                                                   },

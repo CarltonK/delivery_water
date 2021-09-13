@@ -1,22 +1,16 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/auth_provider.dart';
 import 'package:water_del/provider/database_provider.dart';
-import 'package:water_del/provider/loc_provider.dart';
 import 'package:water_del/screens/Home/mapwidget.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
 import 'package:water_del/widgets/global/Recent_transactions.dart';
-import 'package:water_del/widgets/widgets.dart';
-import 'package:water_del/widgets/cartbottomsheet.dart';
-import '../merchant_screen.dart';
-import 'landing.dart';
+
 
 class HomeMain extends StatefulWidget {
   @override
@@ -207,7 +201,9 @@ class _HomeMainState extends State<HomeMain> {
                                 type: PageTransitionType.rightToLeft,
                                 duration: Duration(milliseconds: 200),
                                 reverseDuration: Duration(milliseconds: 200),
-                                child: Container(),
+                                child:
+                                // Search(),
+                                 Container(),
                                 // CartWidget(),
                               ),
                             );
