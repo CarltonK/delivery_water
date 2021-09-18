@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
 import 'package:water_del/provider/provider.dart';
+import 'package:water_del/screens/Home/supplier/supplier_home.dart';
+import 'package:water_del/screens/checkout/cart.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
 import 'package:water_del/widgets/widgets.dart';

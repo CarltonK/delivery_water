@@ -102,7 +102,7 @@ final List<Merchant> merchant = [
       shopName: 'Bottled Water',
       address: 'Kahawa West',
       description:
-          'Ksh 360',
+          'Ksh 380',
       locationCoords: LatLng(-1.19167318, 36.91020012),
       thumbNail: 'https://firebasestorage.googleapis.com/v0/b/naqua-1b2bb.appspot.com/o/assets%2Fbottled.png?alt=media&token=270e08f6-ef64-4ebc-ac18-f88dbf8d6e0c'
       ),
