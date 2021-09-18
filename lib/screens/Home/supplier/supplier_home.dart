@@ -2,8 +2,13 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:water_del/screens/Home/profilePage.dart';
+import 'package:water_del/screens/Home/supplier/product_page.dart';
+import 'package:water_del/screens/Home/supplier/review_page.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
+
+import 'orders_page.dart';
 
 class SupplierHome extends StatefulWidget {
   final auth.User user;
