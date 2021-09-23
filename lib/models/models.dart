@@ -6,3 +6,4 @@ export 'productModel.dart';
 export 'reviewModel.dart';
 export 'singleAddress.dart';
 export 'userModel.dart';
+export 'MerchantLocationModel.dart';

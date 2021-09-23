@@ -195,9 +195,8 @@ class _HomeMainState extends State<HomeMain> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(2, 15, 5, 0),
                         child: InkWell(
-                          onTap: () async {
+                          onTap: ()  {
                            
-                           print (merchant);
                             // await Navigator.push(
                             //   context,
                             //   PageTransition(

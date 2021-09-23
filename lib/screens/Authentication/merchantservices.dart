@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:water_del/models/MerchantLocationModel.dart';
+import 'package:water_del/services/merchservices.dart';
 
 class MarkersMap extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _MarkersMapState extends State<MarkersMap> {
   List<Marker> allMarkers = [];
   
   PageController _pageController;
-
+  List<Merchant> merchant =[];
   int prevPage;
 
   @override
@@ -132,34 +133,65 @@ class _MarkersMapState extends State<MarkersMap> {
   Widget build(BuildContext context) {
     return Scaffold(
     
-        body: Stack(
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height - 50.0,
-              width: MediaQuery.of(context).size.width,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(-1.2320662, 36.8780867), zoom: 12.0),
-                markers: Set.from(allMarkers),
-                onMapCreated: mapCreated,
-              ),
-            ),
-            Positioned(
-              bottom: 20.0,
-              child: Container(
-                height: 200.0,
-                width: MediaQuery.of(context).size.width,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: merchant.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _coffeeShopList(index);
-                  },
+        body: 
+
+        StreamBuilder<Merchant>( 
+          stream: DatabaseService().merchantData,
+          builder: (context, snapshot)
+           {
+         
+            if(snapshot.hasData){
+         
+         
+            Merchant  merchants = snapshot.data;
+            
+            Center(
+              child: Text(
+                merchants.address.toString()
+              )
+            );
+            
+            }
+            else {
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-            )
-          ],
-        ));
+              );
+            }
+            return Container();
+          }
+        )
+        
+        // Stack(
+        //   children: <Widget>[
+        //     Container(
+        //       height: MediaQuery.of(context).size.height - 50.0,
+        //       width: MediaQuery.of(context).size.width,
+        //       child: GoogleMap(
+        //         initialCameraPosition: CameraPosition(
+        //             target: LatLng(-1.2320662, 36.8780867), zoom: 12.0),
+        //         markers: Set.from(allMarkers),
+        //         onMapCreated: mapCreated,
+        //       ),
+        //     ),
+        //     Positioned(
+        //       bottom: 20.0,
+        //       child: Container(
+        //         height: 200.0,
+        //         width: MediaQuery.of(context).size.width,
+        //         child: PageView.builder(
+        //           controller: _pageController,
+        //           itemCount: merchant.length,
+        //           itemBuilder: (BuildContext context, int index) {
+        //             return _coffeeShopList(index);
+        //           },
+        //         ),
+        //       ),
+        //     )
+        //   ],
+        // )
+        );
   }
 
   void mapCreated(controller) {
