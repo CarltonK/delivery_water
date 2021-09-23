@@ -1,6 +1,6 @@
     // collection reference
   import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:water_del/models/MerchantLocationModel.dart';
+import 'package:water_del/models/MerchantModel.dart';
 
 
 class DatabaseService {

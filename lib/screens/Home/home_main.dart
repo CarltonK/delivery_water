@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:water_del/models/MerchantLocationModel.dart';
 
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
