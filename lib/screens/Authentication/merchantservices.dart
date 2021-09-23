@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-<<<<<<< HEAD
-import 'package:water_del/models/MerchantLocationModel.dart';
+import 'package:water_del/models/MerchantModel.dart';
 import 'package:water_del/services/merchservices.dart';
 
-=======
-import 'package:provider/provider.dart';
-import 'package:water_del/models/MerchantModel.dart';
-import 'package:water_del/provider/MerchantProvider.dart';
->>>>>>> 9f4c875f9540c4d6b055758ef41d779d73f5c1f0
 class MarkersMap extends StatefulWidget {
   @override
   _MarkersMapState createState() => _MarkersMapState();
 }
 
 class _MarkersMapState extends State<MarkersMap> {
-  
   GoogleMapController _controller;
 
   List<Marker> allMarkers = [];
@@ -27,20 +20,15 @@ class _MarkersMapState extends State<MarkersMap> {
   @override
   void initState() {
     // TODO: implement initState
-    //  FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
-     MerchantNotifier merchant = Provider.of<MerchantNotifier>(context, listen: false);
-    
-
     super.initState();
-    super.initState();
-
+    merchant.forEach((element) {
       allMarkers.add(Marker(
-          markerId: MarkerId(merchant.shopName),
+          markerId: MarkerId(element.shopName),
           draggable: false,
           infoWindow:
               InfoWindow(title: element.shopName, snippet: element.address),
           position: element.locationCoords));
-   
+    });
     _pageController = PageController(initialPage: 1, viewportFraction: 0.8)
       ..addListener(_onScroll);
   }
@@ -143,7 +131,6 @@ class _MarkersMapState extends State<MarkersMap> {
 
   @override
   Widget build(BuildContext context) {
-     MerchantNotifier merchant = Provider.of<MerchantNotifier>(context);
     return Scaffold(
     
         body: 
@@ -160,7 +147,7 @@ class _MarkersMapState extends State<MarkersMap> {
             
             Center(
               child: Text(
-                merchants.address.toString()
+                merchants.address
               )
             );
             
