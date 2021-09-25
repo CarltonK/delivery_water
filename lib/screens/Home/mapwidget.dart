@@ -52,19 +52,26 @@ class _HomeMapState extends State<HomeMap> {
                                                   ),
                                                 ),
                                                 InkWell(
-                                                  onTap: () async {
-                                                    await showModalBottomSheet(
-                                                      isScrollControlled: true,
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return Container(
-                                                          height: 750,
-                                                          child: 
-                                                          // Landing();
-                                                          MarkersMap(),
-                                                        );
-                                                      },
+                                                  onTap: () {
+
+                                                    Navigator.push(
+                                                      context, 
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>    MarkersMap(),
+                                                      )
                                                     );
+                                                    // await showModalBottomSheet(
+                                                    //   isScrollControlled: true,
+                                                    //   context: context,
+                                                    //   builder: (context) {
+                                                    //     return Container(
+                                                    //       height: 750,
+                                                    //       child: 
+                                                    //       // Landing();
+                                                       
+                                                    //     );
+                                                    //   },
+                                                    
                                                   },
                                                   child: Row(
                                                     mainAxisSize: MainAxisSize.max,
