@@ -5,7 +5,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
-import 'package:water_del/screens/screens.dart';
+import 'package:water_del/screens/Authentication/main_authentication.dart';
+import 'package:water_del/screens/Home/home_main.dart';
 import 'package:water_del/widgets/widgets.dart';
 import 'provider/provider.dart';
 
@@ -26,16 +27,24 @@ void main() {
             status: false,
             products: [],
           ),
-        )
+        ),
       ],
       child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final FirebaseAnalytics analytics = FirebaseAnalytics();
+
+
   final futureApp = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,7 +58,8 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.pink[200],
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: FutureBuilder(
+      home: 
+      FutureBuilder(
         future: futureApp,
         builder: (_, snapshot) {
           switch (snapshot.connectionState) {

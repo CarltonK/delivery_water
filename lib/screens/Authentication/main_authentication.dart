@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:water_del/screens/Authentication/registration.dart';
 import 'package:water_del/screens/screens.dart';
 import 'package:water_del/utilities/utilities.dart';
+
+import 'login.dart';
 
 class MainAuthentication extends StatefulWidget {
   @override

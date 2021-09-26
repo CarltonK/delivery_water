@@ -1,21 +1,25 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:provider/provider.dart';
 import 'package:water_del/models/models.dart';
-import 'package:water_del/provider/provider.dart';
-import 'package:water_del/screens/screens.dart';
+import 'package:water_del/provider/auth_provider.dart';
+import 'package:water_del/provider/database_provider.dart';
+import 'package:water_del/screens/Home/mapwidget.dart';
+import 'package:water_del/screens/Home/profilePage.dart';
 import 'package:water_del/utilities/utilities.dart';
-import 'package:water_del/widgets/widgets.dart';
+import 'package:water_del/widgets/global/Recent_transactions.dart';
+
 
 class HomeMain extends StatefulWidget {
   @override
   _HomeMainState createState() => _HomeMainState();
 }
 
+//  1a1f24
 class _HomeMainState extends State<HomeMain> {
+
   PageController _controller;
   var userCurrent;
   UserModel userModel;
@@ -25,44 +29,18 @@ class _HomeMainState extends State<HomeMain> {
   Future productFuture;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  // Widget popupPlace() {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //         color: Colors.blue.withOpacity(0.4),
-  //         borderRadius: BorderRadius.circular(12)),
-  //     child: PopupMenuButton(
-  //       tooltip: 'Place',
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  //       itemBuilder: (context) {
-  //         var list = List<PopupMenuEntry<Object>>();
-  //         list.add(
-  //           PopupMenuItem(
-  //             child: Text('Delivery Location'),
-  //             value: 1,
-  //           ),
-  //         );
-  //         list.add(
-  //           PopupMenuDivider(
-  //             height: 5,
-  //           ),
-  //         );
-  //         list.add(
-  //           CheckedPopupMenuItem(
-  //             child: Text(
-  //               "Home",
-  //               style: normalOutlineBlack,
-  //             ),
-  //             value: 2,
-  //             checked: true,
-  //           ),
-  //         );
-  //         return list;
-  //       },
-  //       offset: Offset(0, 100),
-  //       icon: Icon(CupertinoIcons.location_solid),
-  //     ),
-  //   );
-  // }
+  Widget yesExit(BuildContext context) {
+    return FlatButton(
+      onPressed: () {
+        AuthProvider.instance().logout();
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+      child: Text(
+        'YES',
+      ),
+    );
+  }
 
   Widget _profilePage() {
     return Positioned(
@@ -170,181 +148,178 @@ class _HomeMainState extends State<HomeMain> {
     super.dispose();
   }
 
-  Widget baseMap() {
-    return StreamBuilder<LocationModel>(
-      stream: LocationProvider().locationStream,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          Provider.of<OrderModel>(context).location = snapshot.data;
-          List<LocationModel> locations = [];
-          locations.insert(0, snapshot.data);
-          myLocation = snapshot.data;
-          return MapWidget(
-            coordinates: locations,
-            user: userCurrent,
-          );
-        }
-        return Center(
-          child: SpinKitFoldingCube(
-            size: 150,
-            color: Theme.of(context).primaryColor,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget productMap() {
-    return FutureBuilder<List<Product>>(
-      future: productFuture,
-      builder: (context, snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            if (snapshot.hasData && snapshot.data.length > 0) {
-              return ProductMapWidget(
-                products: snapshot.data,
-                user: userCurrent,
-                location: myLocation,
-              );
-            }
-            return Center(
-              child: Text(
-                'There are no products',
-                style: normalOutlineBlack,
-              ),
-            );
-          case ConnectionState.active:
-          case ConnectionState.none:
-            return Center(
-              child: Text(
-                'There are no products',
-                style: normalOutlineBlack,
-              ),
-            );
-          case ConnectionState.waiting:
-            return Center(
-              child: SpinKitFoldingCube(
-                size: 150,
-                color: Theme.of(context).primaryColor,
-              ),
-            );
-        }
-        return Center(
-          child: SpinKitFoldingCube(
-            size: 150,
-            color: Theme.of(context).primaryColor,
-          ),
-        );
-      },
-    );
-  }
-
   Widget clientPage() {
-    return Stack(
-      children: [
-        display.length == 0 ? baseMap() : productMap(),
-        CartIcon(
-          location: myLocation,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.grey[900],
+
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            height: 800,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // image
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 16, 10),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        color: Colors.blue,
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.network(
+                              'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(2, 15, 5, 0),
+                        child: InkWell(
+                          onTap: ()  {
+                           
+                            // await Navigator.push(
+                            //   context,
+                            //   PageTransition(
+                            //     type: PageTransitionType.rightToLeft,
+                            //     duration: Duration(milliseconds: 200),
+                            //     reverseDuration: Duration(milliseconds: 200),
+                            //     child:
+                            //     // Search(),
+                            //      Container(),
+                            //     // CartWidget(),
+                            //   ),
+                            // );
+                          },
+                          child: Icon(
+                            Icons.shopping_bag,
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+
+                //  Good Morning
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          _databaseProvider.greetingMessage(),
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontFamily: 'Lexend Deca',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                //  Name
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          "Sang",
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontFamily: 'Lexend Deca',
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                        child: Text(
+                          "👋🏿",
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                //  Map
+                  HomeMap(),
+                //  Recent
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Recent",
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontFamily: 'Lexend Deca',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w200),
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 15, 6),
+                  child: Recent(),
+                ),
+
+              //   No products 
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 0, 0),
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "No Recent transactions",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Lexend Deca',
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-        _profilePage(),
-        _bottomSelection()
-      ],
+      ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     Provider.of<OrderModel>(context).client = userCurrent.uid;
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: StreamBuilder<UserModel>(
-          stream: _databaseProvider.streamUser(userCurrent.uid),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    if (snapshot.data.clientStatus) ...[
-                      Container(
-                        height: size.height,
-                        width: size.width,
-                        child: clientPage(),
-                      )
-                    ],
-                    if (!snapshot.data.clientStatus) ...[
-                      Container(
-                        height: size.height,
-                        width: size.width,
-                        child: SupplierHome(
-                          user: userCurrent,
-                        ),
-                      )
-                    ]
-                  ],
-                ),
-              );
-            }
-            return Center(
-              child: SpinKitFoldingCube(
-                size: 150,
-                color: Theme.of(context).primaryColor,
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class CartIcon extends StatelessWidget {
-  static OrderModel model;
-  final LocationModel location;
-  CartIcon({@required this.location});
-  @override
-  Widget build(BuildContext context) {
-    model = context.watch<OrderModel>();
-    model.location = location;
-    int items = model.products.length;
-    return Positioned(
-      top: 40,
-      left: 10,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            SlideLeftTransition(
-              page: CartScreen(),
-            ),
-          );
-        },
-        child: Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.4),
-            shape: BoxShape.circle,
-          ),
-          child: Stack(
-            clipBehavior: Clip.antiAlias,
-            alignment: Alignment.center,
-            children: [
-              Positioned(
-                bottom: 5,
-                child: Icon(Icons.shopping_cart),
-              ),
-              Positioned(
-                top: 8,
-                child: Text(
-                  items.toString() ?? '0',
-                  style: boldOutlineWhite,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+    return clientPage();
   }
 }
